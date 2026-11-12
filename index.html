@@ -68,6 +68,21 @@ select.sel{background:var(--bg2);border:1px solid var(--line);border-radius:12px
 .chip{white-space:nowrap;padding:7px 12px;border-radius:999px;background:var(--bg2);border:1px solid var(--line);font-size:13px;color:var(--tx2);display:flex;align-items:center;gap:5px}
 .chip.on{background:var(--accent);border-color:var(--accent);color:#fff}
 .chip.trade.on{background:#b45309;border-color:#d97706}
+.seg{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:3px}
+.seg button{padding:7px 2px;border-radius:9px;font-size:13px;font-weight:600;color:var(--tx3);white-space:nowrap}
+.seg button.on{color:#fff}
+.seg button.on[data-mode=caught]{background:var(--ok)}
+.seg button.on[data-mode=shiny]{background:#a16207}
+.seg button.on[data-mode=lucky]{background:#b45309}
+.seg button.on[data-mode=all]{background:var(--accent)}
+body.m-lucky .card.c{border-color:rgba(245,158,11,.8);background:linear-gradient(180deg,rgba(245,158,11,.14),var(--bg2) 60%)}
+body.m-lucky .card.c .chk span{background:var(--lucky);border-color:var(--lucky)}
+body.m-shiny .card.c{border-color:rgba(250,204,21,.75);background:linear-gradient(180deg,rgba(250,204,21,.12),var(--bg2) 60%)}
+body.m-shiny .card.c .chk span{background:var(--shiny);border-color:var(--shiny)}
+body.m-all .card.c{border-color:var(--accent);background:linear-gradient(180deg,var(--accentbg),var(--bg2) 60%)}
+body.m-all .card.c .chk span{background:var(--accent);border-color:var(--accent);color:#fff}
+.allbtn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:11px;border-radius:14px;border:1.5px dashed var(--line2);background:var(--bg);color:var(--tx2);font-weight:700;font-size:14px}
+.allbtn.on{border-style:solid;border-color:var(--accent);color:#fff;background:var(--accentbg)}
 .chip-sep{width:1px;background:var(--line);flex:none;margin:4px 2px}
 .summary{max-width:1200px;margin:0 auto;padding:6px 12px;display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px;color:var(--tx3)}
 .summary b{color:var(--tx)}
@@ -166,6 +181,8 @@ main{max-width:1200px;margin:0 auto;padding:4px 8px}
 .fmk button.on.c{border-color:var(--ok);background:var(--okbg)}
 .fmk button.on.s{border-color:var(--shiny)}
 .fmk button.on.l{border-color:var(--lucky)}
+.fmk button.on.a{border-color:var(--accent)}
+.fmk button{width:32px;height:34px}
 .fmk .ck{color:var(--ok);font-weight:900;font-size:15px}
 .navbtns{display:flex;gap:8px}
 
@@ -261,12 +278,16 @@ main{max-width:1200px;margin:0 auto;padding:4px 8px}
         <option value="za">Nombre Z-A</option>
       </select>
     </div>
+    <div class="seg" id="modeSeg">
+      <button data-mode="caught">✅ Normal</button>
+      <button data-mode="shiny">✨ Shiny</button>
+      <button data-mode="lucky">🍀 Suerte</button>
+      <button data-mode="all">⭐ Todo</button>
+    </div>
     <div class="chips" id="chips">
       <button class="chip" data-st="all">Todos</button>
       <button class="chip" data-st="c">Tengo</button>
       <button class="chip" data-st="m">Me faltan</button>
-      <button class="chip" data-st="s">✨ Shiny</button>
-      <button class="chip" data-st="l">🍀 Suerte</button>
       <span class="chip-sep"></span>
       <button class="chip trade" data-tr="give">🔄 <span id="trGive">Le faltan a …</span></button>
       <button class="chip trade" data-tr="get">🎁 <span id="trGet">… tiene y yo no</span></button>
@@ -297,7 +318,7 @@ main{max-width:1200px;margin:0 auto;padding:4px 8px}
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 <script>
 'use strict';
-const APP_VERSION = '2.0.0';
+const APP_VERSION = '2.1.0';
 const DATA_VERSION = '2026-11-12';
 
 /* ================= CONFIGURACIÓN ================= */
@@ -397,10 +418,27 @@ const state = {
   me: null, other: null,
   dex: { Dapica03: emptyDex(), Rulotgar: emptyDex() },
   region: store.get('region', 'all'), type: store.get('type', 'all'), sort: store.get('sort', 'num'),
-  status: 'all', trade: null, q: '',
+  status: 'all', trade: null, q: '', mode: store.get('mode', 'caught'),
   list: [], detail: null, detailShiny: false
 };
 const has = (t, field, key) => !!state.dex[t][field][key];
+const MODE_INFO = {
+  caught: { icon: '✅', label: 'Normal', have: 'Tengo', miss: 'Me faltan' },
+  shiny:  { icon: '✨', label: 'Shiny',  have: 'Tengo shiny', miss: 'Me faltan shiny' },
+  lucky:  { icon: '🍀', label: 'Suerte', have: 'Tengo con suerte', miss: 'Me faltan con suerte' },
+  all:    { icon: '⭐', label: 'Todo',   have: 'Completos', miss: 'Incompletos' }
+};
+/* ¿Lo tiene en el modo indicado? "all" = normal + shiny + suerte */
+function owned(t, key, mode = state.mode) {
+  if (mode === 'all') return has(t, 'caught', key) && has(t, 'shiny', key) && has(t, 'lucky', key);
+  return has(t, mode, key);
+}
+/* Marcar / desmarcar en el modo indicado */
+function setOwned(key, val, mode = state.mode) {
+  // Quitar "Todo" solo quita shiny y suerte: el normal se conserva para no perder la captura
+  if (mode === 'all') { writeMarks(val ? { caught: { [key]: true }, shiny: { [key]: true }, lucky: { [key]: true } } : { shiny: { [key]: false }, lucky: { [key]: false } }); scheduleRender(); }
+  else setMark(mode, key, val);
+}
 
 /* ================= FIREBASE ================= */
 firebase.initializeApp(firebaseConfig);
@@ -527,6 +565,10 @@ function buildControls() {
     clearTimeout(qt); qt = setTimeout(() => { state.q = e.target.value; render(); }, 140);
   };
   $('#qClear').onclick = () => { $('#q').value = ''; state.q = ''; $('#qClear').classList.add('hidden'); render(); };
+  $('#modeSeg').onclick = e => {
+    const b = e.target.closest('[data-mode]'); if (!b) return;
+    state.mode = b.dataset.mode; store.set('mode', state.mode); render();
+  };
   $('#chips').onclick = e => {
     const b = e.target.closest('.chip'); if (!b) return;
     if (b.dataset.st) state.status = b.dataset.st;
@@ -554,15 +596,15 @@ function filtered() {
       else if (!s.n.includes(q)) return false;
     }
     if (type !== null && !s.types.includes(type)) return false;
-    const c = has(me, 'caught', s.key);
-    switch (state.status) {
-      case 'c': if (!c) return false; break;
-      case 'm': if (c) return false; break;
-      case 's': if (!has(me, 'shiny', s.key)) return false; break;
-      case 'l': if (!has(me, 'lucky', s.key)) return false; break;
+    const o = owned(me, s.key);
+    if (state.status === 'c' && !o) return false;
+    if (state.status === 'm' && o) return false;
+    if (state.trade) {
+      // En modo Suerte: la suerte sale al intercambiar, así que basta con que quien lo envía lo tenga
+      const giverHas = (t) => state.mode === 'lucky' ? has(t, 'caught', s.key) : owned(t, s.key);
+      if (state.trade === 'give' && (!giverHas(me) || owned(ot, s.key))) return false;
+      if (state.trade === 'get' && (!giverHas(ot) || o)) return false;
     }
-    if (state.trade === 'give' && (!c || has(ot, 'caught', s.key))) return false;
-    if (state.trade === 'get' && (c || !has(ot, 'caught', s.key))) return false;
     return true;
   });
   const coll = new Intl.Collator('es');
@@ -573,17 +615,17 @@ function filtered() {
 }
 
 function cardHTML(s) {
-  const me = state.me, c = has(me, 'caught', s.key);
+  const me = state.me, c = owned(me, s.key);
   const sh = has(me, 'shiny', s.key), lk = has(me, 'lucky', s.key);
   let fb = '';
   if (s.forms.length) {
-    const fc = s.forms.filter(f => has(me, 'caught', f.key)).length;
+    const fc = s.forms.filter(f => owned(me, f.key)).length;
     fb = `<span class="fbadge ${fc === s.forms.length ? 'full' : ''}">+${s.forms.length} · ${fc}✓</span>`;
   }
   return `<div class="card ${c ? 'c' : ''}" data-k="${s.key}">
     <div class="ctop"><span class="num">${pad(s.id)}</span><button class="chk" aria-label="Marcar"><span>${c ? icon('check') : ''}</span></button></div>
-    ${fb}<div class="badges">${sh ? '✨' : ''}${lk ? '🍀' : ''}</div>
-    <div class="art"><img loading="lazy" decoding="async" alt="" src="${ART(s.id)}"></div>
+    ${fb}<div class="badges">${state.mode !== 'caught' && has(me, 'caught', s.key) && !c ? '✅' : ''}${sh ? '✨' : ''}${lk ? '🍀' : ''}</div>
+    <div class="art"><img loading="lazy" decoding="async" alt="" src="${ART(s.id, state.mode === 'shiny')}"></div>
     <div class="cname">${esc(s.name)}</div>
     <div class="ctypes">${s.types.map(typeTag).join('')}</div>
   </div>`;
@@ -601,13 +643,19 @@ function render() {
   const list = state.list = filtered();
   $('#grid').innerHTML = list.map(cardHTML).join('');
   $('#empty').classList.toggle('hidden', list.length > 0);
+  document.body.classList.remove('m-caught', 'm-shiny', 'm-lucky', 'm-all');
+  document.body.classList.add('m-' + state.mode);
+  document.querySelectorAll('#modeSeg button').forEach(b => b.classList.toggle('on', b.dataset.mode === state.mode));
+  const mi = MODE_INFO[state.mode];
+  document.querySelector('[data-st="c"]').textContent = mi.have;
+  document.querySelector('[data-st="m"]').textContent = mi.miss;
   // chips
   document.querySelectorAll('#chips .chip').forEach(b => {
     b.classList.toggle('on', b.dataset.st ? b.dataset.st === state.status : b.dataset.tr === state.trade);
   });
   $('#sumCount').textContent = list.length;
   $('#sumLabel').textContent = list.length === 1 ? 'Pokémon' : 'Pokémon';
-  const allC = list.length && list.every(s => has(state.me, 'caught', s.key));
+  const allC = list.length && list.every(s => owned(state.me, s.key));
   $('#markAllTxt').textContent = allC ? 'Desmarcar visibles' : 'Marcar visibles';
   updateHeader();
   if (state.detail) renderDetail();
@@ -617,11 +665,12 @@ function render() {
 function updateHeader() {
   const me = state.me;
   const pool = SPECIES.filter(s => state.region === 'all' || state.region === 'forms' || s.region === state.region);
-  const c = pool.filter(s => has(me, 'caught', s.key)).length;
-  const sh = Object.keys(state.dex[me].shiny).length, lk = Object.keys(state.dex[me].lucky).length;
+  const n = (m) => pool.filter(s => owned(me, s.key, m)).length;
+  const c = n(state.mode);
   const pct = pool.length ? Math.round(c / pool.length * 100) : 0;
   const regName = state.region === 'all' || state.region === 'forms' ? 'Total' : REGIONS.find(r => r[0] === state.region)[1];
-  $('#meSub').textContent = `${regName}: ${c}/${pool.length} (${pct}%) · ✨${sh} · 🍀${lk}`;
+  const others = ['caught', 'shiny', 'lucky'].filter(m => m !== state.mode).map(m => MODE_INFO[m].icon + n(m)).join(' · ');
+  $('#meSub').textContent = `${MODE_INFO[state.mode].icon} ${regName}: ${c}/${pool.length} (${pct}%) · ${others}`;
   $('#progBar').style.width = pct + '%';
 }
 
@@ -629,17 +678,21 @@ function updateHeader() {
 $('#grid').addEventListener('click', e => {
   const card = e.target.closest('.card'); if (!card) return;
   const k = card.dataset.k;
-  if (e.target.closest('.chk')) { setMark('caught', k, !has(state.me, 'caught', k)); if (navigator.vibrate) navigator.vibrate(12); }
+  if (e.target.closest('.chk')) { setOwned(k, !owned(state.me, k)); if (navigator.vibrate) navigator.vibrate(12); }
   else openDetail(k);
 });
 
 $('#btnMarkAll').onclick = () => {
   const list = state.list; if (!list.length) return;
-  const allC = list.every(s => has(state.me, 'caught', s.key));
-  if (list.length > 15 && !confirm(`¿${allC ? 'Desmarcar' : 'Marcar como capturados'} ${list.length} Pokémon?`)) return;
-  const ch = { caught: {} };
-  if (allC) { ch.shiny = {}; ch.lucky = {}; }
-  list.forEach(s => { ch.caught[s.key] = !allC; if (allC) { ch.shiny[s.key] = false; ch.lucky[s.key] = false; } });
+  const mode = state.mode, allC = list.every(s => owned(state.me, s.key));
+  if (list.length > 15 && !confirm(`¿${allC ? 'Desmarcar' : 'Marcar'} ${list.length} Pokémon en «${MODE_INFO[mode].icon} ${MODE_INFO[mode].label}»?`)) return;
+  const ch = { caught: {}, shiny: {}, lucky: {} };
+  list.forEach(s => {
+    const k = s.key, v = !allC;
+    if (mode === 'all') { if (v) ch.caught[k] = true; ch.shiny[k] = v; ch.lucky[k] = v; }
+    else if (mode === 'caught') { ch.caught[k] = v; if (!v) { ch.shiny[k] = false; ch.lucky[k] = false; } }
+    else { ch[mode][k] = v; if (v) ch.caught[k] = true; }
+  });
   writeMarks(ch); render();
 };
 
@@ -647,9 +700,10 @@ $('#btnMarkAll').onclick = () => {
 $('#btnShare').onclick = async () => {
   const list = state.list; if (!list.length) return toast('No hay nada que compartir');
   const parts = [];
-  if (state.trade === 'give') parts.push(`Tengo y le faltan a ${state.other}`);
-  else if (state.trade === 'get') parts.push(`${state.other} tiene y a mí me faltan`);
-  else parts.push({ all: 'Pokédex', c: 'Tengo', m: 'Me faltan', s: 'Mis shiny', l: 'Mis Pokémon con suerte' }[state.status]);
+  const mi = MODE_INFO[state.mode];
+  if (state.trade === 'give') parts.push(`Puedo enviarle a ${state.other} (${mi.icon} le faltan)`);
+  else if (state.trade === 'get') parts.push(`${state.other} me puede enviar (${mi.icon} me faltan)`);
+  else parts.push(state.status === 'all' ? `Pokédex ${mi.icon} ${mi.label}` : `${mi.icon} ${state.status === 'c' ? mi.have : mi.miss}`);
   if (state.region !== 'all') parts.push($('#fRegion').selectedOptions[0].textContent.replace(/\s*\(.*\)/, ''));
   if (state.type !== 'all') parts.push('tipo ' + TYPES[state.type][0]);
   const title = `📋 ${parts.join(' · ')} (${list.length})`;
@@ -699,7 +753,9 @@ function stepDetail(dir) {
 
 function markBtns(key, me) {
   const c = has(me, 'caught', key), s = has(me, 'shiny', key), l = has(me, 'lucky', key);
-  return `<div class="marks">
+  const all = c && s && l;
+  return `<button class="allbtn ${all ? 'on' : ''}" data-allkey="${key}">⭐ ${all ? 'Lo tengo todo (normal, shiny y suerte)' : 'Marcar todo: normal + shiny + suerte'}</button>
+  <div class="marks">
     <button class="mk c ${c ? 'on' : ''}" data-mark="caught" data-key="${key}"><span class="e">✅</span>${c ? 'Lo tengo' : 'No lo tengo'}</button>
     <button class="mk s ${s ? 'on' : ''}" data-mark="shiny" data-key="${key}"><span class="e">✨</span>Shiny</button>
     <button class="mk l ${l ? 'on' : ''}" data-mark="lucky" data-key="${key}"><span class="e">🍀</span>Suerte</button>
@@ -742,6 +798,7 @@ function formsHTML(s) {
         <button class="c ${c ? 'on' : ''}" data-mark="caught" data-key="${f.key}" title="Lo tengo"><span class="ck">✓</span></button>
         <button class="s ${sh ? 'on' : ''}" data-mark="shiny" data-key="${f.key}" title="Shiny">✨</button>
         <button class="l ${lk ? 'on' : ''}" data-mark="lucky" data-key="${f.key}" title="Suerte">🍀</button>
+        <button class="a ${c && sh && lk ? 'on' : ''}" data-allkey="${f.key}" title="Todo">⭐</button>
       </div></div>`;
   }).join('') + `</div></div>`;
 }
@@ -779,6 +836,8 @@ function renderDetail() {
 }
 
 $('#dlg').addEventListener('click', e => {
+  const ak = e.target.closest('[data-allkey]');
+  if (ak) { const k = ak.dataset.allkey; setOwned(k, !owned(state.me, k, 'all'), 'all'); if (navigator.vibrate) navigator.vibrate(12); return; }
   const mk = e.target.closest('[data-mark]');
   if (mk) { const { mark, key } = mk.dataset; setMark(mark, key, !has(state.me, mark, key)); if (navigator.vibrate) navigator.vibrate(12); return; }
   const st = e.target.closest('[data-step]'); if (st) return stepDetail(+st.dataset.step);
@@ -811,14 +870,16 @@ function renderCompare() {
     return `<div class="reg-row"><div class="reg-top">${name}<span>${n} Pokémon</span></div>
       <div class="bar"><div style="width:${cd / n * 100}%;background:#3b82f6"></div></div>
       <div class="bar"><div style="width:${cr / n * 100}%;background:#f43f5e"></div></div>
-      <div class="reg-l"><span style="color:#93c5fd">Dapica03 ${cd}</span><span style="color:#fda4af">Rulotgar ${cr}</span></div></div>`;
+      <div class="reg-l"><span style="color:#93c5fd">Dapica03 ${cd} · ✨${cnt(D, 'shiny', pool)} · 🍀${cnt(D, 'lucky', pool)}</span><span style="color:#fda4af">Rulotgar ${cr} · ✨${cnt(R, 'shiny', pool)} · 🍀${cnt(R, 'lucky', pool)}</span></div></div>`;
   }).join('');
   const give = SPECIES.filter(s => has(state.me, 'caught', s.key) && !has(state.other, 'caught', s.key)).length;
   const get = SPECIES.filter(s => !has(state.me, 'caught', s.key) && has(state.other, 'caught', s.key)).length;
+  const lgive = SPECIES.filter(s => has(state.me, 'caught', s.key) && !has(state.other, 'lucky', s.key)).length;
+  const lget = SPECIES.filter(s => has(state.other, 'caught', s.key) && !has(state.me, 'lucky', s.key)).length;
   el.innerHTML = `<div class="sh-head"><h3>Dapica03 vs Rulotgar</h3><button class="ibtn" data-close>${icon('x')}</button></div>
     <div class="sh-body">
       <div class="vs">${head(D)}${head(R)}</div>
-      <div class="box"><p class="muted">🔄 Puedes conseguirle <b style="color:var(--tx)">${give}</b> a ${state.other} · 🎁 ${state.other} puede conseguirte <b style="color:var(--tx)">${get}</b></p></div>
+      <div class="box"><p class="muted">🔄 Puedes conseguirle <b style="color:var(--tx)">${give}</b> a ${state.other} · 🎁 ${state.other} puede conseguirte <b style="color:var(--tx)">${get}</b><br>🍀 Con un intercambio, ${state.other} podría conseguir con suerte <b style="color:var(--tx)">${lgive}</b> y tú <b style="color:var(--tx)">${lget}</b></p></div>
       <div><p class="sec-t">Progreso por región</p><div class="reg">${rows}</div></div>
     </div>`;
 }

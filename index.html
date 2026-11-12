@@ -452,11 +452,39 @@ function writeLucky(changes) { // { key: bool }
 }
 const toggle = key => writeLucky({ [key]: !L(state.me, key) });
 
+const OLD_FORMS = { r1: 'f10091', r2: 'f10100', r3: 'f10161', r4: 'f10238', r5: 'f10253' };
+/* Acepta: copia de esta app ({lucky}), copia v2 ({caught}) o la copia antigua ({"1":true,"r1":true...}) */
+function keysFromBackup(data) {
+  const nonEmpty = o => o && typeof o === 'object' && Object.keys(o).length ? o : null;
+  const src = (data && (nonEmpty(data.lucky) || (data.version === 2 ? data.caught : null) || (data.version ? null : data))) || {};
+  const ch = {};
+  for (const [k, v] of Object.entries(src)) { const key = OLD_FORMS[k] || k; if (v && BY_KEY.has(key)) ch[key] = true; }
+  return ch;
+}
+
+/* Primera vez: carga automáticamente la lista guardada del entrenador (solo si aún no tiene ningún 🍀) */
+async function migrateIfNeeded(t) {
+  try {
+    const r = await fetch('migracion-' + t + '.json', { cache: 'no-store' });
+    if (!r.ok) return;
+    const ch = keysFromBackup(await r.json());
+    const n = Object.keys(ch).length; if (!n) return;
+    writeLucky(ch);
+    docRef(t).set({ luckyMigrated: true }, { merge: true }).catch(() => {});
+    toast(`✅ Importados ${n} Pokémon con suerte de tu copia`, 4000);
+  } catch {}
+}
+
 function subscribe() {
   unsubs.forEach(u => u()); unsubs = [];
   TRAINERS.forEach(t => {
-    unsubs.push(docRef(t).onSnapshot(snap => {
+    let checked = false;
+    unsubs.push(docRef(t).onSnapshot({ includeMetadataChanges: true }, snap => {
       const d = snap.data(), x = {};
+      if (!checked && t === state.me && !snap.metadata.fromCache && SPECIES.length) {
+        checked = true;
+        if (!(d && d.luckyMigrated) && !(d && d.lucky && Object.keys(d.lucky).length)) migrateIfNeeded(t);
+      }
       if (d && d.lucky) for (const [k, v] of Object.entries(d.lucky)) if (v) x[k] = true;
       state.lucky[t] = x;
       scheduleRender();
@@ -494,7 +522,7 @@ auth.onAuthStateChanged(async user => {
   $('#avatar').textContent = trainer[0];
   $('#meName').textContent = trainer;
   document.querySelector('[data-view="other"]').textContent = `Le faltan a ${state.other}`;
-  subscribe(); scheduleRender();
+  dataReady.then(subscribe); scheduleRender();
 });
 
 /* ================= FILTROS Y LISTA ================= */
@@ -796,8 +824,7 @@ $('#btnSettings').onclick = () => {
     const r = new FileReader();
     r.onload = () => {
       try {
-        const data = JSON.parse(r.result), src = data.lucky || {}, ch = {};
-        Object.keys(src).forEach(k => { if (src[k] && BY_KEY.has(k)) ch[k] = true; });
+        const ch = keysFromBackup(JSON.parse(r.result));
         if (!Object.keys(ch).length) return toast('El archivo no tiene Pokémon con suerte');
         if (!confirm(`Se añadirán ${Object.keys(ch).length} Pokémon con suerte. ¿Continuar?`)) return;
         writeLucky(ch); closeDlg(); toast('✅ Importado');
@@ -830,7 +857,8 @@ if ('serviceWorker' in navigator && location.protocol === 'https:') {
 
 /* ================= ARRANQUE ================= */
 buildControls();
-loadData().then(() => scheduleRender()).catch(err => {
+const dataReady = loadData();
+dataReady.then(() => scheduleRender()).catch(err => {
   console.error(err);
   $('#loading').innerHTML = '⚠️ No se pudieron cargar los datos. Comprueba tu conexión y recarga.';
 });

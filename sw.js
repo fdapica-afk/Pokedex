@@ -1,5 +1,5 @@
 /* Service worker: permite usar la Pokédex sin conexión y la actualiza sola */
-const VERSION = 'v3.0.0';
+const VERSION = 'v3.0.2';
 const SHELL = 'pdx-shell-' + VERSION;
 const LIBS = 'pdx-libs-v1';
 const IMGS = 'pdx-img-v1';

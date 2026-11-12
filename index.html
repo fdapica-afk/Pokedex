@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0f172a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Pokédex">
+<title>Pokédex · Dapica03 &amp; Rulotgar</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+:root{
+  --bg:#0f172a; --bg2:#1e293b; --bg3:#334155; --line:#334155; --line2:#475569;
+  --tx:#f1f5f9; --tx2:#cbd5e1; --tx3:#94a3b8; --tx4:#64748b;
+  --accent:#3b82f6; --accent2:#60a5fa; --accentbg:rgba(59,130,246,.15);
+  --ok:#10b981; --okbg:rgba(16,185,129,.12); --shiny:#facc15; --lucky:#f59e0b; --bad:#f43f5e;
+  --r:14px; --safe-b:env(safe-area-inset-bottom,0px); --safe-t:env(safe-area-inset-top,0px);
+}
+body.t-Rulotgar{--accent:#f43f5e; --accent2:#fb7185; --accentbg:rgba(244,63,94,.15)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--tx);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+body{min-height:100vh;touch-action:manipulation;padding-bottom:calc(16px + var(--safe-b))}
+button,select,input{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+.hidden{display:none!important}
+svg.i{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+::-webkit-scrollbar{width:4px;height:4px}::-webkit-scrollbar-thumb{background:rgba(255,255,255,.2);border-radius:4px}
+
+/* LOGIN */
+#login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+.login-card{max-width:360px;width:100%;background:var(--bg2);border:1px solid var(--line);border-radius:20px;padding:28px 22px;text-align:center}
+.login-card img{width:72px;height:72px;border-radius:18px}
+.login-card h1{font-size:22px;margin:14px 0 6px}
+.login-card p{color:var(--tx3);font-size:14px;margin:0 0 20px;line-height:1.45}
+.gbtn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:13px;border-radius:12px;background:#fff;color:#1f2937;font-weight:600;font-size:15px}
+.login-err{color:var(--bad);font-size:13px;margin-top:14px}
+
+/* HEADER */
+header{position:sticky;top:0;z-index:40;background:rgba(15,23,42,.94);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding-top:var(--safe-t)}
+.hrow{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:8px;padding:8px 10px}
+.me{display:flex;align-items:center;gap:8px;min-width:0}
+.avatar{width:34px;height:34px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;flex:none}
+.me-txt{min-width:0}
+.me-name{font-weight:700;font-size:14px;color:var(--accent2);white-space:nowrap}
+.me-sub{font-size:11px;color:var(--tx3);white-space:nowrap}
+.hspace{flex:1}
+.ibtn{width:38px;height:38px;border-radius:12px;background:var(--bg2);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--tx2);flex:none}
+.ibtn:active{transform:scale(.95)}
+.progress{height:4px;background:#020617}
+.progress div{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));width:0;transition:width .3s}
+
+/* CONTROLES */
+.controls{max-width:1200px;margin:0 auto;padding:10px 10px 4px;display:flex;flex-direction:column;gap:8px}
+.row{display:flex;gap:6px;align-items:center}
+.search{position:relative;flex:1}
+.search svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--tx4)}
+.search input{width:100%;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:10px 34px 10px 36px;font-size:15px;outline:none}
+.search input:focus{border-color:var(--accent)}
+.search .clear{position:absolute;right:6px;top:50%;transform:translateY(-50%);color:var(--tx3);padding:6px}
+select.sel{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:9px 8px;font-size:14px;color:var(--tx2);outline:none;min-width:0}
+.row .sel{flex:1}
+.chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{white-space:nowrap;padding:7px 12px;border-radius:999px;background:var(--bg2);border:1px solid var(--line);font-size:13px;color:var(--tx2);display:flex;align-items:center;gap:5px}
+.chip.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.chip.trade.on{background:#b45309;border-color:#d97706}
+.chip-sep{width:1px;background:var(--line);flex:none;margin:4px 2px}
+.summary{max-width:1200px;margin:0 auto;padding:6px 12px;display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px;color:var(--tx3)}
+.summary b{color:var(--tx)}
+.summary .acts{display:flex;gap:6px}
+.sbtn{display:flex;align-items:center;gap:5px;padding:6px 10px;border-radius:10px;background:var(--bg2);border:1px solid var(--line);font-size:12px;color:var(--tx2)}
+.sbtn svg{width:15px;height:15px}
+
+/* REJILLA */
+main{max-width:1200px;margin:0 auto;padding:4px 8px}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+@media(min-width:560px){.grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(min-width:820px){.grid{grid-template-columns:repeat(6,minmax(0,1fr))}}
+@media(max-width:350px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.card{position:relative;background:var(--bg2);border:1.5px solid var(--line);border-radius:var(--r);padding:6px 6px 8px;cursor:pointer;content-visibility:auto;contain-intrinsic-size:auto 170px;user-select:none;-webkit-user-select:none}
+.card:active{transform:scale(.98)}
+.card.c{border-color:rgba(16,185,129,.7);background:linear-gradient(180deg,rgba(16,185,129,.10),var(--bg2) 60%)}
+.ctop{display:flex;justify-content:space-between;align-items:center}
+.num{font-size:10px;font-family:ui-monospace,monospace;color:var(--tx3);font-weight:700}
+.chk{width:30px;height:30px;margin:-4px -4px 0 0;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.chk span{width:22px;height:22px;border-radius:50%;border:2px solid var(--line2);display:flex;align-items:center;justify-content:center}
+.card.c .chk span{background:var(--ok);border-color:var(--ok);color:#022c22}
+.chk svg{width:14px;height:14px;stroke-width:3}
+.card .art{aspect-ratio:1;display:flex;align-items:center;justify-content:center}
+.card img{width:88%;height:88%;object-fit:contain;filter:drop-shadow(0 3px 4px rgba(0,0,0,.4))}
+.card:not(.c) img{opacity:.55;filter:grayscale(.35)}
+.cname{font-weight:700;font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
+.ctypes{display:flex;gap:3px;margin-top:4px;flex-wrap:wrap}
+.tp{font-size:9.5px;padding:2px 6px;border-radius:6px;color:#fff;font-weight:600;text-shadow:0 1px 1px rgba(0,0,0,.35)}
+.badges{position:absolute;top:30px;right:6px;display:flex;flex-direction:column;gap:2px;font-size:13px;line-height:1}
+.fbadge{position:absolute;left:6px;top:24px;font-size:9px;color:var(--tx3);background:rgba(2,6,23,.6);padding:1px 5px;border-radius:6px}
+.fbadge.full{color:#6ee7b7}
+.empty{text-align:center;color:var(--tx3);padding:60px 10px}
+.loading{text-align:center;color:var(--tx3);padding:80px 10px}
+.spin{width:30px;height:30px;border:4px solid var(--accent);border-top-color:transparent;border-radius:50%;animation:sp 1s linear infinite;margin:0 auto 12px}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+/* MODALES / HOJAS */
+.overlay{position:fixed;inset:0;z-index:60;background:rgba(2,6,23,.75);backdrop-filter:blur(3px);display:flex;align-items:flex-end;justify-content:center}
+@media(min-width:700px){.overlay{align-items:center;padding:20px}}
+.sheet{background:var(--bg2);border:1px solid var(--line);border-radius:20px 20px 0 0;width:100%;max-width:560px;max-height:92vh;display:flex;flex-direction:column;animation:up .2s ease-out}
+@media(min-width:700px){.sheet{border-radius:20px}}
+@keyframes up{from{transform:translateY(30px);opacity:.5}}
+.sh-head{display:flex;align-items:center;gap:8px;padding:12px 14px;border-bottom:1px solid var(--line)}
+.sh-head h3{margin:0;font-size:16px;flex:1}
+.sh-body{overflow-y:auto;padding:14px;padding-bottom:calc(18px + var(--safe-b));display:flex;flex-direction:column;gap:14px}
+.sec-t{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--tx3);font-weight:700;margin:0 0 8px}
+.box{background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:12px}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;padding:11px 14px;border-radius:12px;background:var(--bg3);color:var(--tx);font-weight:600;font-size:14px;width:100%}
+.btn.pri{background:var(--accent);color:#fff}
+.btn.danger{background:rgba(244,63,94,.12);color:#fda4af;border:1px solid rgba(244,63,94,.35)}
+.btn2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.muted{color:var(--tx3);font-size:13px;line-height:1.45;margin:0}
+
+/* FICHA */
+.dt-hero{position:relative;text-align:center;background:radial-gradient(circle at 50% 45%,var(--accentbg),transparent 65%);border-radius:16px;padding:6px}
+.dt-hero img{width:min(62vw,240px);aspect-ratio:1;object-fit:contain;filter:drop-shadow(0 6px 10px rgba(0,0,0,.5))}
+.dt-sw{position:absolute;top:6px;right:6px;font-size:12px;padding:6px 10px;border-radius:999px;background:var(--bg);border:1px solid var(--line);color:var(--tx2)}
+.dt-sw.on{border-color:var(--shiny);color:var(--shiny)}
+.dt-name{text-align:center}
+.dt-name .n{font-size:24px;font-weight:800}
+.dt-name .m{font-size:12px;color:var(--tx3);margin-top:2px}
+.dt-types{display:flex;gap:6px;justify-content:center;margin-top:8px}
+.dt-types .tp{font-size:12px;padding:4px 10px;border-radius:8px}
+.marks{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.mk{display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 4px;border-radius:14px;background:var(--bg);border:1.5px solid var(--line);font-size:13px;font-weight:600;color:var(--tx3)}
+.mk .e{font-size:22px;filter:grayscale(1);opacity:.5}
+.mk.on .e{filter:none;opacity:1}
+.mk.on.c{border-color:var(--ok);color:#6ee7b7;background:var(--okbg)}
+.mk.on.s{border-color:var(--shiny);color:#fde047;background:rgba(250,204,21,.1)}
+.mk.on.l{border-color:var(--lucky);color:#fcd34d;background:rgba(245,158,11,.1)}
+.other{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--tx2)}
+.other .dot{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff}
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;text-align:center}
+.stats div{background:var(--bg2);border-radius:10px;padding:8px 2px}
+.stats b{display:block;font-size:16px}
+.stats span{font-size:10px;color:var(--tx3)}
+.evo{display:flex;align-items:center;gap:4px;overflow-x:auto;padding-bottom:4px}
+.evo-col{display:flex;flex-direction:column;gap:6px}
+.evo-arrow{color:var(--tx4);flex:none}
+.evo-it{display:flex;flex-direction:column;align-items:center;width:78px;padding:6px 2px;border-radius:12px;border:1.5px solid var(--line);background:var(--bg2);font-size:11px;text-align:center}
+.evo-it img{width:52px;height:52px;object-fit:contain}
+.evo-it.cur{border-color:var(--accent)}
+.evo-it.c{box-shadow:inset 0 0 0 1px rgba(16,185,129,.5)}
+.evo-it .x{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:74px}
+.forms{display:flex;flex-direction:column;gap:8px}
+.form{display:flex;align-items:center;gap:10px;padding:8px;border-radius:12px;background:var(--bg2);border:1.5px solid var(--line)}
+.form.c{border-color:rgba(16,185,129,.6)}
+.form img{width:56px;height:56px;object-fit:contain;flex:none}
+.form .fi{flex:1;min-width:0}
+.form .fl{font-weight:700;font-size:13px}
+.form .fc{font-size:10px;color:var(--tx3);text-transform:uppercase;letter-spacing:.05em}
+.form .ctypes{margin-top:3px}
+.fmk{display:flex;gap:4px}
+.fmk button{width:36px;height:36px;border-radius:10px;background:var(--bg);border:1.5px solid var(--line);font-size:16px;filter:grayscale(1);opacity:.55}
+.fmk button.on{filter:none;opacity:1}
+.fmk button.on.c{border-color:var(--ok);background:var(--okbg)}
+.fmk button.on.s{border-color:var(--shiny)}
+.fmk button.on.l{border-color:var(--lucky)}
+.fmk .ck{color:var(--ok);font-weight:900;font-size:15px}
+.navbtns{display:flex;gap:8px}
+
+/* COMPARADOR */
+.vs{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.vs .p{border-radius:12px;padding:10px;text-align:center}
+.vs .p.D{background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.35)}
+.vs .p.R{background:rgba(244,63,94,.12);border:1px solid rgba(244,63,94,.35)}
+.vs .big{font-size:24px;font-weight:900}
+.vs .sm{font-size:11px;color:var(--tx3)}
+.reg{display:flex;flex-direction:column;gap:6px}
+.reg-row{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:9px 10px}
+.reg-top{display:flex;justify-content:space-between;font-size:13px;font-weight:700;margin-bottom:6px}
+.reg-top span{font-weight:400;color:var(--tx3);font-size:11px}
+.bar{height:6px;border-radius:4px;background:var(--bg3);overflow:hidden;margin-top:3px}
+.bar div{height:100%}
+.reg-l{display:flex;justify-content:space-between;font-size:11px;color:var(--tx2);margin-top:5px}
+
+/* TOAST / BANNER */
+#toast{position:fixed;left:50%;bottom:calc(20px + var(--safe-b));transform:translateX(-50%);background:#0b1220;border:1px solid var(--line2);padding:10px 16px;border-radius:12px;font-size:13px;z-index:90;box-shadow:0 10px 30px rgba(0,0,0,.5);max-width:90vw;text-align:center}
+#offline{background:#78350f;color:#fde68a;font-size:12px;text-align:center;padding:5px 8px}
+</style>
+</head>
+<body>
+
+<!-- ICONOS -->
+<svg width="0" height="0" style="position:absolute">
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></symbol>
+  <symbol id="i-vs" viewBox="0 0 24 24"><path d="M8 3 4 7l4 4M4 7h16M16 21l4-4-4-4M20 17H4"/></symbol>
+  <symbol id="i-share" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></symbol>
+  <symbol id="i-checks" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="m8 12 3 3 5-6"/></symbol>
+  <symbol id="i-left" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></symbol>
+  <symbol id="i-right" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 3v12m-5-5 5 5 5-5M5 21h14"/></symbol>
+  <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 15V3m-5 5 5-5 5 5M5 21h14"/></symbol>
+  <symbol id="i-out" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="2"/><path d="M11 18h2"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/></symbol>
+</svg>
+
+<div id="offline" class="hidden">Sin conexión · tus cambios se guardan y se sincronizarán al volver</div>
+
+<!-- PANTALLA DE ACCESO -->
+<section id="login" class="hidden">
+  <div class="login-card">
+    <img src="icon-192.png" alt="">
+    <h1>Pokédex</h1>
+    <p>Dapica03 &amp; Rulotgar · Pokémon GO<br>Entra con tu cuenta de Google para ver y marcar tus capturas.</p>
+    <button class="gbtn" id="btnLogin">
+      <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="m6.3 14.7 6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>
+      Entrar con Google
+    </button>
+    <div id="loginErr" class="login-err hidden"></div>
+  </div>
+</section>
+
+<!-- APP -->
+<div id="app" class="hidden">
+  <header>
+    <div class="hrow">
+      <div class="me">
+        <div class="avatar" id="avatar">?</div>
+        <div class="me-txt">
+          <div class="me-name" id="meName">—</div>
+          <div class="me-sub" id="meSub">—</div>
+        </div>
+      </div>
+      <div class="hspace"></div>
+      <button class="ibtn" id="btnCompare" title="Comparar"><svg class="i"><use href="#i-vs"/></svg></button>
+      <button class="ibtn" id="btnSettings" title="Ajustes"><svg class="i"><use href="#i-gear"/></svg></button>
+    </div>
+    <div class="progress"><div id="progBar"></div></div>
+  </header>
+
+  <section class="controls">
+    <div class="row">
+      <div class="search">
+        <svg class="i"><use href="#i-search"/></svg>
+        <input id="q" type="search" inputmode="search" autocomplete="off" placeholder="Nombre o número (ej. Pikachu, 25)">
+        <button class="clear hidden" id="qClear" aria-label="Borrar"><svg class="i"><use href="#i-x"/></svg></button>
+      </div>
+    </div>
+    <div class="row">
+      <select class="sel" id="fRegion"></select>
+      <select class="sel" id="fType"></select>
+      <select class="sel" id="fSort">
+        <option value="num">N.º ↑</option>
+        <option value="numd">N.º ↓</option>
+        <option value="az">Nombre A-Z</option>
+        <option value="za">Nombre Z-A</option>
+      </select>
+    </div>
+    <div class="chips" id="chips">
+      <button class="chip" data-st="all">Todos</button>
+      <button class="chip" data-st="c">Tengo</button>
+      <button class="chip" data-st="m">Me faltan</button>
+      <button class="chip" data-st="s">✨ Shiny</button>
+      <button class="chip" data-st="l">🍀 Suerte</button>
+      <span class="chip-sep"></span>
+      <button class="chip trade" data-tr="give">🔄 <span id="trGive">Le faltan a …</span></button>
+      <button class="chip trade" data-tr="get">🎁 <span id="trGet">… tiene y yo no</span></button>
+    </div>
+  </section>
+
+  <div class="summary">
+    <div><b id="sumCount">0</b> <span id="sumLabel">Pokémon</span></div>
+    <div class="acts">
+      <button class="sbtn" id="btnShare"><svg class="i"><use href="#i-share"/></svg>Compartir</button>
+      <button class="sbtn" id="btnMarkAll"><svg class="i"><use href="#i-checks"/></svg><span id="markAllTxt">Marcar visibles</span></button>
+    </div>
+  </div>
+
+  <main>
+    <div id="loading" class="loading"><div class="spin"></div>Cargando Pokédex…</div>
+    <div id="grid" class="grid"></div>
+    <div id="empty" class="empty hidden">No hay Pokémon con estos filtros.</div>
+  </main>
+</div>
+
+<!-- FICHA -->
+<div id="dlg" class="overlay hidden"></div>
+<div id="toast" class="hidden"></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<script>
+'use strict';
+const APP_VERSION = '2.0.0';
+const DATA_VERSION = '2026-11-12';
+
+/* ================= CONFIGURACIÓN ================= */
+const firebaseConfig = {
+  apiKey: "AIzaSyCa5pYC5l6K_4yiKUfW5fP-m1LTy-B8Ma4",
+  authDomain: "pokedex-43619.firebaseapp.com",
+  projectId: "pokedex-43619",
+  storageBucket: "pokedex-43619.firebasestorage.app",
+  messagingSenderId: "1004730802457",
+  appId: "1:1004730802457:web:4f62bc894dbbaabb45e588"
+};
+// Si la app se abre desde el propio dominio de Firebase, el inicio de sesión usa ese mismo dominio
+if (/\.(web\.app|firebaseapp\.com)$/.test(location.hostname)) firebaseConfig.authDomain = location.hostname;
+
+const ACCOUNTS = { 'f.dapica@gmail.com': 'Dapica03', 'lotyal95@gmail.com': 'Rulotgar' };
+const TRAINERS = ['Dapica03', 'Rulotgar'];
+const OTHER = { Dapica03: 'Rulotgar', Rulotgar: 'Dapica03' };
+
+const REGIONS = [
+  ['kanto','Kanto',1,151],['johto','Johto',152,251],['hoenn','Hoenn',252,386],['sinnoh','Sinnoh',387,493],
+  ['unova','Teselia',494,649],['kalos','Kalos',650,721],['alola','Alola',722,809],['galar','Galar',810,898],
+  ['hisui','Hisui',899,905],['paldea','Paldea',906,1025]
+];
+const TYPES = [
+  ['Normal','#9099a1'],['Lucha','#ce4069'],['Volador','#8fa8dd'],['Veneno','#ab6ac8'],['Tierra','#d97746'],['Roca','#c5b78c'],
+  ['Bicho','#90c12c'],['Fantasma','#5269ac'],['Acero','#5a8ea1'],['Fuego','#ff9c54'],['Agua','#4d90d5'],['Planta','#63bb5b'],
+  ['Eléctrico','#e5c531'],['Psíquico','#f97176'],['Hielo','#74cec0'],['Dragón','#0a6dc4'],['Siniestro','#5a5366'],['Hada','#ec8fe6']
+];
+const FORM_CAT = { r: 'Regional', o: 'Forma', m: 'Mega', g: 'Gigamax' };
+const FORM_ORDER = { r: 0, o: 1, m: 2, g: 3 };
+const FORM_LABELS = {
+  alola:'Forma de Alola', galar:'Forma de Galar', 'galar-standard':'Forma de Galar', hisui:'Forma de Hisui', paldea:'Forma de Paldea',
+  'paldea-combat-breed':'Paldea · Raza Combatiente', 'paldea-blaze-breed':'Paldea · Raza Ardiente', 'paldea-aqua-breed':'Paldea · Raza Acuática',
+  origin:'Forma Origen', 'white-striped':'Forma Raya Blanca', 'blue-striped':'Forma Raya Azul', female:'Hembra', therian:'Forma Tótem',
+  'blue-plumage':'Plumaje Azul', 'yellow-plumage':'Plumaje Amarillo', 'white-plumage':'Plumaje Blanco',
+  droopy:'Forma Lánguida', stretchy:'Forma Estirada', roaming:'Forma Andante', primal:'Regresión Primigenia'
+};
+const ART = (pid, shiny) => `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${shiny ? 'shiny/' : ''}${pid}.png`;
+
+/* ================= UTILIDADES ================= */
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const norm = s => String(s).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+const pad = n => '#' + String(n).padStart(4, '0');
+const store = {
+  get(k, d) { try { const v = localStorage.getItem('pdx_' + k); return v === null ? d : JSON.parse(v); } catch { return d; } },
+  set(k, v) { try { localStorage.setItem('pdx_' + k, JSON.stringify(v)); } catch {} }
+};
+let toastT;
+function toast(msg, ms = 2200) {
+  const t = $('#toast'); t.textContent = msg; t.classList.remove('hidden');
+  clearTimeout(toastT); toastT = setTimeout(() => t.classList.add('hidden'), ms);
+}
+const typeTag = i => `<span class="tp" style="background:${TYPES[i][1]}">${TYPES[i][0]}</span>`;
+const icon = (id, cls = 'i') => `<svg class="${cls}"><use href="#i-${id}"/></svg>`;
+
+/* ================= DATOS POKÉMON ================= */
+let SPECIES = [], BY_ID = new Map(), BY_KEY = new Map(), FORMS = [];
+const regionOf = id => (REGIONS.find(r => id >= r[2] && id <= r[3]) || REGIONS[9])[0];
+
+async function loadData() {
+  const r = await fetch('pokedex-data.json?v=' + DATA_VERSION);
+  if (!r.ok) throw new Error('No se pudieron cargar los datos');
+  const d = await r.json();
+  const tps = t => [...t].map(c => parseInt(c, 36));
+  SPECIES = d.P.map(([id, name, t, gen, chain, from, st]) => ({
+    id, key: String(id), name, n: norm(name), types: tps(t), gen, chain, from, st, region: regionOf(id), forms: []
+  }));
+  SPECIES.forEach(s => { BY_ID.set(s.id, s); BY_KEY.set(s.key, s); });
+  d.F.forEach(([sid, pid, cat, suf, n, t, st]) => {
+    const s = BY_ID.get(sid); if (!s) return;
+    let label;
+    if (cat === 'g') label = 'Gigamax';
+    else if (cat === 'm') label = n || ('Mega-' + s.name + (/-(x|y)$/.test(suf) ? ' ' + suf.slice(-1).toUpperCase() : ''));
+    else label = FORM_LABELS[suf] || n || suf.replace(/-/g, ' ');
+    const f = { key: 'f' + pid, pid, sid, cat, label, types: tps(t), st, sp: s };
+    s.forms.push(f); FORMS.push(f); BY_KEY.set(f.key, f);
+  });
+  SPECIES.forEach(s => s.forms.sort((a, b) => FORM_ORDER[a.cat] - FORM_ORDER[b.cat] || a.pid - b.pid));
+}
+
+/* Estadísticas de Pokémon GO estimadas con la fórmula oficial a partir de las estadísticas base */
+function goStats(b) {
+  const [hp, at, df, sa, sd, spe] = b;
+  const sm = 1 + (spe - 75) / 500;
+  let A = Math.round(Math.round(2 * (0.875 * Math.max(at, sa) + 0.125 * Math.min(at, sa))) * sm);
+  let D = Math.round(Math.round(2 * (0.875 * Math.max(df, sd) + 0.125 * Math.min(df, sd))) * sm);
+  let S = hp === 1 ? 1 : Math.floor(hp * 1.75 + 50);
+  const cp = (m) => Math.max(10, Math.floor((A + 15) * Math.sqrt(D + 15) * Math.sqrt(S + 15) * m * m / 10));
+  if (cp(0.7903) > 4000) { A = Math.round(A * 0.91); D = Math.round(D * 0.91); S = Math.round(S * 0.91); }
+  return { A, D, S, cp40: cp(0.7903), cp50: cp(0.84029999) };
+}
+
+/* ================= ESTADO ================= */
+const emptyDex = () => ({ caught: {}, shiny: {}, lucky: {} });
+const state = {
+  me: null, other: null,
+  dex: { Dapica03: emptyDex(), Rulotgar: emptyDex() },
+  region: store.get('region', 'all'), type: store.get('type', 'all'), sort: store.get('sort', 'num'),
+  status: 'all', trade: null, q: '',
+  list: [], detail: null, detailShiny: false
+};
+const has = (t, field, key) => !!state.dex[t][field][key];
+
+/* ================= FIREBASE ================= */
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+db.enablePersistence({ synchronizeTabs: true }).catch(() => {});
+const FV = firebase.firestore.FieldValue;
+const docRef = t => db.collection('pokedex').doc(t);
+let unsubs = [];
+
+function writeMarks(changes) {
+  // changes: { caught: {key: bool}, shiny: {...}, lucky: {...} }
+  const me = state.me, payload = { updatedAt: FV.serverTimestamp() };
+  for (const field of ['caught', 'shiny', 'lucky']) {
+    const ch = changes[field]; if (!ch) continue;
+    payload[field] = {};
+    for (const [k, v] of Object.entries(ch)) {
+      if (v) state.dex[me][field][k] = true; else delete state.dex[me][field][k];
+      payload[field][k] = v ? true : FV.delete();
+    }
+  }
+  docRef(me).set(payload, { merge: true }).catch(e => { console.error(e); toast('⚠️ No se pudo guardar: ' + (e.code || e.message)); });
+}
+
+function setMark(field, key, val) {
+  const ch = { [field]: { [key]: val } };
+  if (val && field !== 'caught') ch.caught = { [key]: true };              // shiny / suerte implica tenerlo
+  if (!val && field === 'caught') { ch.shiny = { [key]: false }; ch.lucky = { [key]: false }; }
+  writeMarks(ch);
+  scheduleRender();
+}
+
+function normalizeDoc(d) {
+  const x = emptyDex();
+  if (d) for (const f of ['caught', 'shiny', 'lucky']) if (d[f] && typeof d[f] === 'object') for (const [k, v] of Object.entries(d[f])) if (v) x[f][k] = true;
+  return x;
+}
+
+function subscribe() {
+  unsubs.forEach(u => u()); unsubs = [];
+  TRAINERS.forEach(t => {
+    let checked = false;
+    unsubs.push(docRef(t).onSnapshot({ includeMetadataChanges: true }, snap => {
+      if (!checked && t === state.me && !snap.metadata.fromCache) {
+        checked = true;
+        if (!snap.exists) migrateIfNeeded();
+      }
+      state.dex[t] = normalizeDoc(snap.data());
+      scheduleRender();
+    }, err => { console.error(err); toast('⚠️ Error de sincronización: ' + (err.code || err.message), 4000); }));
+  });
+}
+
+async function migrateIfNeeded() {
+  // Primera vez: recupera el progreso de la versión antigua (solo si existe copia preparada)
+  try {
+    const r = await fetch('migracion-' + state.me + '.json', { cache: 'no-store' });
+    if (!r.ok) return;
+    const data = await r.json();
+    applyImport(data, true);
+    toast('✅ Progreso anterior recuperado (' + Object.keys(data.caught || {}).length + ' capturas)', 4000);
+  } catch {}
+}
+
+/* ---------- Inicio de sesión ---------- */
+const isStandalone = () => matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+$('#btnLogin').onclick = async () => {
+  const provider = new firebase.auth.GoogleAuthProvider();
+  provider.setCustomParameters({ prompt: 'select_account' });
+  $('#loginErr').classList.add('hidden');
+  try {
+    await auth.signInWithPopup(provider); // ventana emergente: funciona aunque la app esté en otro dominio
+  } catch (e) {
+    if (['auth/popup-blocked', 'auth/operation-not-supported-in-this-environment', 'auth/cancelled-popup-request'].includes(e.code)) {
+      return auth.signInWithRedirect(provider);
+    }
+    if (e.code !== 'auth/popup-closed-by-user') showLoginErr(e);
+  }
+};
+auth.getRedirectResult().catch(showLoginErr);
+function showLoginErr(e) {
+  const el = $('#loginErr'); el.textContent = 'No se pudo iniciar sesión: ' + (e.code || e.message); el.classList.remove('hidden');
+}
+
+auth.onAuthStateChanged(async user => {
+  if (!user) {
+    unsubs.forEach(u => u()); unsubs = [];
+    $('#app').classList.add('hidden'); $('#login').classList.remove('hidden');
+    return;
+  }
+  const trainer = ACCOUNTS[(user.email || '').toLowerCase()];
+  if (!trainer) {
+    showLoginErr({ message: `la cuenta ${user.email} no tiene acceso a esta Pokédex.` });
+    await auth.signOut();
+    return;
+  }
+  state.me = trainer; state.other = OTHER[trainer];
+  document.body.className = 't-' + trainer;
+  $('#login').classList.add('hidden'); $('#app').classList.remove('hidden');
+  $('#avatar').textContent = trainer[0];
+  $('#meName').textContent = trainer;
+  $('#trGive').textContent = `Le faltan a ${state.other}`;
+  $('#trGet').textContent = `${state.other} tiene y yo no`;
+  subscribe();
+  scheduleRender();
+});
+
+/* ================= FILTROS Y LISTA ================= */
+function buildControls() {
+  const reg = $('#fRegion');
+  reg.innerHTML = `<option value="all">🌐 Todas las regiones</option>` +
+    REGIONS.map(r => `<option value="${r[0]}">${r[1]} (${r[2]}-${r[3]})</option>`).join('') +
+    `<option value="forms">✨ Con formas alternativas</option>`;
+  reg.value = state.region;
+  $('#fType').innerHTML = `<option value="all">Todos los tipos</option>` + TYPES.map((t, i) => `<option value="${i}">${t[0]}</option>`).join('');
+  $('#fType').value = state.type;
+  $('#fSort').value = state.sort;
+  reg.onchange = e => { state.region = e.target.value; store.set('region', state.region); render(); scrollTo({ top: 0, behavior: 'smooth' }); };
+  $('#fType').onchange = e => { state.type = e.target.value; store.set('type', state.type); render(); };
+  $('#fSort').onchange = e => { state.sort = e.target.value; store.set('sort', state.sort); render(); };
+  let qt;
+  $('#q').oninput = e => {
+    $('#qClear').classList.toggle('hidden', !e.target.value);
+    clearTimeout(qt); qt = setTimeout(() => { state.q = e.target.value; render(); }, 140);
+  };
+  $('#qClear').onclick = () => { $('#q').value = ''; state.q = ''; $('#qClear').classList.add('hidden'); render(); };
+  $('#chips').onclick = e => {
+    const b = e.target.closest('.chip'); if (!b) return;
+    if (b.dataset.st) state.status = b.dataset.st;
+    if (b.dataset.tr) state.trade = state.trade === b.dataset.tr ? null : b.dataset.tr;
+    render();
+  };
+}
+
+function inRegion(s) {
+  if (state.region === 'all') return true;
+  if (state.region === 'forms') return s.forms.length > 0;
+  return s.region === state.region;
+}
+
+function filtered() {
+  const me = state.me, ot = state.other;
+  let q = norm(state.q.trim()).replace(/^#/, '');
+  const qNum = /^\d+$/.test(q) ? String(parseInt(q, 10)) : null;
+  const qExact = qNum && (/^\s*#/.test(state.q) || /^0/.test(q)); // "#6" o "0006" = número exacto
+  const type = state.type === 'all' ? null : +state.type;
+  const out = SPECIES.filter(s => {
+    if (!inRegion(s)) return false;
+    if (q) {
+      if (qNum) { if (qExact ? s.key !== qNum : !s.key.startsWith(qNum)) return false; }
+      else if (!s.n.includes(q)) return false;
+    }
+    if (type !== null && !s.types.includes(type)) return false;
+    const c = has(me, 'caught', s.key);
+    switch (state.status) {
+      case 'c': if (!c) return false; break;
+      case 'm': if (c) return false; break;
+      case 's': if (!has(me, 'shiny', s.key)) return false; break;
+      case 'l': if (!has(me, 'lucky', s.key)) return false; break;
+    }
+    if (state.trade === 'give' && (!c || has(ot, 'caught', s.key))) return false;
+    if (state.trade === 'get' && (c || !has(ot, 'caught', s.key))) return false;
+    return true;
+  });
+  const coll = new Intl.Collator('es');
+  if (state.sort === 'numd') out.reverse();
+  else if (state.sort === 'az') out.sort((a, b) => coll.compare(a.name, b.name));
+  else if (state.sort === 'za') out.sort((a, b) => coll.compare(b.name, a.name));
+  return out;
+}
+
+function cardHTML(s) {
+  const me = state.me, c = has(me, 'caught', s.key);
+  const sh = has(me, 'shiny', s.key), lk = has(me, 'lucky', s.key);
+  let fb = '';
+  if (s.forms.length) {
+    const fc = s.forms.filter(f => has(me, 'caught', f.key)).length;
+    fb = `<span class="fbadge ${fc === s.forms.length ? 'full' : ''}">+${s.forms.length} · ${fc}✓</span>`;
+  }
+  return `<div class="card ${c ? 'c' : ''}" data-k="${s.key}">
+    <div class="ctop"><span class="num">${pad(s.id)}</span><button class="chk" aria-label="Marcar"><span>${c ? icon('check') : ''}</span></button></div>
+    ${fb}<div class="badges">${sh ? '✨' : ''}${lk ? '🍀' : ''}</div>
+    <div class="art"><img loading="lazy" decoding="async" alt="" src="${ART(s.id)}"></div>
+    <div class="cname">${esc(s.name)}</div>
+    <div class="ctypes">${s.types.map(typeTag).join('')}</div>
+  </div>`;
+}
+
+let renderQueued = false;
+function scheduleRender() {
+  if (renderQueued) return; renderQueued = true;
+  requestAnimationFrame(() => { renderQueued = false; render(); });
+}
+
+function render() {
+  if (!state.me || !SPECIES.length) return;
+  $('#loading').classList.add('hidden');
+  const list = state.list = filtered();
+  $('#grid').innerHTML = list.map(cardHTML).join('');
+  $('#empty').classList.toggle('hidden', list.length > 0);
+  // chips
+  document.querySelectorAll('#chips .chip').forEach(b => {
+    b.classList.toggle('on', b.dataset.st ? b.dataset.st === state.status : b.dataset.tr === state.trade);
+  });
+  $('#sumCount').textContent = list.length;
+  $('#sumLabel').textContent = list.length === 1 ? 'Pokémon' : 'Pokémon';
+  const allC = list.length && list.every(s => has(state.me, 'caught', s.key));
+  $('#markAllTxt').textContent = allC ? 'Desmarcar visibles' : 'Marcar visibles';
+  updateHeader();
+  if (state.detail) renderDetail();
+  if (currentDlg === 'compare') renderCompare();
+}
+
+function updateHeader() {
+  const me = state.me;
+  const pool = SPECIES.filter(s => state.region === 'all' || state.region === 'forms' || s.region === state.region);
+  const c = pool.filter(s => has(me, 'caught', s.key)).length;
+  const sh = Object.keys(state.dex[me].shiny).length, lk = Object.keys(state.dex[me].lucky).length;
+  const pct = pool.length ? Math.round(c / pool.length * 100) : 0;
+  const regName = state.region === 'all' || state.region === 'forms' ? 'Total' : REGIONS.find(r => r[0] === state.region)[1];
+  $('#meSub').textContent = `${regName}: ${c}/${pool.length} (${pct}%) · ✨${sh} · 🍀${lk}`;
+  $('#progBar').style.width = pct + '%';
+}
+
+/* ---------- Clic en la rejilla ---------- */
+$('#grid').addEventListener('click', e => {
+  const card = e.target.closest('.card'); if (!card) return;
+  const k = card.dataset.k;
+  if (e.target.closest('.chk')) { setMark('caught', k, !has(state.me, 'caught', k)); if (navigator.vibrate) navigator.vibrate(12); }
+  else openDetail(k);
+});
+
+$('#btnMarkAll').onclick = () => {
+  const list = state.list; if (!list.length) return;
+  const allC = list.every(s => has(state.me, 'caught', s.key));
+  if (list.length > 15 && !confirm(`¿${allC ? 'Desmarcar' : 'Marcar como capturados'} ${list.length} Pokémon?`)) return;
+  const ch = { caught: {} };
+  if (allC) { ch.shiny = {}; ch.lucky = {}; }
+  list.forEach(s => { ch.caught[s.key] = !allC; if (allC) { ch.shiny[s.key] = false; ch.lucky[s.key] = false; } });
+  writeMarks(ch); render();
+};
+
+/* ---------- Compartir lista ---------- */
+$('#btnShare').onclick = async () => {
+  const list = state.list; if (!list.length) return toast('No hay nada que compartir');
+  const parts = [];
+  if (state.trade === 'give') parts.push(`Tengo y le faltan a ${state.other}`);
+  else if (state.trade === 'get') parts.push(`${state.other} tiene y a mí me faltan`);
+  else parts.push({ all: 'Pokédex', c: 'Tengo', m: 'Me faltan', s: 'Mis shiny', l: 'Mis Pokémon con suerte' }[state.status]);
+  if (state.region !== 'all') parts.push($('#fRegion').selectedOptions[0].textContent.replace(/\s*\(.*\)/, ''));
+  if (state.type !== 'all') parts.push('tipo ' + TYPES[state.type][0]);
+  const title = `📋 ${parts.join(' · ')} (${list.length})`;
+  const lines = list.map(s => `${pad(s.id)} ${s.name}${has(state.me, 'shiny', s.key) ? ' ✨' : ''}${has(state.me, 'lucky', s.key) ? ' 🍀' : ''}`);
+  const text = `${title}\n— ${state.me}\n\n${lines.join('\n')}`;
+  if (navigator.share) { try { await navigator.share({ text }); return; } catch (e) { if (e.name === 'AbortError') return; } }
+  try { await navigator.clipboard.writeText(text); toast('Lista copiada'); } catch {}
+  window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank');
+};
+
+/* ================= DIÁLOGOS ================= */
+let currentDlg = null;
+function openDlg(name, html) {
+  currentDlg = name;
+  const d = $('#dlg'); d.innerHTML = html; d.classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+  if (history.state?.dlg !== name) history.pushState({ dlg: name }, '');
+}
+function closeDlg(fromPop) {
+  if (!currentDlg) return;
+  currentDlg = null; state.detail = null;
+  $('#dlg').classList.add('hidden'); $('#dlg').innerHTML = '';
+  document.body.style.overflow = '';
+  if (!fromPop && history.state?.dlg) history.back();
+}
+window.addEventListener('popstate', () => closeDlg(true));
+$('#dlg').addEventListener('click', e => { if (e.target.id === 'dlg' || e.target.closest('[data-close]')) closeDlg(); });
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeDlg();
+  if (state.detail && (e.key === 'ArrowRight' || e.key === 'ArrowLeft')) stepDetail(e.key === 'ArrowRight' ? 1 : -1);
+});
+
+/* ---------- Ficha de detalle ---------- */
+function openDetail(key) {
+  state.detail = key; state.detailShiny = false;
+  openDlg('detail', '<div class="sheet" id="sheet"></div>');
+  renderDetail();
+  $('#sheet .sh-body')?.scrollTo(0, 0);
+}
+function stepDetail(dir) {
+  const L = state.list.length ? state.list : SPECIES;
+  let i = L.findIndex(s => s.key === state.detail);
+  if (i < 0) i = 0; else i = (i + dir + L.length) % L.length;
+  state.detail = L[i].key; state.detailShiny = false; renderDetail();
+  $('#sheet .sh-body')?.scrollTo(0, 0);
+}
+
+function markBtns(key, me) {
+  const c = has(me, 'caught', key), s = has(me, 'shiny', key), l = has(me, 'lucky', key);
+  return `<div class="marks">
+    <button class="mk c ${c ? 'on' : ''}" data-mark="caught" data-key="${key}"><span class="e">✅</span>${c ? 'Lo tengo' : 'No lo tengo'}</button>
+    <button class="mk s ${s ? 'on' : ''}" data-mark="shiny" data-key="${key}"><span class="e">✨</span>Shiny</button>
+    <button class="mk l ${l ? 'on' : ''}" data-mark="lucky" data-key="${key}"><span class="e">🍀</span>Suerte</button>
+  </div>`;
+}
+
+function otherLine(key) {
+  const ot = state.other, c = has(ot, 'caught', key);
+  const bg = ot === 'Dapica03' ? '#2563eb' : '#e11d48';
+  const extra = [has(ot, 'shiny', key) && '✨ shiny', has(ot, 'lucky', key) && '🍀 suerte'].filter(Boolean).join(' · ');
+  return `<div class="other"><span class="dot" style="background:${bg}">${ot[0]}</span>${ot}: ${c ? '<b style="color:#6ee7b7">lo tiene</b>' : '<span style="color:var(--tx3)">no lo tiene</span>'}${extra ? ' · ' + extra : ''}</div>`;
+}
+
+function familyHTML(s) {
+  const fam = SPECIES.filter(x => x.chain === s.chain);
+  if (fam.length < 2) return '';
+  const ids = new Set(fam.map(x => x.id));
+  const depth = x => (x.from && ids.has(x.from)) ? depth(BY_ID.get(x.from)) + 1 : 0;
+  const cols = [];
+  fam.forEach(x => { const d = depth(x); (cols[d] = cols[d] || []).push(x); });
+  const me = state.me;
+  return `<div><p class="sec-t">Familia evolutiva</p><div class="evo">` + cols.map((col, i) =>
+    (i ? `<span class="evo-arrow">${icon('right')}</span>` : '') +
+    `<div class="evo-col">${col.map(x => `<button class="evo-it ${x.id === s.id ? 'cur' : ''} ${has(me, 'caught', x.key) ? 'c' : ''}" data-go="${x.key}">
+      <img loading="lazy" src="${ART(x.id)}" alt=""><span class="x">${esc(x.name)}</span><span style="color:var(--tx4)">${has(me, 'caught', x.key) ? '✓' : pad(x.id)}</span></button>`).join('')}</div>`
+  ).join('') + `</div></div>`;
+}
+
+function formsHTML(s) {
+  if (!s.forms.length) return '';
+  const me = state.me;
+  const done = s.forms.filter(f => has(me, 'caught', f.key)).length;
+  return `<div><p class="sec-t">Formas (${done}/${s.forms.length})</p><div class="forms">` + s.forms.map(f => {
+    const c = has(me, 'caught', f.key), sh = has(me, 'shiny', f.key), lk = has(me, 'lucky', f.key);
+    const oc = has(state.other, 'caught', f.key);
+    return `<div class="form ${c ? 'c' : ''}">
+      <img loading="lazy" src="${ART(f.pid)}" alt="" onerror="this.src='${ART(s.id)}'">
+      <div class="fi"><div class="fc">${FORM_CAT[f.cat]}${oc ? ` · ${state.other[0]} ✓` : ''}</div><div class="fl">${esc(f.label)}</div><div class="ctypes">${f.types.map(typeTag).join('')}</div></div>
+      <div class="fmk">
+        <button class="c ${c ? 'on' : ''}" data-mark="caught" data-key="${f.key}" title="Lo tengo"><span class="ck">✓</span></button>
+        <button class="s ${sh ? 'on' : ''}" data-mark="shiny" data-key="${f.key}" title="Shiny">✨</button>
+        <button class="l ${lk ? 'on' : ''}" data-mark="lucky" data-key="${f.key}" title="Suerte">🍀</button>
+      </div></div>`;
+  }).join('') + `</div></div>`;
+}
+
+function renderDetail() {
+  const s = BY_KEY.get(state.detail); const el = $('#sheet'); if (!s || !el) return;
+  const prevScroll = el.querySelector('.sh-body')?.scrollTop || 0;
+  const g = goStats(s.st);
+  const reg = REGIONS.find(r => r[0] === s.region)[1];
+  el.innerHTML = `
+    <div class="sh-head">
+      <button class="ibtn" data-step="-1" aria-label="Anterior">${icon('left')}</button>
+      <h3 style="text-align:center">${pad(s.id)}</h3>
+      <button class="ibtn" data-step="1" aria-label="Siguiente">${icon('right')}</button>
+      <button class="ibtn" data-close aria-label="Cerrar">${icon('x')}</button>
+    </div>
+    <div class="sh-body">
+      <div class="dt-hero">
+        <img src="${ART(s.id, state.detailShiny)}" alt="${esc(s.name)}">
+        <button class="dt-sw ${state.detailShiny ? 'on' : ''}" data-shinyview>✨ ${state.detailShiny ? 'Viendo shiny' : 'Ver shiny'}</button>
+      </div>
+      <div class="dt-name"><div class="n">${esc(s.name)}</div><div class="m">${reg} · Generación ${s.gen}</div>
+        <div class="dt-types">${s.types.map(typeTag).join('')}</div></div>
+      ${markBtns(s.key, state.me)}
+      ${otherLine(s.key)}
+      <div><p class="sec-t">Estadísticas en GO (estimadas)</p>
+        <div class="box" style="padding:8px"><div class="stats">
+          <div><b>${g.A}</b><span>Ataque</span></div><div><b>${g.D}</b><span>Defensa</span></div><div><b>${g.S}</b><span>PS</span></div>
+          <div><b>${g.cp40}</b><span>PC máx. 40</span></div><div><b>${g.cp50}</b><span>PC máx. 50</span></div>
+        </div></div></div>
+      ${formsHTML(s)}
+      ${familyHTML(s)}
+    </div>`;
+  el.querySelector('.sh-body').scrollTop = prevScroll;
+}
+
+$('#dlg').addEventListener('click', e => {
+  const mk = e.target.closest('[data-mark]');
+  if (mk) { const { mark, key } = mk.dataset; setMark(mark, key, !has(state.me, mark, key)); if (navigator.vibrate) navigator.vibrate(12); return; }
+  const st = e.target.closest('[data-step]'); if (st) return stepDetail(+st.dataset.step);
+  const go = e.target.closest('[data-go]'); if (go) { state.detail = go.dataset.go; state.detailShiny = false; renderDetail(); $('#sheet .sh-body').scrollTo(0, 0); return; }
+  if (e.target.closest('[data-shinyview]')) { state.detailShiny = !state.detailShiny; renderDetail(); }
+});
+
+/* Deslizar a los lados en la ficha para pasar de Pokémon */
+let tx0 = null, ty0 = null;
+$('#dlg').addEventListener('touchstart', e => { if (state.detail) { tx0 = e.touches[0].clientX; ty0 = e.touches[0].clientY; } }, { passive: true });
+$('#dlg').addEventListener('touchend', e => {
+  if (tx0 === null || !state.detail) return;
+  const dx = e.changedTouches[0].clientX - tx0, dy = e.changedTouches[0].clientY - ty0; tx0 = null;
+  if (Math.abs(dx) > 70 && Math.abs(dx) > Math.abs(dy) * 1.8 && !e.target.closest('.evo')) stepDetail(dx < 0 ? 1 : -1);
+}, { passive: true });
+
+/* ---------- Comparador ---------- */
+$('#btnCompare').onclick = () => { openDlg('compare', '<div class="sheet" id="cmp"></div>'); renderCompare(); };
+function renderCompare() {
+  const el = $('#cmp'); if (!el) return;
+  const cnt = (t, f, pool) => pool.filter(x => has(t, f, x.key)).length;
+  const tot = SPECIES.length;
+  const D = 'Dapica03', R = 'Rulotgar';
+  const head = t => `<div class="p ${t[0]}"><div style="font-weight:700;color:${t === D ? '#93c5fd' : '#fda4af'}">${t}</div>
+    <div class="big">${cnt(t, 'caught', SPECIES)}</div><div class="sm">${Math.round(cnt(t, 'caught', SPECIES) / tot * 100)}% de ${tot}</div>
+    <div class="sm" style="margin-top:4px">✨ ${Object.keys(state.dex[t].shiny).length} · 🍀 ${Object.keys(state.dex[t].lucky).length} · Formas ${cnt(t, 'caught', FORMS)}/${FORMS.length}</div></div>`;
+  const rows = REGIONS.map(([k, name, a, b]) => {
+    const pool = SPECIES.filter(s => s.region === k), n = pool.length;
+    const cd = cnt(D, 'caught', pool), cr = cnt(R, 'caught', pool);
+    return `<div class="reg-row"><div class="reg-top">${name}<span>${n} Pokémon</span></div>
+      <div class="bar"><div style="width:${cd / n * 100}%;background:#3b82f6"></div></div>
+      <div class="bar"><div style="width:${cr / n * 100}%;background:#f43f5e"></div></div>
+      <div class="reg-l"><span style="color:#93c5fd">Dapica03 ${cd}</span><span style="color:#fda4af">Rulotgar ${cr}</span></div></div>`;
+  }).join('');
+  const give = SPECIES.filter(s => has(state.me, 'caught', s.key) && !has(state.other, 'caught', s.key)).length;
+  const get = SPECIES.filter(s => !has(state.me, 'caught', s.key) && has(state.other, 'caught', s.key)).length;
+  el.innerHTML = `<div class="sh-head"><h3>Dapica03 vs Rulotgar</h3><button class="ibtn" data-close>${icon('x')}</button></div>
+    <div class="sh-body">
+      <div class="vs">${head(D)}${head(R)}</div>
+      <div class="box"><p class="muted">🔄 Puedes conseguirle <b style="color:var(--tx)">${give}</b> a ${state.other} · 🎁 ${state.other} puede conseguirte <b style="color:var(--tx)">${get}</b></p></div>
+      <div><p class="sec-t">Progreso por región</p><div class="reg">${rows}</div></div>
+    </div>`;
+}
+
+/* ---------- Ajustes ---------- */
+let deferredInstall = null;
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredInstall = e; });
+$('#btnSettings').onclick = () => {
+  const ios = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  const installHTML = isStandalone() ? `<p class="muted">✅ La app ya está instalada en este dispositivo.</p>`
+    : deferredInstall ? `<button class="btn pri" id="btnInstall">${icon('phone')} Instalar como app</button>`
+    : ios ? `<p class="muted">En iPhone: abre esta página en <b>Safari</b>, pulsa <b>Compartir</b> y luego <b>Añadir a pantalla de inicio</b>.</p>`
+    : `<p class="muted">En Android: menú ⋮ de Chrome → <b>Instalar aplicación</b> (o "Añadir a pantalla de inicio").</p>`;
+  openDlg('settings', `<div class="sheet">
+    <div class="sh-head"><h3>Ajustes</h3><button class="ibtn" data-close>${icon('x')}</button></div>
+    <div class="sh-body">
+      <div class="box"><p class="sec-t">Cuenta</p>
+        <p class="muted">Has entrado como <b style="color:var(--accent2)">${state.me}</b><br>${esc(auth.currentUser?.email || '')}</p>
+        <div style="height:10px"></div>
+        <button class="btn" id="btnLogout">${icon('out')} Cerrar sesión</button></div>
+      <div class="box"><p class="sec-t">Instalar en el móvil</p>${installHTML}
+        <p class="muted" style="margin-top:8px">Funciona sin conexión: lo que marques se guarda y se sube solo al recuperar la conexión.</p></div>
+      <div class="box"><p class="sec-t">Copia de seguridad</p>
+        <div class="btn2"><button class="btn" id="btnExport">${icon('down')} Exportar</button>
+        <label class="btn" style="cursor:pointer">${icon('up')} Importar<input type="file" id="fileImport" accept=".json,application/json" hidden></label></div>
+        <p class="muted" style="margin-top:8px">Importar acepta también las copias de la versión antigua.</p></div>
+      <div class="box"><button class="btn danger" id="btnReset">${icon('trash')} Borrar todo mi progreso</button></div>
+      <p class="muted" style="text-align:center;font-size:11px">Versión ${APP_VERSION} · Datos de PokeAPI · Las estadísticas GO son estimaciones</p>
+    </div></div>`);
+  $('#btnLogout').onclick = () => { if (confirm('¿Cerrar sesión?')) { closeDlg(); auth.signOut(); } };
+  $('#btnInstall') && ($('#btnInstall').onclick = async () => { deferredInstall.prompt(); await deferredInstall.userChoice; deferredInstall = null; closeDlg(); });
+  $('#btnExport').onclick = exportJSON;
+  $('#fileImport').onchange = importJSON;
+  $('#btnReset').onclick = () => {
+    if (!confirm(`¿Seguro que quieres borrar TODO el progreso de ${state.me}? No se puede deshacer (exporta antes una copia).`)) return;
+    state.dex[state.me] = emptyDex();
+    docRef(state.me).set({ ...emptyDex(), updatedAt: FV.serverTimestamp() }).catch(e => toast('⚠️ ' + (e.code || e.message)));
+    closeDlg(); render(); toast('Progreso borrado');
+  };
+};
+
+function exportJSON() {
+  const d = state.dex[state.me];
+  const blob = new Blob([JSON.stringify({ version: 2, trainer: state.me, exportedAt: new Date().toISOString(), ...d })], { type: 'application/json' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = `pokedex_${state.me}_${new Date().toISOString().slice(0, 10)}.json`; a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+}
+
+const OLD_FORMS = { r1: 'f10091', r2: 'f10100', r3: 'f10161', r4: 'f10238', r5: 'f10253' };
+function applyImport(data, silent) {
+  let src;
+  if (data && data.version === 2) src = { caught: data.caught || {}, shiny: data.shiny || {}, lucky: data.lucky || {} };
+  else { // formato antiguo: { "1": true, "r1": true, ... }
+    src = emptyDex();
+    for (const [k, v] of Object.entries(data || {})) if (v) src.caught[OLD_FORMS[k] || k] = true;
+  }
+  const ch = { caught: {}, shiny: {}, lucky: {} };
+  let n = 0;
+  for (const f of ['caught', 'shiny', 'lucky']) for (const k of Object.keys(src[f])) if (BY_KEY.has(k) || !SPECIES.length) { ch[f][k] = true; if (f === 'caught') n++; }
+  writeMarks(ch); render();
+  if (!silent) toast(`✅ Importados ${n} Pokémon`);
+  return n;
+}
+function importJSON(e) {
+  const file = e.target.files[0]; if (!file) return;
+  const r = new FileReader();
+  r.onload = () => {
+    try {
+      const data = JSON.parse(r.result);
+      if (!confirm('Se AÑADIRÁN las capturas del archivo a tu progreso actual. ¿Continuar?')) return;
+      applyImport(data); closeDlg();
+    } catch { toast('⚠️ El archivo no es válido'); }
+  };
+  r.readAsText(file);
+}
+
+/* ================= CONEXIÓN Y SERVICE WORKER ================= */
+const setOnline = () => $('#offline').classList.toggle('hidden', navigator.onLine);
+addEventListener('online', setOnline); addEventListener('offline', setOnline); setOnline();
+
+if ('serviceWorker' in navigator && location.protocol === 'https:') {
+  const hadController = !!navigator.serviceWorker.controller;
+  navigator.serviceWorker.register('sw.js').then(reg => {
+    setInterval(() => reg.update().catch(() => {}), 60 * 60 * 1000);
+    document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') reg.update().catch(() => {}); });
+  });
+  let reloaded = false;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (!hadController || reloaded) return;
+    reloaded = true;
+    if (!currentDlg) location.reload(); else toast('Nueva versión disponible: se aplicará al reabrir la app', 4000);
+  });
+}
+
+/* ================= ARRANQUE ================= */
+buildControls();
+loadData().then(() => scheduleRender()).catch(err => {
+  console.error(err);
+  $('#loading').innerHTML = '⚠️ No se pudieron cargar los datos. Comprueba tu conexión y recarga.';
+});
+</script>
+</body>
+</html>

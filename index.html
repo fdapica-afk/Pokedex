@@ -8,7 +8,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Pokédex">
-<title>Pokédex · Dapica03 &amp; Rulotgar</title>
+<title>Pokédex con suerte · Dapica03 &amp; Rulotgar</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
@@ -204,6 +204,36 @@ main{max-width:1200px;margin:0 auto;padding:4px 8px}
 /* TOAST / BANNER */
 #toast{position:fixed;left:50%;bottom:calc(20px + var(--safe-b));transform:translateX(-50%);background:#0b1220;border:1px solid var(--line2);padding:10px 16px;border-radius:12px;font-size:13px;z-index:90;box-shadow:0 10px 30px rgba(0,0,0,.5);max-width:90vw;text-align:center}
 #offline{background:#78350f;color:#fde68a;font-size:12px;text-align:center;padding:5px 8px}
+
+/* ===== Pokédex con suerte ===== */
+:root{--ok:#f59e0b;--okbg:rgba(245,158,11,.14)}
+.card.c{border-color:rgba(245,158,11,.8);background:linear-gradient(180deg,rgba(245,158,11,.14),var(--bg2) 60%)}
+.card.c .chk span{background:transparent;border-color:var(--lucky);font-size:14px}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.duo-p{border-radius:12px;padding:8px 10px;font-size:12px;display:flex;flex-direction:column;gap:2px}
+.duo-p b{font-size:13px}
+.duo-p.D{background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.35)} .duo-p.D b{color:#93c5fd}
+.duo-p.R{background:rgba(244,63,94,.12);border:1px solid rgba(244,63,94,.35)} .duo-p.R b{color:#fda4af}
+.duo-p .bar{margin-top:4px} #barD{background:#3b82f6} #barR{background:#f43f5e}
+.seg{display:grid;grid-template-columns:1.1fr 1.3fr 1fr .8fr;gap:4px;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:3px}
+.seg button{padding:8px 2px;border-radius:9px;font-size:12.5px;font-weight:600;color:var(--tx3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.seg button.on{color:#fff;background:#b45309}
+.pls{display:flex;gap:4px;margin-top:5px}
+.pl{flex:1;font-size:10.5px;font-weight:700;padding:4px 0;border-radius:8px;text-align:center;background:var(--bg);border:1px solid var(--line);color:var(--tx4)}
+.pl.D.on{border-color:#3b82f6;color:#bfdbfe;background:rgba(59,130,246,.18)}
+.pl.R.on{border-color:#f43f5e;color:#fecdd3;background:rgba(244,63,94,.18)}
+.pl.mine{cursor:pointer}
+.form .pls{width:96px;margin:0;flex:none}
+.who{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.who-p{display:flex;flex-direction:column;align-items:center;gap:3px;padding:12px 6px;border-radius:14px;background:var(--bg);border:1.5px solid var(--line);color:var(--tx3);font-size:12px;text-align:center}
+.who-p .e{font-size:26px;filter:grayscale(1);opacity:.4}
+.who-p.on .e{filter:none;opacity:1}
+.who-p b{font-size:14px;color:var(--tx)}
+.who-p small{font-size:10.5px;color:var(--tx4)}
+.who-p.D.on{border-color:#3b82f6;background:rgba(59,130,246,.12);color:#bfdbfe}
+.who-p.R.on{border-color:#f43f5e;background:rgba(244,63,94,.12);color:#fecdd3}
+button.who-p{cursor:pointer}
+.fbadge{top:24px}
 </style>
 </head>
 <body>
@@ -232,8 +262,8 @@ main{max-width:1200px;margin:0 auto;padding:4px 8px}
 <section id="login" class="hidden">
   <div class="login-card">
     <img src="icon-192.png" alt="">
-    <h1>Pokédex</h1>
-    <p>Dapica03 &amp; Rulotgar · Pokémon GO<br>Entra con tu cuenta de Google para ver y marcar tus capturas.</p>
+    <h1>🍀 Pokédex con suerte</h1>
+    <p>Dapica03 &amp; Rulotgar · Pokémon GO<br>Entra con tu cuenta de Google para ver los Pokémon con suerte que os faltan.</p>
     <button class="gbtn" id="btnLogin">
       <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="m6.3 14.7 6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>
       Entrar con Google
@@ -254,13 +284,23 @@ main{max-width:1200px;margin:0 auto;padding:4px 8px}
         </div>
       </div>
       <div class="hspace"></div>
-      <button class="ibtn" id="btnCompare" title="Comparar"><svg class="i"><use href="#i-vs"/></svg></button>
+      <button class="ibtn" id="btnCompare" title="Por regiones"><svg class="i"><use href="#i-vs"/></svg></button>
       <button class="ibtn" id="btnSettings" title="Ajustes"><svg class="i"><use href="#i-gear"/></svg></button>
     </div>
     <div class="progress"><div id="progBar"></div></div>
   </header>
 
   <section class="controls">
+    <div class="duo" id="duo">
+      <div class="duo-p D"><b>Dapica03</b><span id="duoD">—</span><div class="bar"><div id="barD"></div></div></div>
+      <div class="duo-p R"><b>Rulotgar</b><span id="duoR">—</span><div class="bar"><div id="barR"></div></div></div>
+    </div>
+    <div class="seg" id="viewSeg">
+      <button data-view="me">🍀 Me faltan</button>
+      <button data-view="other">Le faltan a …</button>
+      <button data-view="both">A los dos</button>
+      <button data-view="all">Todos</button>
+    </div>
     <div class="row">
       <div class="search">
         <svg class="i"><use href="#i-search"/></svg>
@@ -278,20 +318,6 @@ main{max-width:1200px;margin:0 auto;padding:4px 8px}
         <option value="za">Nombre Z-A</option>
       </select>
     </div>
-    <div class="seg" id="modeSeg">
-      <button data-mode="caught">✅ Normal</button>
-      <button data-mode="shiny">✨ Shiny</button>
-      <button data-mode="lucky">🍀 Suerte</button>
-      <button data-mode="all">⭐ Todo</button>
-    </div>
-    <div class="chips" id="chips">
-      <button class="chip" data-st="all">Todos</button>
-      <button class="chip" data-st="c">Tengo</button>
-      <button class="chip" data-st="m">Me faltan</button>
-      <span class="chip-sep"></span>
-      <button class="chip trade" data-tr="give">🔄 <span id="trGive">Le faltan a …</span></button>
-      <button class="chip trade" data-tr="get">🎁 <span id="trGet">… tiene y yo no</span></button>
-    </div>
   </section>
 
   <div class="summary">
@@ -305,11 +331,10 @@ main{max-width:1200px;margin:0 auto;padding:4px 8px}
   <main>
     <div id="loading" class="loading"><div class="spin"></div>Cargando Pokédex…</div>
     <div id="grid" class="grid"></div>
-    <div id="empty" class="empty hidden">No hay Pokémon con estos filtros.</div>
+    <div id="empty" class="empty hidden">🎉 ¡Nada pendiente con estos filtros!</div>
   </main>
 </div>
 
-<!-- FICHA -->
 <div id="dlg" class="overlay hidden"></div>
 <div id="toast" class="hidden"></div>
 
@@ -318,7 +343,7 @@ main{max-width:1200px;margin:0 auto;padding:4px 8px}
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 <script>
 'use strict';
-const APP_VERSION = '2.1.0';
+const APP_VERSION = '3.0.0';
 const DATA_VERSION = '2026-11-12';
 
 /* ================= CONFIGURACIÓN ================= */
@@ -330,12 +355,12 @@ const firebaseConfig = {
   messagingSenderId: "968669174895",
   appId: "1:968669174895:web:447f44a6db7c7d507e419a"
 };
-// Si la app se abre desde el propio dominio de Firebase, el inicio de sesión usa ese mismo dominio
-if (/\.(web\.app|firebaseapp\.com)$/.test(location.hostname)) firebaseConfig.authDomain = location.hostname;
-
 const ACCOUNTS = { 'f.dapica@gmail.com': 'Dapica03', 'lotyal95@gmail.com': 'Rulotgar' };
 const TRAINERS = ['Dapica03', 'Rulotgar'];
 const OTHER = { Dapica03: 'Rulotgar', Rulotgar: 'Dapica03' };
+
+/* Singulares: en Pokémon GO no se pueden intercambiar, así que nunca salen con suerte */
+const MYTHICAL = new Set([151, 251, 385, 386, 489, 490, 491, 492, 493, 494, 647, 648, 649, 719, 720, 721, 801, 802, 807, 808, 809, 893, 1025]);
 
 const REGIONS = [
   ['kanto','Kanto',1,151],['johto','Johto',152,251],['hoenn','Hoenn',252,386],['sinnoh','Sinnoh',387,493],
@@ -347,16 +372,16 @@ const TYPES = [
   ['Bicho','#90c12c'],['Fantasma','#5269ac'],['Acero','#5a8ea1'],['Fuego','#ff9c54'],['Agua','#4d90d5'],['Planta','#63bb5b'],
   ['Eléctrico','#e5c531'],['Psíquico','#f97176'],['Hielo','#74cec0'],['Dragón','#0a6dc4'],['Siniestro','#5a5366'],['Hada','#ec8fe6']
 ];
-const FORM_CAT = { r: 'Regional', o: 'Forma', m: 'Mega', g: 'Gigamax' };
-const FORM_ORDER = { r: 0, o: 1, m: 2, g: 3 };
+const FORM_CAT = { r: 'Regional', o: 'Forma', g: 'Gigamax' };
+const FORM_ORDER = { r: 0, o: 1, g: 2 };
 const FORM_LABELS = {
   alola:'Forma de Alola', galar:'Forma de Galar', 'galar-standard':'Forma de Galar', hisui:'Forma de Hisui', paldea:'Forma de Paldea',
   'paldea-combat-breed':'Paldea · Raza Combatiente', 'paldea-blaze-breed':'Paldea · Raza Ardiente', 'paldea-aqua-breed':'Paldea · Raza Acuática',
   origin:'Forma Origen', 'white-striped':'Forma Raya Blanca', 'blue-striped':'Forma Raya Azul', female:'Hembra', therian:'Forma Tótem',
   'blue-plumage':'Plumaje Azul', 'yellow-plumage':'Plumaje Amarillo', 'white-plumage':'Plumaje Blanco',
-  droopy:'Forma Lánguida', stretchy:'Forma Estirada', roaming:'Forma Andante', primal:'Regresión Primigenia'
+  droopy:'Forma Lánguida', stretchy:'Forma Estirada', roaming:'Forma Andante'
 };
-const ART = (pid, shiny) => `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${shiny ? 'shiny/' : ''}${pid}.png`;
+const ART = (pid) => `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pid}.png`;
 
 /* ================= UTILIDADES ================= */
 const $ = s => document.querySelector(s);
@@ -364,8 +389,8 @@ const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>'
 const norm = s => String(s).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 const pad = n => '#' + String(n).padStart(4, '0');
 const store = {
-  get(k, d) { try { const v = localStorage.getItem('pdx_' + k); return v === null ? d : JSON.parse(v); } catch { return d; } },
-  set(k, v) { try { localStorage.setItem('pdx_' + k, JSON.stringify(v)); } catch {} }
+  get(k, d) { try { const v = localStorage.getItem('pdxl_' + k); return v === null ? d : JSON.parse(v); } catch { return d; } },
+  set(k, v) { try { localStorage.setItem('pdxl_' + k, JSON.stringify(v)); } catch {} }
 };
 let toastT;
 function toast(msg, ms = 2200) {
@@ -384,61 +409,27 @@ async function loadData() {
   if (!r.ok) throw new Error('No se pudieron cargar los datos');
   const d = await r.json();
   const tps = t => [...t].map(c => parseInt(c, 36));
-  SPECIES = d.P.map(([id, name, t, gen, chain, from, st]) => ({
-    id, key: String(id), name, n: norm(name), types: tps(t), gen, chain, from, st, region: regionOf(id), forms: []
+  SPECIES = d.P.filter(p => !MYTHICAL.has(p[0])).map(([id, name, t, gen, chain, from]) => ({
+    id, key: String(id), name, n: norm(name), types: tps(t), gen, chain, from, region: regionOf(id), forms: []
   }));
   SPECIES.forEach(s => { BY_ID.set(s.id, s); BY_KEY.set(s.key, s); });
-  d.F.forEach(([sid, pid, cat, suf, n, t, st]) => {
-    const s = BY_ID.get(sid); if (!s) return;
-    let label;
-    if (cat === 'g') label = 'Gigamax';
-    else if (cat === 'm') label = n || ('Mega-' + s.name + (/-(x|y)$/.test(suf) ? ' ' + suf.slice(-1).toUpperCase() : ''));
-    else label = FORM_LABELS[suf] || n || suf.replace(/-/g, ' ');
-    const f = { key: 'f' + pid, pid, sid, cat, label, types: tps(t), st, sp: s };
+  d.F.forEach(([sid, pid, cat, suf, n, t]) => {
+    const s = BY_ID.get(sid); if (!s || cat === 'm') return;   // las megas no cuentan: no son Pokémon aparte
+    const label = cat === 'g' ? 'Gigamax' : (FORM_LABELS[suf] || n || suf.replace(/-/g, ' '));
+    const f = { key: 'f' + pid, pid, sid, cat, label, types: tps(t), sp: s };
     s.forms.push(f); FORMS.push(f); BY_KEY.set(f.key, f);
   });
   SPECIES.forEach(s => s.forms.sort((a, b) => FORM_ORDER[a.cat] - FORM_ORDER[b.cat] || a.pid - b.pid));
 }
 
-/* Estadísticas de Pokémon GO estimadas con la fórmula oficial a partir de las estadísticas base */
-function goStats(b) {
-  const [hp, at, df, sa, sd, spe] = b;
-  const sm = 1 + (spe - 75) / 500;
-  let A = Math.round(Math.round(2 * (0.875 * Math.max(at, sa) + 0.125 * Math.min(at, sa))) * sm);
-  let D = Math.round(Math.round(2 * (0.875 * Math.max(df, sd) + 0.125 * Math.min(df, sd))) * sm);
-  let S = hp === 1 ? 1 : Math.floor(hp * 1.75 + 50);
-  const cp = (m) => Math.max(10, Math.floor((A + 15) * Math.sqrt(D + 15) * Math.sqrt(S + 15) * m * m / 10));
-  if (cp(0.7903) > 4000) { A = Math.round(A * 0.91); D = Math.round(D * 0.91); S = Math.round(S * 0.91); }
-  return { A, D, S, cp40: cp(0.7903), cp50: cp(0.84029999) };
-}
-
 /* ================= ESTADO ================= */
-const emptyDex = () => ({ caught: {}, shiny: {}, lucky: {} });
 const state = {
   me: null, other: null,
-  dex: { Dapica03: emptyDex(), Rulotgar: emptyDex() },
+  lucky: { Dapica03: {}, Rulotgar: {} },
   region: store.get('region', 'all'), type: store.get('type', 'all'), sort: store.get('sort', 'num'),
-  status: 'all', trade: null, q: '', mode: store.get('mode', 'caught'),
-  list: [], detail: null, detailShiny: false
+  view: store.get('view', 'me'), q: '', list: [], detail: null
 };
-const has = (t, field, key) => !!state.dex[t][field][key];
-const MODE_INFO = {
-  caught: { icon: '✅', label: 'Normal', have: 'Tengo', miss: 'Me faltan' },
-  shiny:  { icon: '✨', label: 'Shiny',  have: 'Tengo shiny', miss: 'Me faltan shiny' },
-  lucky:  { icon: '🍀', label: 'Suerte', have: 'Tengo con suerte', miss: 'Me faltan con suerte' },
-  all:    { icon: '⭐', label: 'Todo',   have: 'Completos', miss: 'Incompletos' }
-};
-/* ¿Lo tiene en el modo indicado? "all" = normal + shiny + suerte */
-function owned(t, key, mode = state.mode) {
-  if (mode === 'all') return has(t, 'caught', key) && has(t, 'shiny', key) && has(t, 'lucky', key);
-  return has(t, mode, key);
-}
-/* Marcar / desmarcar en el modo indicado */
-function setOwned(key, val, mode = state.mode) {
-  // Quitar "Todo" solo quita shiny y suerte: el normal se conserva para no perder la captura
-  if (mode === 'all') { writeMarks(val ? { caught: { [key]: true }, shiny: { [key]: true }, lucky: { [key]: true } } : { shiny: { [key]: false }, lucky: { [key]: false } }); scheduleRender(); }
-  else setMark(mode, key, val);
-}
+const L = (t, key) => !!state.lucky[t][key];
 
 /* ================= FIREBASE ================= */
 firebase.initializeApp(firebaseConfig);
@@ -449,72 +440,38 @@ const FV = firebase.firestore.FieldValue;
 const docRef = t => db.collection('pokedex').doc(t);
 let unsubs = [];
 
-function writeMarks(changes) {
-  // changes: { caught: {key: bool}, shiny: {...}, lucky: {...} }
-  const me = state.me, payload = { updatedAt: FV.serverTimestamp() };
-  for (const field of ['caught', 'shiny', 'lucky']) {
-    const ch = changes[field]; if (!ch) continue;
-    payload[field] = {};
-    for (const [k, v] of Object.entries(ch)) {
-      if (v) state.dex[me][field][k] = true; else delete state.dex[me][field][k];
-      payload[field][k] = v ? true : FV.delete();
-    }
+function writeLucky(changes) { // { key: bool }
+  const me = state.me, lucky = {};
+  for (const [k, v] of Object.entries(changes)) {
+    if (v) state.lucky[me][k] = true; else delete state.lucky[me][k];
+    lucky[k] = v ? true : FV.delete();
   }
-  docRef(me).set(payload, { merge: true }).catch(e => { console.error(e); toast('⚠️ No se pudo guardar: ' + (e.code || e.message)); });
-}
-
-function setMark(field, key, val) {
-  const ch = { [field]: { [key]: val } };
-  if (val && field !== 'caught') ch.caught = { [key]: true };              // shiny / suerte implica tenerlo
-  if (!val && field === 'caught') { ch.shiny = { [key]: false }; ch.lucky = { [key]: false }; }
-  writeMarks(ch);
+  docRef(me).set({ lucky, updatedAt: FV.serverTimestamp() }, { merge: true })
+    .catch(e => { console.error(e); toast('⚠️ No se pudo guardar: ' + (e.code || e.message)); });
   scheduleRender();
 }
-
-function normalizeDoc(d) {
-  const x = emptyDex();
-  if (d) for (const f of ['caught', 'shiny', 'lucky']) if (d[f] && typeof d[f] === 'object') for (const [k, v] of Object.entries(d[f])) if (v) x[f][k] = true;
-  return x;
-}
+const toggle = key => writeLucky({ [key]: !L(state.me, key) });
 
 function subscribe() {
   unsubs.forEach(u => u()); unsubs = [];
   TRAINERS.forEach(t => {
-    let checked = false;
-    unsubs.push(docRef(t).onSnapshot({ includeMetadataChanges: true }, snap => {
-      if (!checked && t === state.me && !snap.metadata.fromCache) {
-        checked = true;
-        if (!snap.exists) migrateIfNeeded();
-      }
-      state.dex[t] = normalizeDoc(snap.data());
+    unsubs.push(docRef(t).onSnapshot(snap => {
+      const d = snap.data(), x = {};
+      if (d && d.lucky) for (const [k, v] of Object.entries(d.lucky)) if (v) x[k] = true;
+      state.lucky[t] = x;
       scheduleRender();
     }, err => { console.error(err); toast('⚠️ Error de sincronización: ' + (err.code || err.message), 4000); }));
   });
 }
 
-async function migrateIfNeeded() {
-  // Primera vez: recupera el progreso de la versión antigua (solo si existe copia preparada)
-  try {
-    const r = await fetch('migracion-' + state.me + '.json', { cache: 'no-store' });
-    if (!r.ok) return;
-    const data = await r.json();
-    applyImport(data, true);
-    toast('✅ Progreso anterior recuperado (' + Object.keys(data.caught || {}).length + ' capturas)', 4000);
-  } catch {}
-}
-
 /* ---------- Inicio de sesión ---------- */
-const isStandalone = () => matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
 $('#btnLogin').onclick = async () => {
   const provider = new firebase.auth.GoogleAuthProvider();
   provider.setCustomParameters({ prompt: 'select_account' });
   $('#loginErr').classList.add('hidden');
-  try {
-    await auth.signInWithPopup(provider); // ventana emergente: funciona aunque la app esté en otro dominio
-  } catch (e) {
-    if (['auth/popup-blocked', 'auth/operation-not-supported-in-this-environment', 'auth/cancelled-popup-request'].includes(e.code)) {
-      return auth.signInWithRedirect(provider);
-    }
+  try { await auth.signInWithPopup(provider); }
+  catch (e) {
+    if (['auth/popup-blocked', 'auth/operation-not-supported-in-this-environment', 'auth/cancelled-popup-request'].includes(e.code)) return auth.signInWithRedirect(provider);
     if (e.code !== 'auth/popup-closed-by-user') showLoginErr(e);
   }
 };
@@ -530,32 +487,25 @@ auth.onAuthStateChanged(async user => {
     return;
   }
   const trainer = ACCOUNTS[(user.email || '').toLowerCase()];
-  if (!trainer) {
-    showLoginErr({ message: `la cuenta ${user.email} no tiene acceso a esta Pokédex.` });
-    await auth.signOut();
-    return;
-  }
+  if (!trainer) { showLoginErr({ message: `la cuenta ${user.email} no tiene acceso.` }); await auth.signOut(); return; }
   state.me = trainer; state.other = OTHER[trainer];
   document.body.className = 't-' + trainer;
   $('#login').classList.add('hidden'); $('#app').classList.remove('hidden');
   $('#avatar').textContent = trainer[0];
   $('#meName').textContent = trainer;
-  $('#trGive').textContent = `Le faltan a ${state.other}`;
-  $('#trGet').textContent = `${state.other} tiene y yo no`;
-  subscribe();
-  scheduleRender();
+  document.querySelector('[data-view="other"]').textContent = `Le faltan a ${state.other}`;
+  subscribe(); scheduleRender();
 });
 
 /* ================= FILTROS Y LISTA ================= */
 function buildControls() {
   const reg = $('#fRegion');
   reg.innerHTML = `<option value="all">🌐 Todas las regiones</option>` +
-    REGIONS.map(r => `<option value="${r[0]}">${r[1]} (${r[2]}-${r[3]})</option>`).join('') +
-    `<option value="forms">✨ Con formas alternativas</option>`;
+    REGIONS.map(r => `<option value="${r[0]}">${r[1]}</option>`).join('') +
+    `<option value="forms">Con formas</option>`;
   reg.value = state.region;
   $('#fType').innerHTML = `<option value="all">Todos los tipos</option>` + TYPES.map((t, i) => `<option value="${i}">${t[0]}</option>`).join('');
-  $('#fType').value = state.type;
-  $('#fSort').value = state.sort;
+  $('#fType').value = state.type; $('#fSort').value = state.sort;
   reg.onchange = e => { state.region = e.target.value; store.set('region', state.region); render(); scrollTo({ top: 0, behavior: 'smooth' }); };
   $('#fType').onchange = e => { state.type = e.target.value; store.set('type', state.type); render(); };
   $('#fSort').onchange = e => { state.sort = e.target.value; store.set('sort', state.sort); render(); };
@@ -565,30 +515,24 @@ function buildControls() {
     clearTimeout(qt); qt = setTimeout(() => { state.q = e.target.value; render(); }, 140);
   };
   $('#qClear').onclick = () => { $('#q').value = ''; state.q = ''; $('#qClear').classList.add('hidden'); render(); };
-  $('#modeSeg').onclick = e => {
-    const b = e.target.closest('[data-mode]'); if (!b) return;
-    state.mode = b.dataset.mode; store.set('mode', state.mode); render();
-  };
-  $('#chips').onclick = e => {
-    const b = e.target.closest('.chip'); if (!b) return;
-    if (b.dataset.st) state.status = b.dataset.st;
-    if (b.dataset.tr) state.trade = state.trade === b.dataset.tr ? null : b.dataset.tr;
-    render();
+  $('#viewSeg').onclick = e => {
+    const b = e.target.closest('[data-view]'); if (!b) return;
+    state.view = b.dataset.view; store.set('view', state.view); render(); scrollTo({ top: 0 });
   };
 }
 
-function inRegion(s) {
-  if (state.region === 'all') return true;
-  if (state.region === 'forms') return s.forms.length > 0;
-  return s.region === state.region;
-}
+const inRegion = s => state.region === 'all' ? true : state.region === 'forms' ? s.forms.length > 0 : s.region === state.region;
+// Para una especie con formas: falta si falta la especie O alguna de sus formas
+const missing = (t, s) => !L(t, s.key) || s.forms.some(f => !L(t, f.key));
+const missingBase = (t, s) => !L(t, s.key);
 
 function filtered() {
   const me = state.me, ot = state.other;
-  let q = norm(state.q.trim()).replace(/^#/, '');
+  const q = norm(state.q.trim()).replace(/^#/, '');
   const qNum = /^\d+$/.test(q) ? String(parseInt(q, 10)) : null;
-  const qExact = qNum && (/^\s*#/.test(state.q) || /^0/.test(q)); // "#6" o "0006" = número exacto
+  const qExact = qNum && (/^\s*#/.test(state.q) || /^0/.test(q));
   const type = state.type === 'all' ? null : +state.type;
+  const miss = state.region === 'forms' ? missing : missingBase;
   const out = SPECIES.filter(s => {
     if (!inRegion(s)) return false;
     if (q) {
@@ -596,15 +540,9 @@ function filtered() {
       else if (!s.n.includes(q)) return false;
     }
     if (type !== null && !s.types.includes(type)) return false;
-    const o = owned(me, s.key);
-    if (state.status === 'c' && !o) return false;
-    if (state.status === 'm' && o) return false;
-    if (state.trade) {
-      // En modo Suerte: la suerte sale al intercambiar, así que basta con que quien lo envía lo tenga
-      const giverHas = (t) => state.mode === 'lucky' ? has(t, 'caught', s.key) : owned(t, s.key);
-      if (state.trade === 'give' && (!giverHas(me) || owned(ot, s.key))) return false;
-      if (state.trade === 'get' && (!giverHas(ot) || o)) return false;
-    }
+    if (state.view === 'me' && !miss(me, s)) return false;
+    if (state.view === 'other' && !miss(ot, s)) return false;
+    if (state.view === 'both' && !(miss(me, s) && miss(ot, s))) return false;
     return true;
   });
   const coll = new Intl.Collator('es');
@@ -614,20 +552,24 @@ function filtered() {
   return out;
 }
 
+function pill(t, key) {
+  const on = L(t, key), mine = t === state.me;
+  return `<${mine ? 'button' : 'span'} class="pl ${t[0]} ${on ? 'on' : ''} ${mine ? 'mine' : ''}" ${mine ? 'data-tg="' + key + '"' : ''}>${t[0]} ${on ? '🍀' : '—'}</${mine ? 'button' : 'span'}>`;
+}
+
 function cardHTML(s) {
-  const me = state.me, c = owned(me, s.key);
-  const sh = has(me, 'shiny', s.key), lk = has(me, 'lucky', s.key);
+  const me = state.me, c = L(me, s.key);
   let fb = '';
   if (s.forms.length) {
-    const fc = s.forms.filter(f => owned(me, f.key)).length;
-    fb = `<span class="fbadge ${fc === s.forms.length ? 'full' : ''}">+${s.forms.length} · ${fc}✓</span>`;
+    const fc = s.forms.filter(f => L(me, f.key)).length;
+    fb = `<span class="fbadge ${fc === s.forms.length ? 'full' : ''}">+${s.forms.length} formas · ${fc}🍀</span>`;
   }
   return `<div class="card ${c ? 'c' : ''}" data-k="${s.key}">
-    <div class="ctop"><span class="num">${pad(s.id)}</span><button class="chk" aria-label="Marcar"><span>${c ? icon('check') : ''}</span></button></div>
-    ${fb}<div class="badges">${state.mode !== 'caught' && has(me, 'caught', s.key) && !c ? '✅' : ''}${sh ? '✨' : ''}${lk ? '🍀' : ''}</div>
-    <div class="art"><img loading="lazy" decoding="async" alt="" src="${ART(s.id, state.mode === 'shiny')}"></div>
+    <div class="ctop"><span class="num">${pad(s.id)}</span><button class="chk" aria-label="Marcar con suerte"><span>${c ? '🍀' : ''}</span></button></div>
+    ${fb}
+    <div class="art"><img loading="lazy" decoding="async" alt="" src="${ART(s.id)}"></div>
     <div class="cname">${esc(s.name)}</div>
-    <div class="ctypes">${s.types.map(typeTag).join('')}</div>
+    <div class="pls">${pill('Dapica03', s.key)}${pill('Rulotgar', s.key)}</div>
   </div>`;
 }
 
@@ -643,19 +585,10 @@ function render() {
   const list = state.list = filtered();
   $('#grid').innerHTML = list.map(cardHTML).join('');
   $('#empty').classList.toggle('hidden', list.length > 0);
-  document.body.classList.remove('m-caught', 'm-shiny', 'm-lucky', 'm-all');
-  document.body.classList.add('m-' + state.mode);
-  document.querySelectorAll('#modeSeg button').forEach(b => b.classList.toggle('on', b.dataset.mode === state.mode));
-  const mi = MODE_INFO[state.mode];
-  document.querySelector('[data-st="c"]').textContent = mi.have;
-  document.querySelector('[data-st="m"]').textContent = mi.miss;
-  // chips
-  document.querySelectorAll('#chips .chip').forEach(b => {
-    b.classList.toggle('on', b.dataset.st ? b.dataset.st === state.status : b.dataset.tr === state.trade);
-  });
+  document.querySelectorAll('#viewSeg button').forEach(b => b.classList.toggle('on', b.dataset.view === state.view));
   $('#sumCount').textContent = list.length;
-  $('#sumLabel').textContent = list.length === 1 ? 'Pokémon' : 'Pokémon';
-  const allC = list.length && list.every(s => owned(state.me, s.key));
+  $('#sumLabel').textContent = { me: 'me faltan con suerte', other: `le faltan a ${state.other}`, both: 'nos faltan a los dos', all: 'Pokémon' }[state.view];
+  const allC = list.length && list.every(s => L(state.me, s.key));
   $('#markAllTxt').textContent = allC ? 'Desmarcar visibles' : 'Marcar visibles';
   updateHeader();
   if (state.detail) renderDetail();
@@ -663,52 +596,44 @@ function render() {
 }
 
 function updateHeader() {
-  const me = state.me;
   const pool = SPECIES.filter(s => state.region === 'all' || state.region === 'forms' || s.region === state.region);
-  const n = (m) => pool.filter(s => owned(me, s.key, m)).length;
-  const c = n(state.mode);
-  const pct = pool.length ? Math.round(c / pool.length * 100) : 0;
+  const n = t => pool.filter(s => L(t, s.key)).length;
   const regName = state.region === 'all' || state.region === 'forms' ? 'Total' : REGIONS.find(r => r[0] === state.region)[1];
-  const others = ['caught', 'shiny', 'lucky'].filter(m => m !== state.mode).map(m => MODE_INFO[m].icon + n(m)).join(' · ');
-  $('#meSub').textContent = `${MODE_INFO[state.mode].icon} ${regName}: ${c}/${pool.length} (${pct}%) · ${others}`;
-  $('#progBar').style.width = pct + '%';
+  const pct = c => pool.length ? Math.round(c / pool.length * 100) : 0;
+  const d = n('Dapica03'), r = n('Rulotgar'), m = n(state.me);
+  $('#meSub').textContent = `🍀 ${regName}: ${m}/${pool.length} (${pct(m)}%) · faltan ${pool.length - m}`;
+  $('#progBar').style.width = pct(m) + '%';
+  $('#duoD').textContent = `🍀 ${d}/${pool.length} · faltan ${pool.length - d}`;
+  $('#duoR').textContent = `🍀 ${r}/${pool.length} · faltan ${pool.length - r}`;
+  $('#barD').style.width = pct(d) + '%'; $('#barR').style.width = pct(r) + '%';
 }
 
 /* ---------- Clic en la rejilla ---------- */
 $('#grid').addEventListener('click', e => {
   const card = e.target.closest('.card'); if (!card) return;
   const k = card.dataset.k;
-  if (e.target.closest('.chk')) { setOwned(k, !owned(state.me, k)); if (navigator.vibrate) navigator.vibrate(12); }
-  else openDetail(k);
+  const tg = e.target.closest('[data-tg]');
+  if (tg || e.target.closest('.chk')) { toggle(tg ? tg.dataset.tg : k); if (navigator.vibrate) navigator.vibrate(12); return; }
+  if (e.target.closest('.pl')) return;
+  openDetail(k);
 });
 
 $('#btnMarkAll').onclick = () => {
   const list = state.list; if (!list.length) return;
-  const mode = state.mode, allC = list.every(s => owned(state.me, s.key));
-  if (list.length > 15 && !confirm(`¿${allC ? 'Desmarcar' : 'Marcar'} ${list.length} Pokémon en «${MODE_INFO[mode].icon} ${MODE_INFO[mode].label}»?`)) return;
-  const ch = { caught: {}, shiny: {}, lucky: {} };
-  list.forEach(s => {
-    const k = s.key, v = !allC;
-    if (mode === 'all') { if (v) ch.caught[k] = true; ch.shiny[k] = v; ch.lucky[k] = v; }
-    else if (mode === 'caught') { ch.caught[k] = v; if (!v) { ch.shiny[k] = false; ch.lucky[k] = false; } }
-    else { ch[mode][k] = v; if (v) ch.caught[k] = true; }
-  });
-  writeMarks(ch); render();
+  const allC = list.every(s => L(state.me, s.key));
+  if (list.length > 15 && !confirm(`¿${allC ? 'Desmarcar' : 'Marcar con suerte'} ${list.length} Pokémon?`)) return;
+  const ch = {}; list.forEach(s => ch[s.key] = !allC); writeLucky(ch);
 };
 
 /* ---------- Compartir lista ---------- */
 $('#btnShare').onclick = async () => {
   const list = state.list; if (!list.length) return toast('No hay nada que compartir');
-  const parts = [];
-  const mi = MODE_INFO[state.mode];
-  if (state.trade === 'give') parts.push(`Puedo enviarle a ${state.other} (${mi.icon} le faltan)`);
-  else if (state.trade === 'get') parts.push(`${state.other} me puede enviar (${mi.icon} me faltan)`);
-  else parts.push(state.status === 'all' ? `Pokédex ${mi.icon} ${mi.label}` : `${mi.icon} ${state.status === 'c' ? mi.have : mi.miss}`);
-  if (state.region !== 'all') parts.push($('#fRegion').selectedOptions[0].textContent.replace(/\s*\(.*\)/, ''));
+  const title = { me: `🍀 Me faltan con suerte (${state.me})`, other: `🍀 Le faltan con suerte a ${state.other}`, both: '🍀 Nos faltan con suerte a los dos', all: '🍀 Pokédex con suerte' }[state.view];
+  const parts = [title];
+  if (state.region !== 'all') parts.push($('#fRegion').selectedOptions[0].textContent);
   if (state.type !== 'all') parts.push('tipo ' + TYPES[state.type][0]);
-  const title = `📋 ${parts.join(' · ')} (${list.length})`;
-  const lines = list.map(s => `${pad(s.id)} ${s.name}${has(state.me, 'shiny', s.key) ? ' ✨' : ''}${has(state.me, 'lucky', s.key) ? ' 🍀' : ''}`);
-  const text = `${title}\n— ${state.me}\n\n${lines.join('\n')}`;
+  const lines = list.map(s => `${pad(s.id)} ${s.name}`);
+  const text = `${parts.join(' · ')} (${list.length})\n\n${lines.join('\n')}`;
   if (navigator.share) { try { await navigator.share({ text }); return; } catch (e) { if (e.name === 'AbortError') return; } }
   try { await navigator.clipboard.writeText(text); toast('Lista copiada'); } catch {}
   window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank');
@@ -736,37 +661,21 @@ document.addEventListener('keydown', e => {
   if (state.detail && (e.key === 'ArrowRight' || e.key === 'ArrowLeft')) stepDetail(e.key === 'ArrowRight' ? 1 : -1);
 });
 
-/* ---------- Ficha de detalle ---------- */
-function openDetail(key) {
-  state.detail = key; state.detailShiny = false;
-  openDlg('detail', '<div class="sheet" id="sheet"></div>');
-  renderDetail();
-  $('#sheet .sh-body')?.scrollTo(0, 0);
-}
+/* ---------- Ficha ---------- */
+function openDetail(key) { state.detail = key; openDlg('detail', '<div class="sheet" id="sheet"></div>'); renderDetail(); }
 function stepDetail(dir) {
-  const L = state.list.length ? state.list : SPECIES;
-  let i = L.findIndex(s => s.key === state.detail);
-  if (i < 0) i = 0; else i = (i + dir + L.length) % L.length;
-  state.detail = L[i].key; state.detailShiny = false; renderDetail();
-  $('#sheet .sh-body')?.scrollTo(0, 0);
+  const Ls = state.list.length ? state.list : SPECIES;
+  let i = Ls.findIndex(s => s.key === state.detail);
+  i = i < 0 ? 0 : (i + dir + Ls.length) % Ls.length;
+  state.detail = Ls[i].key; renderDetail(); $('#sheet .sh-body')?.scrollTo(0, 0);
 }
 
-function markBtns(key, me) {
-  const c = has(me, 'caught', key), s = has(me, 'shiny', key), l = has(me, 'lucky', key);
-  const all = c && s && l;
-  return `<button class="allbtn ${all ? 'on' : ''}" data-allkey="${key}">⭐ ${all ? 'Lo tengo todo (normal, shiny y suerte)' : 'Marcar todo: normal + shiny + suerte'}</button>
-  <div class="marks">
-    <button class="mk c ${c ? 'on' : ''}" data-mark="caught" data-key="${key}"><span class="e">✅</span>${c ? 'Lo tengo' : 'No lo tengo'}</button>
-    <button class="mk s ${s ? 'on' : ''}" data-mark="shiny" data-key="${key}"><span class="e">✨</span>Shiny</button>
-    <button class="mk l ${l ? 'on' : ''}" data-mark="lucky" data-key="${key}"><span class="e">🍀</span>Suerte</button>
-  </div>`;
-}
-
-function otherLine(key) {
-  const ot = state.other, c = has(ot, 'caught', key);
-  const bg = ot === 'Dapica03' ? '#2563eb' : '#e11d48';
-  const extra = [has(ot, 'shiny', key) && '✨ shiny', has(ot, 'lucky', key) && '🍀 suerte'].filter(Boolean).join(' · ');
-  return `<div class="other"><span class="dot" style="background:${bg}">${ot[0]}</span>${ot}: ${c ? '<b style="color:#6ee7b7">lo tiene</b>' : '<span style="color:var(--tx3)">no lo tiene</span>'}${extra ? ' · ' + extra : ''}</div>`;
+function whoRow(key) {
+  return `<div class="who">${TRAINERS.map(t => {
+    const on = L(t, key), mine = t === state.me;
+    return `<${mine ? 'button' : 'div'} class="who-p ${t[0]} ${on ? 'on' : ''}" ${mine ? 'data-tg="' + key + '"' : ''}>
+      <span class="e">🍀</span><b>${t}</b><span>${on ? 'Lo tiene con suerte' : 'Le falta'}${mine ? '' : ''}</span>${mine ? `<small>${on ? 'Toca para quitar' : 'Toca para marcar'}</small>` : ''}</${mine ? 'button' : 'div'}>`;
+  }).join('')}</div>`;
 }
 
 function familyHTML(s) {
@@ -776,37 +685,26 @@ function familyHTML(s) {
   const depth = x => (x.from && ids.has(x.from)) ? depth(BY_ID.get(x.from)) + 1 : 0;
   const cols = [];
   fam.forEach(x => { const d = depth(x); (cols[d] = cols[d] || []).push(x); });
-  const me = state.me;
   return `<div><p class="sec-t">Familia evolutiva</p><div class="evo">` + cols.map((col, i) =>
     (i ? `<span class="evo-arrow">${icon('right')}</span>` : '') +
-    `<div class="evo-col">${col.map(x => `<button class="evo-it ${x.id === s.id ? 'cur' : ''} ${has(me, 'caught', x.key) ? 'c' : ''}" data-go="${x.key}">
-      <img loading="lazy" src="${ART(x.id)}" alt=""><span class="x">${esc(x.name)}</span><span style="color:var(--tx4)">${has(me, 'caught', x.key) ? '✓' : pad(x.id)}</span></button>`).join('')}</div>`
+    `<div class="evo-col">${col.map(x => `<button class="evo-it ${x.id === s.id ? 'cur' : ''} ${L(state.me, x.key) ? 'c' : ''}" data-go="${x.key}">
+      <img loading="lazy" src="${ART(x.id)}" alt=""><span class="x">${esc(x.name)}</span><span style="color:var(--tx4)">${L(state.me, x.key) ? '🍀' : pad(x.id)}</span></button>`).join('')}</div>`
   ).join('') + `</div></div>`;
 }
 
 function formsHTML(s) {
   if (!s.forms.length) return '';
-  const me = state.me;
-  const done = s.forms.filter(f => has(me, 'caught', f.key)).length;
-  return `<div><p class="sec-t">Formas (${done}/${s.forms.length})</p><div class="forms">` + s.forms.map(f => {
-    const c = has(me, 'caught', f.key), sh = has(me, 'shiny', f.key), lk = has(me, 'lucky', f.key);
-    const oc = has(state.other, 'caught', f.key);
-    return `<div class="form ${c ? 'c' : ''}">
+  return `<div><p class="sec-t">Formas con suerte</p><div class="forms">` + s.forms.map(f => `
+    <div class="form ${L(state.me, f.key) ? 'c' : ''}">
       <img loading="lazy" src="${ART(f.pid)}" alt="" onerror="this.src='${ART(s.id)}'">
-      <div class="fi"><div class="fc">${FORM_CAT[f.cat]}${oc ? ` · ${state.other[0]} ✓` : ''}</div><div class="fl">${esc(f.label)}</div><div class="ctypes">${f.types.map(typeTag).join('')}</div></div>
-      <div class="fmk">
-        <button class="c ${c ? 'on' : ''}" data-mark="caught" data-key="${f.key}" title="Lo tengo"><span class="ck">✓</span></button>
-        <button class="s ${sh ? 'on' : ''}" data-mark="shiny" data-key="${f.key}" title="Shiny">✨</button>
-        <button class="l ${lk ? 'on' : ''}" data-mark="lucky" data-key="${f.key}" title="Suerte">🍀</button>
-        <button class="a ${c && sh && lk ? 'on' : ''}" data-allkey="${f.key}" title="Todo">⭐</button>
-      </div></div>`;
-  }).join('') + `</div></div>`;
+      <div class="fi"><div class="fc">${FORM_CAT[f.cat]}</div><div class="fl">${esc(f.label)}</div></div>
+      <div class="pls">${pill('Dapica03', f.key)}${pill('Rulotgar', f.key)}</div>
+    </div>`).join('') + `</div></div>`;
 }
 
 function renderDetail() {
   const s = BY_KEY.get(state.detail); const el = $('#sheet'); if (!s || !el) return;
-  const prevScroll = el.querySelector('.sh-body')?.scrollTop || 0;
-  const g = goStats(s.st);
+  const prev = el.querySelector('.sh-body')?.scrollTop || 0;
   const reg = REGIONS.find(r => r[0] === s.region)[1];
   el.innerHTML = `
     <div class="sh-head">
@@ -816,36 +714,21 @@ function renderDetail() {
       <button class="ibtn" data-close aria-label="Cerrar">${icon('x')}</button>
     </div>
     <div class="sh-body">
-      <div class="dt-hero">
-        <img src="${ART(s.id, state.detailShiny)}" alt="${esc(s.name)}">
-        <button class="dt-sw ${state.detailShiny ? 'on' : ''}" data-shinyview>✨ ${state.detailShiny ? 'Viendo shiny' : 'Ver shiny'}</button>
-      </div>
+      <div class="dt-hero"><img src="${ART(s.id)}" alt="${esc(s.name)}"></div>
       <div class="dt-name"><div class="n">${esc(s.name)}</div><div class="m">${reg} · Generación ${s.gen}</div>
         <div class="dt-types">${s.types.map(typeTag).join('')}</div></div>
-      ${markBtns(s.key, state.me)}
-      ${otherLine(s.key)}
-      <div><p class="sec-t">Estadísticas en GO (estimadas)</p>
-        <div class="box" style="padding:8px"><div class="stats">
-          <div><b>${g.A}</b><span>Ataque</span></div><div><b>${g.D}</b><span>Defensa</span></div><div><b>${g.S}</b><span>PS</span></div>
-          <div><b>${g.cp40}</b><span>PC máx. 40</span></div><div><b>${g.cp50}</b><span>PC máx. 50</span></div>
-        </div></div></div>
+      ${whoRow(s.key)}
       ${formsHTML(s)}
       ${familyHTML(s)}
     </div>`;
-  el.querySelector('.sh-body').scrollTop = prevScroll;
+  el.querySelector('.sh-body').scrollTop = prev;
 }
 
 $('#dlg').addEventListener('click', e => {
-  const ak = e.target.closest('[data-allkey]');
-  if (ak) { const k = ak.dataset.allkey; setOwned(k, !owned(state.me, k, 'all'), 'all'); if (navigator.vibrate) navigator.vibrate(12); return; }
-  const mk = e.target.closest('[data-mark]');
-  if (mk) { const { mark, key } = mk.dataset; setMark(mark, key, !has(state.me, mark, key)); if (navigator.vibrate) navigator.vibrate(12); return; }
+  const tg = e.target.closest('[data-tg]'); if (tg) { toggle(tg.dataset.tg); if (navigator.vibrate) navigator.vibrate(12); return; }
   const st = e.target.closest('[data-step]'); if (st) return stepDetail(+st.dataset.step);
-  const go = e.target.closest('[data-go]'); if (go) { state.detail = go.dataset.go; state.detailShiny = false; renderDetail(); $('#sheet .sh-body').scrollTo(0, 0); return; }
-  if (e.target.closest('[data-shinyview]')) { state.detailShiny = !state.detailShiny; renderDetail(); }
+  const go = e.target.closest('[data-go]'); if (go) { state.detail = go.dataset.go; renderDetail(); $('#sheet .sh-body').scrollTo(0, 0); }
 });
-
-/* Deslizar a los lados en la ficha para pasar de Pokémon */
 let tx0 = null, ty0 = null;
 $('#dlg').addEventListener('touchstart', e => { if (state.detail) { tx0 = e.touches[0].clientX; ty0 = e.touches[0].clientY; } }, { passive: true });
 $('#dlg').addEventListener('touchend', e => {
@@ -854,124 +737,94 @@ $('#dlg').addEventListener('touchend', e => {
   if (Math.abs(dx) > 70 && Math.abs(dx) > Math.abs(dy) * 1.8 && !e.target.closest('.evo')) stepDetail(dx < 0 ? 1 : -1);
 }, { passive: true });
 
-/* ---------- Comparador ---------- */
+/* ---------- Por regiones ---------- */
 $('#btnCompare').onclick = () => { openDlg('compare', '<div class="sheet" id="cmp"></div>'); renderCompare(); };
 function renderCompare() {
   const el = $('#cmp'); if (!el) return;
-  const cnt = (t, f, pool) => pool.filter(x => has(t, f, x.key)).length;
-  const tot = SPECIES.length;
+  const cnt = (t, pool) => pool.filter(x => L(t, x.key)).length;
   const D = 'Dapica03', R = 'Rulotgar';
-  const head = t => `<div class="p ${t[0]}"><div style="font-weight:700;color:${t === D ? '#93c5fd' : '#fda4af'}">${t}</div>
-    <div class="big">${cnt(t, 'caught', SPECIES)}</div><div class="sm">${Math.round(cnt(t, 'caught', SPECIES) / tot * 100)}% de ${tot}</div>
-    <div class="sm" style="margin-top:4px">✨ ${Object.keys(state.dex[t].shiny).length} · 🍀 ${Object.keys(state.dex[t].lucky).length} · Formas ${cnt(t, 'caught', FORMS)}/${FORMS.length}</div></div>`;
-  const rows = REGIONS.map(([k, name, a, b]) => {
+  const both = SPECIES.filter(s => !L(D, s.key) && !L(R, s.key)).length;
+  const rows = REGIONS.map(([k, name]) => {
     const pool = SPECIES.filter(s => s.region === k), n = pool.length;
-    const cd = cnt(D, 'caught', pool), cr = cnt(R, 'caught', pool);
-    return `<div class="reg-row"><div class="reg-top">${name}<span>${n} Pokémon</span></div>
+    const cd = cnt(D, pool), cr = cnt(R, pool);
+    return `<div class="reg-row"><div class="reg-top">${name}<span>${n} posibles</span></div>
       <div class="bar"><div style="width:${cd / n * 100}%;background:#3b82f6"></div></div>
       <div class="bar"><div style="width:${cr / n * 100}%;background:#f43f5e"></div></div>
-      <div class="reg-l"><span style="color:#93c5fd">Dapica03 ${cd} · ✨${cnt(D, 'shiny', pool)} · 🍀${cnt(D, 'lucky', pool)}</span><span style="color:#fda4af">Rulotgar ${cr} · ✨${cnt(R, 'shiny', pool)} · 🍀${cnt(R, 'lucky', pool)}</span></div></div>`;
+      <div class="reg-l"><span style="color:#93c5fd">Dapica03 ${cd} · faltan ${n - cd}</span><span style="color:#fda4af">Rulotgar ${cr} · faltan ${n - cr}</span></div></div>`;
   }).join('');
-  const give = SPECIES.filter(s => has(state.me, 'caught', s.key) && !has(state.other, 'caught', s.key)).length;
-  const get = SPECIES.filter(s => !has(state.me, 'caught', s.key) && has(state.other, 'caught', s.key)).length;
-  const lgive = SPECIES.filter(s => has(state.me, 'caught', s.key) && !has(state.other, 'lucky', s.key)).length;
-  const lget = SPECIES.filter(s => has(state.other, 'caught', s.key) && !has(state.me, 'lucky', s.key)).length;
-  el.innerHTML = `<div class="sh-head"><h3>Dapica03 vs Rulotgar</h3><button class="ibtn" data-close>${icon('x')}</button></div>
+  el.innerHTML = `<div class="sh-head"><h3>🍀 Progreso con suerte</h3><button class="ibtn" data-close>${icon('x')}</button></div>
     <div class="sh-body">
-      <div class="vs">${head(D)}${head(R)}</div>
-      <div class="box"><p class="muted">🔄 Puedes conseguirle <b style="color:var(--tx)">${give}</b> a ${state.other} · 🎁 ${state.other} puede conseguirte <b style="color:var(--tx)">${get}</b><br>🍀 Con un intercambio, ${state.other} podría conseguir con suerte <b style="color:var(--tx)">${lgive}</b> y tú <b style="color:var(--tx)">${lget}</b></p></div>
-      <div><p class="sec-t">Progreso por región</p><div class="reg">${rows}</div></div>
+      <div class="box"><p class="muted">Faltan a los dos: <b style="color:var(--tx)">${both}</b>. Intercambiarlos entre vosotros os da a ambos la oportunidad de que salgan con suerte.</p></div>
+      <div class="reg">${rows}</div>
+      <p class="muted" style="font-size:11px">No se incluyen los singulares (Mew, Celebi…) porque en Pokémon GO no se pueden intercambiar.</p>
     </div>`;
 }
 
 /* ---------- Ajustes ---------- */
 let deferredInstall = null;
 window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredInstall = e; });
+const isStandalone = () => matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
 $('#btnSettings').onclick = () => {
   const ios = /iphone|ipad|ipod/i.test(navigator.userAgent);
   const installHTML = isStandalone() ? `<p class="muted">✅ La app ya está instalada en este dispositivo.</p>`
     : deferredInstall ? `<button class="btn pri" id="btnInstall">${icon('phone')} Instalar como app</button>`
     : ios ? `<p class="muted">En iPhone: abre esta página en <b>Safari</b>, pulsa <b>Compartir</b> y luego <b>Añadir a pantalla de inicio</b>.</p>`
-    : `<p class="muted">En Android: menú ⋮ de Chrome → <b>Instalar aplicación</b> (o "Añadir a pantalla de inicio").</p>`;
+    : `<p class="muted">En Android: menú ⋮ de Chrome → <b>Instalar aplicación</b>.</p>`;
   openDlg('settings', `<div class="sheet">
     <div class="sh-head"><h3>Ajustes</h3><button class="ibtn" data-close>${icon('x')}</button></div>
     <div class="sh-body">
       <div class="box"><p class="sec-t">Cuenta</p>
         <p class="muted">Has entrado como <b style="color:var(--accent2)">${state.me}</b><br>${esc(auth.currentUser?.email || '')}</p>
-        <div style="height:10px"></div>
-        <button class="btn" id="btnLogout">${icon('out')} Cerrar sesión</button></div>
+        <div style="height:10px"></div><button class="btn" id="btnLogout">${icon('out')} Cerrar sesión</button></div>
       <div class="box"><p class="sec-t">Instalar en el móvil</p>${installHTML}
-        <p class="muted" style="margin-top:8px">Funciona sin conexión: lo que marques se guarda y se sube solo al recuperar la conexión.</p></div>
+        <p class="muted" style="margin-top:8px">Funciona sin conexión: lo que marques se sube solo al volver la conexión.</p></div>
       <div class="box"><p class="sec-t">Copia de seguridad</p>
         <div class="btn2"><button class="btn" id="btnExport">${icon('down')} Exportar</button>
-        <label class="btn" style="cursor:pointer">${icon('up')} Importar<input type="file" id="fileImport" accept=".json,application/json" hidden></label></div>
-        <p class="muted" style="margin-top:8px">Importar acepta también las copias de la versión antigua.</p></div>
-      <div class="box"><button class="btn danger" id="btnReset">${icon('trash')} Borrar todo mi progreso</button></div>
-      <p class="muted" style="text-align:center;font-size:11px">Versión ${APP_VERSION} · Datos de PokeAPI · Las estadísticas GO son estimaciones</p>
+        <label class="btn" style="cursor:pointer">${icon('up')} Importar<input type="file" id="fileImport" accept=".json,application/json" hidden></label></div></div>
+      <div class="box"><button class="btn danger" id="btnReset">${icon('trash')} Borrar todos mis 🍀</button></div>
+      <p class="muted" style="text-align:center;font-size:11px">Versión ${APP_VERSION} · Datos de PokeAPI</p>
     </div></div>`);
   $('#btnLogout').onclick = () => { if (confirm('¿Cerrar sesión?')) { closeDlg(); auth.signOut(); } };
   $('#btnInstall') && ($('#btnInstall').onclick = async () => { deferredInstall.prompt(); await deferredInstall.userChoice; deferredInstall = null; closeDlg(); });
-  $('#btnExport').onclick = exportJSON;
-  $('#fileImport').onchange = importJSON;
+  $('#btnExport').onclick = () => {
+    const blob = new Blob([JSON.stringify({ version: 3, trainer: state.me, exportedAt: new Date().toISOString(), lucky: state.lucky[state.me] })], { type: 'application/json' });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+    a.download = `pokedex_suerte_${state.me}_${new Date().toISOString().slice(0, 10)}.json`; a.click();
+  };
+  $('#fileImport').onchange = e => {
+    const file = e.target.files[0]; if (!file) return;
+    const r = new FileReader();
+    r.onload = () => {
+      try {
+        const data = JSON.parse(r.result), src = data.lucky || {}, ch = {};
+        Object.keys(src).forEach(k => { if (src[k] && BY_KEY.has(k)) ch[k] = true; });
+        if (!Object.keys(ch).length) return toast('El archivo no tiene Pokémon con suerte');
+        if (!confirm(`Se añadirán ${Object.keys(ch).length} Pokémon con suerte. ¿Continuar?`)) return;
+        writeLucky(ch); closeDlg(); toast('✅ Importado');
+      } catch { toast('⚠️ El archivo no es válido'); }
+    };
+    r.readAsText(file);
+  };
   $('#btnReset').onclick = () => {
-    if (!confirm(`¿Seguro que quieres borrar TODO el progreso de ${state.me}? No se puede deshacer (exporta antes una copia).`)) return;
-    state.dex[state.me] = emptyDex();
-    docRef(state.me).set({ ...emptyDex(), updatedAt: FV.serverTimestamp() }).catch(e => toast('⚠️ ' + (e.code || e.message)));
-    closeDlg(); render(); toast('Progreso borrado');
+    if (!confirm(`¿Borrar TODOS los Pokémon con suerte de ${state.me}? No se puede deshacer.`)) return;
+    state.lucky[state.me] = {};
+    docRef(state.me).set({ lucky: FV.delete(), updatedAt: FV.serverTimestamp() }, { merge: true }).catch(e => toast('⚠️ ' + (e.code || e.message)));
+    closeDlg(); render(); toast('Borrado');
   };
 };
-
-function exportJSON() {
-  const d = state.dex[state.me];
-  const blob = new Blob([JSON.stringify({ version: 2, trainer: state.me, exportedAt: new Date().toISOString(), ...d })], { type: 'application/json' });
-  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
-  a.download = `pokedex_${state.me}_${new Date().toISOString().slice(0, 10)}.json`; a.click();
-  setTimeout(() => URL.revokeObjectURL(a.href), 5000);
-}
-
-const OLD_FORMS = { r1: 'f10091', r2: 'f10100', r3: 'f10161', r4: 'f10238', r5: 'f10253' };
-function applyImport(data, silent) {
-  let src;
-  if (data && data.version === 2) src = { caught: data.caught || {}, shiny: data.shiny || {}, lucky: data.lucky || {} };
-  else { // formato antiguo: { "1": true, "r1": true, ... }
-    src = emptyDex();
-    for (const [k, v] of Object.entries(data || {})) if (v) src.caught[OLD_FORMS[k] || k] = true;
-  }
-  const ch = { caught: {}, shiny: {}, lucky: {} };
-  let n = 0;
-  for (const f of ['caught', 'shiny', 'lucky']) for (const k of Object.keys(src[f])) if (BY_KEY.has(k) || !SPECIES.length) { ch[f][k] = true; if (f === 'caught') n++; }
-  writeMarks(ch); render();
-  if (!silent) toast(`✅ Importados ${n} Pokémon`);
-  return n;
-}
-function importJSON(e) {
-  const file = e.target.files[0]; if (!file) return;
-  const r = new FileReader();
-  r.onload = () => {
-    try {
-      const data = JSON.parse(r.result);
-      if (!confirm('Se AÑADIRÁN las capturas del archivo a tu progreso actual. ¿Continuar?')) return;
-      applyImport(data); closeDlg();
-    } catch { toast('⚠️ El archivo no es válido'); }
-  };
-  r.readAsText(file);
-}
 
 /* ================= CONEXIÓN Y SERVICE WORKER ================= */
 const setOnline = () => $('#offline').classList.toggle('hidden', navigator.onLine);
 addEventListener('online', setOnline); addEventListener('offline', setOnline); setOnline();
-
 if ('serviceWorker' in navigator && location.protocol === 'https:') {
   const hadController = !!navigator.serviceWorker.controller;
   navigator.serviceWorker.register('sw.js').then(reg => {
-    setInterval(() => reg.update().catch(() => {}), 60 * 60 * 1000);
     document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') reg.update().catch(() => {}); });
   });
   let reloaded = false;
   navigator.serviceWorker.addEventListener('controllerchange', () => {
-    if (!hadController || reloaded) return;
-    reloaded = true;
-    if (!currentDlg) location.reload(); else toast('Nueva versión disponible: se aplicará al reabrir la app', 4000);
+    if (!hadController || reloaded) return; reloaded = true;
+    if (!currentDlg) location.reload();
   });
 }
 

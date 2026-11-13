@@ -343,7 +343,7 @@ button.who-p{cursor:pointer}
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 <script>
 'use strict';
-const APP_VERSION = '3.0.0';
+const APP_VERSION = '3.1.0';
 const DATA_VERSION = '2026-11-12';
 
 /* ================= CONFIGURACIÓN ================= */
@@ -359,8 +359,9 @@ const ACCOUNTS = { 'f.dapica@gmail.com': 'Dapica03', 'lotyal95@gmail.com': 'Rulo
 const TRAINERS = ['Dapica03', 'Rulotgar'];
 const OTHER = { Dapica03: 'Rulotgar', Rulotgar: 'Dapica03' };
 
-/* Singulares: en Pokémon GO no se pueden intercambiar, así que nunca salen con suerte */
-const MYTHICAL = new Set([151, 251, 385, 386, 489, 490, 491, 492, 493, 494, 647, 648, 649, 719, 720, 721, 801, 802, 807, 808, 809, 893, 1025]);
+/* Pokémon que no aparecen en la Pokédex con suerte de Pokémon GO (no se pueden intercambiar).
+   Meltan y Melmetal sí pueden salir con suerte, por eso no están aquí. */
+const MYTHICAL = new Set([151, 251, 385, 386, 489, 490, 491, 492, 493, 494, 647, 648, 649, 718, 719, 720, 721, 801, 802, 807, 893, 1025]);
 
 const REGIONS = [
   ['kanto','Kanto',1,151],['johto','Johto',152,251],['hoenn','Hoenn',252,386],['sinnoh','Sinnoh',387,493],
@@ -784,7 +785,7 @@ function renderCompare() {
     <div class="sh-body">
       <div class="box"><p class="muted">Faltan a los dos: <b style="color:var(--tx)">${both}</b>. Intercambiarlos entre vosotros os da a ambos la oportunidad de que salgan con suerte.</p></div>
       <div class="reg">${rows}</div>
-      <p class="muted" style="font-size:11px">No se incluyen los singulares (Mew, Celebi…) porque en Pokémon GO no se pueden intercambiar.</p>
+      <p class="muted" style="font-size:11px">Igual que en el juego, no se incluyen los Pokémon que no se pueden intercambiar (Mew, Celebi, Zygarde…). Meltan y Melmetal sí cuentan.</p>
     </div>`;
 }
 

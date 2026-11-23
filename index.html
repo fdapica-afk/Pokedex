@@ -355,6 +355,36 @@ body.light .qi button.s{color:#b45309}
 .lgi .who2 span.R.on{background:#e11d48;color:#fff}
 .lgi .bar{width:100%}
 #confetti{position:fixed;inset:0;pointer-events:none;z-index:100}
+.tact{margin-left:10px;padding:5px 10px;border-radius:9px;background:var(--accent);color:#fff;font-weight:800;font-size:13px}
+.yrsel{background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:7px 8px;font-size:13px;color:var(--tx)}
+.evo-tip{font-size:13px;background:rgba(168,85,247,.12);border:1px solid rgba(168,85,247,.45);color:#d8b4fe;border-radius:12px;padding:8px 10px}
+body.light .evo-tip{color:#7e22ce}
+.old-tip{font-size:12px;color:#fcd34d}
+body.light .old-tip{color:#b45309}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.fr label{font-size:12px;color:var(--tx3);display:flex;flex-direction:column;gap:4px}
+.fr select,.fr input{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:8px;font-size:14px;color:var(--tx);width:100%}
+.lf{font-size:13px;font-weight:700;background:linear-gradient(90deg,rgba(245,158,11,.25),rgba(250,204,21,.1));border:1px solid #f59e0b;border-radius:12px;padding:10px}
+.cost{font-size:10px;font-weight:700;color:var(--tx3);white-space:nowrap}
+.cost.sp{color:#fbbf24}
+.live{display:flex;flex-direction:column;gap:12px}
+.live-cur{display:flex;flex-direction:column;align-items:center;gap:6px;background:var(--bg);border:2px solid var(--accent);border-radius:18px;padding:12px;text-align:center}
+.live-cur img{width:min(46vw,180px);aspect-ratio:1;object-fit:contain}
+.live-cur .nm{font-size:22px;font-weight:900}
+.live-cur .sub{font-size:12px;color:var(--tx3)}
+.live-btns{display:grid;grid-template-columns:2fr 1fr 1fr;gap:6px;width:100%}
+.live-btns button{padding:12px 4px;border-radius:12px;font-weight:800;font-size:13px;background:var(--bg2);border:1px solid var(--line)}
+.live-btns button.ok{background:#b45309;color:#fff;border-color:#f59e0b}
+.feed{display:flex;flex-direction:column;gap:4px;max-height:220px;overflow:auto}
+.feed div{display:flex;align-items:center;gap:6px;font-size:12px;background:var(--bg);border-radius:10px;padding:4px 8px}
+.feed img{width:28px;height:28px;object-fit:contain}
+.pubbar{position:fixed;left:8px;right:8px;bottom:calc(10px + var(--safe-b));z-index:46;background:var(--bg2);border:1px solid var(--accent);border-radius:16px;padding:10px;box-shadow:0 10px 30px rgba(0,0,0,.45);display:flex;flex-direction:column;gap:8px}
+.pubbar .b2{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.btn.wa{background:#16a34a;color:#fff}.btn.tg{background:#0284c7;color:#fff}
+.share3{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.stepper .l{min-width:0;flex:1}
+.stepper .sbtn{flex:none;white-space:nowrap}
+
 #toast{bottom:calc(84px + var(--safe-b))}
 .summary .acts .sbtn{min-width:40px;height:36px;justify-content:center;font-size:15px;padding:6px 10px}
 .summary > div:first-child{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -457,6 +487,8 @@ body.light .qi button.s{color:#b45309}
         <button class="chip x" data-x="oextra">🔁 Él tiene para cambiar</button>
         <button class="chip g" data-x="regional">🌍 Exclusivos regionales</button>
         <button class="chip" data-x="note">📝 Con nota</button>
+        <button class="chip x" data-x="evo">🧬 Por evolución</button>
+        <button class="chip p" data-x="old">🕰️ Copias antiguas</button>
       </div>
     </section>
 
@@ -502,6 +534,7 @@ body.light .qi button.s{color:#b45309}
   </nav>
 </div>
 
+<div id="pub" class="hidden"></div>
 <div id="dlg" class="overlay hidden"></div>
 <div id="toast" class="hidden"></div>
 <canvas id="confetti" class="hidden"></canvas>
@@ -511,7 +544,7 @@ body.light .qi button.s{color:#b45309}
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 <script>
 'use strict';
-const APP_VERSION = '4.0.2';
+const APP_VERSION = '4.1.0';
 const DATA_VERSION = '2026-11-12';
 
 /* ================= CONFIGURACIÓN ================= */
@@ -600,6 +633,18 @@ const FORM_LABELS = {
   'blue-plumage':'Plumaje Azul', 'yellow-plumage':'Plumaje Amarillo', 'white-plumage':'Plumaje Blanco',
   droopy:'Forma Lánguida', stretchy:'Forma Estirada', roaming:'Forma Andante'
 };
+/* Legendarios (y Meltan/Melmetal): sus intercambios son «especiales» en GO */
+const SPECIAL = new Set([144, 145, 146, 150, 243, 244, 245, 249, 250, 377, 378, 379, 380, 381, 382, 383, 384, 480, 481, 482, 483, 484, 485, 486, 487, 488,
+  638, 639, 640, 641, 642, 643, 644, 645, 646, 716, 717, 772, 773, 785, 786, 787, 788, 789, 790, 791, 792, 800, 808, 809, 888, 889, 890, 891, 892, 894, 895,
+  896, 897, 898, 905, 1001, 1002, 1003, 1004, 1007, 1008, 1009, 1010, 1014, 1015, 1016, 1017, 1024]);
+/* Polvoestelar por intercambio según amistad: [normal ya registrado, normal no registrado, especial ya registrado, especial no registrado] */
+const FRIEND_LEVELS = { good: 'Buen amigo', great: 'Gran amigo', ultra: 'Amigo ultra', best: 'Mejor amigo' };
+const COST = { good: [100, 20000, 20000, 1000000], great: [100, 16000, 16000, 800000], ultra: [100, 1600, 1600, 80000], best: [100, 800, 800, 40000] };
+const NEXT_LEVEL = { good: 'great', great: 'ultra', ultra: 'best' };
+const YEARS = [['', '—'], ['2016', '2016'], ['2017', '2017'], ['2018', '2018'], ['2019', '2019 o después']];
+const fmt = n => n.toLocaleString('es-ES');
+const PUBLIC = new URLSearchParams(location.search).get('ver');
+const APP_URL = location.origin + location.pathname;
 const ART = (pid) => `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pid}.png`;
 
 /* ================= UTILIDADES ================= */
@@ -616,12 +661,17 @@ function toast(msg, ms = 2200) {
   const t = $('#toast'); t.textContent = msg; t.classList.remove('hidden');
   clearTimeout(toastT); toastT = setTimeout(() => t.classList.add('hidden'), ms);
 }
+function toastAction(msg, label, cb, ms = 5000) {
+  const t = $('#toast'); t.innerHTML = `${esc(msg)}<button class="tact">${esc(label)}</button>`; t.classList.remove('hidden');
+  t.querySelector('.tact').onclick = () => { t.classList.add('hidden'); cb(); };
+  clearTimeout(toastT); toastT = setTimeout(() => t.classList.add('hidden'), ms);
+}
 const typeTag = i => `<span class="tp" style="background:${TYPES[i][1]}">${TYPES[i][0]}</span>`;
 const icon = (id, cls = 'i') => `<svg class="${cls}"><use href="#i-${id}"/></svg>`;
 const vib = () => { if (navigator.vibrate) navigator.vibrate(12); };
 
 /* ================= DATOS POKÉMON ================= */
-let SPECIES = [], BY_ID = new Map(), BY_KEY = new Map(), FORMS = [];
+let SPECIES = [], BY_ID = new Map(), BY_KEY = new Map(), FORMS = [], FROM = new Map();
 const regionOf = id => (REGIONS.find(r => id >= r[2] && id <= r[3]) || REGIONS[9])[0];
 
 async function loadData() {
@@ -629,6 +679,7 @@ async function loadData() {
   if (!r.ok) throw new Error('No se pudieron cargar los datos');
   const d = await r.json();
   const tps = t => [...t].map(c => parseInt(c, 36));
+  d.P.forEach(p => FROM.set(p[0], p[5]));
   SPECIES = d.P.filter(p => !HIDDEN.has(p[0])).map(([id, name, t, gen, chain, from]) => ({
     id, key: String(id), name, n: norm(name), types: tps(t), gen, chain, from, region: regionOf(id), forms: []
   }));
@@ -647,8 +698,8 @@ const nameOf = key => { const x = BY_KEY.get(key); return !x ? key : x.sp ? `${x
 const artOf = key => { const x = BY_KEY.get(key); return ART(x ? (x.pid || x.id) : 0); };
 
 /* ================= ESTADO ================= */
-const FIELDS = ['lucky', 'luckyAt', 'extra', 'prio', 'notes', 'meet'];
-const emptyT = () => ({ lucky: {}, luckyAt: {}, extra: {}, prio: {}, notes: {}, meet: {} });
+const FIELDS = ['lucky', 'luckyAt', 'extra', 'prio', 'notes', 'meet', 'year'];
+const emptyT = () => ({ lucky: {}, luckyAt: {}, extra: {}, prio: {}, notes: {}, meet: {}, year: {}, friend: null, backups: {}, backupAt: 0, pub: null, gUsed: 0 });
 const state = {
   me: null, other: null,
   data: { Dapica03: emptyT(), Rulotgar: emptyT() },
@@ -663,6 +714,25 @@ const X = (t, key) => +(D(t).extra[key] || 0);
 const P = (t, key) => !!D(t).prio[key];
 const M = (t, key) => !!D(t).meet[key];
 const NOTE = (t, key) => D(t).notes[key] || '';
+const YR = (t, key) => D(t).year[key] || '';
+const OLD = (t, key) => X(t, key) > 0 && YR(t, key) && +YR(t, key) <= 2018;   // copia de 2018 o antes: suerte garantizada (si quedan de los 25)
+/* 🧬 Si tiene con suerte una preevolución, evolucionándola consigue esta con suerte */
+function evoFrom(t, s) {
+  if (L(t, s.key)) return null;
+  let f = FROM.get(s.id), guard = 0;
+  while (f && guard++ < 5) { if (L(t, String(f))) return BY_ID.get(f) || null; f = FROM.get(f); }
+  return null;
+}
+/* Amistad: cada uno guarda la suya; vale la más reciente */
+function friendInfo() {
+  const a = D('Dapica03').friend, b = D('Rulotgar').friend;
+  if (!a) return b || {}; if (!b) return a;
+  return (a.updated || 0) >= (b.updated || 0) ? a : b;
+}
+function tradeCost(ids) {
+  const lv = friendInfo().level || 'best', special = ids.some(id => SPECIAL.has(id));
+  return { n: COST[lv][special ? 2 : 0], special, lv };
+}
 
 /* ================= FIREBASE ================= */
 firebase.initializeApp(firebaseConfig);
@@ -684,7 +754,78 @@ function write(changes, extraTop = {}) {
     }
   }
   docRef(me).set(payload, { merge: true }).catch(e => { console.error(e); toast('⚠️ No se pudo guardar: ' + (e.code || e.message)); });
+  schedulePublish();
   scheduleRender();
+}
+
+/* ---------- ↩️ Deshacer ---------- */
+const UNDO_FIELDS = ['lucky', 'luckyAt', 'extra', 'prio', 'notes', 'meet', 'year'];
+function undoable(msg, fn) {
+  const before = JSON.parse(JSON.stringify(Object.fromEntries(UNDO_FIELDS.map(f => [f, D(state.me)[f]]))));
+  fn();
+  toastAction(msg, 'Deshacer', () => {
+    const ch = {};
+    UNDO_FIELDS.forEach(f => {
+      const now = D(state.me)[f], keys = new Set([...Object.keys(before[f]), ...Object.keys(now)]);
+      keys.forEach(k => { if (JSON.stringify(before[f][k]) !== JSON.stringify(now[k])) (ch[f] = ch[f] || {})[k] = before[f][k] ?? null; });
+    });
+    if (Object.keys(ch).length) write(ch);
+    toast('↩️ Deshecho');
+  });
+}
+
+/* ---------- 💾 Copia de seguridad semanal (se guardan las 4 últimas) ---------- */
+function snapshotData() {
+  const d = D(state.me);
+  return { at: Date.now(), lucky: Object.keys(d.lucky).join(','), extra: d.extra, prio: d.prio, notes: d.notes, meet: d.meet, year: d.year };
+}
+function makeBackup(manual) {
+  const d = D(state.me), key = 'b' + new Date().toISOString().slice(0, 10).replace(/-/g, '');
+  const keys = Object.keys(d.backups).filter(k => k !== key).sort().reverse();
+  const backups = { [key]: snapshotData() };
+  keys.slice(3).forEach(k => backups[k] = FV.delete());
+  docRef(state.me).set({ backups, backupAt: Date.now() }, { merge: true })
+    .then(() => manual && toast('💾 Copia guardada')).catch(e => toast('⚠️ ' + (e.code || e.message)));
+}
+function weeklyBackup() {
+  const d = D(state.me);
+  if (!Object.keys(d.lucky).length) return;
+  if (Date.now() - (d.backupAt || 0) > 7 * 864e5) makeBackup(false);
+}
+function restoreBackup(key) {
+  const b = D(state.me).backups[key]; if (!b) return;
+  const target = { lucky: Object.fromEntries((b.lucky || '').split(',').filter(Boolean).map(k => [k, true])), extra: b.extra || {}, prio: b.prio || {}, notes: b.notes || {}, meet: b.meet || {}, year: b.year || {} };
+  const ch = {};
+  Object.entries(target).forEach(([f, map]) => {
+    const now = D(state.me)[f]; ch[f] = {};
+    new Set([...Object.keys(map), ...Object.keys(now)]).forEach(k => { if (JSON.stringify(map[k]) !== JSON.stringify(now[k])) ch[f][k] = map[k] ?? null; });
+  });
+  write(ch); toast('✅ Copia restaurada');
+}
+
+/* ---------- 🔗 Enlace público (solo lectura) para pedir intercambios por WhatsApp/Telegram ---------- */
+const pubRef = t => db.collection('publico').doc(t);
+let pubT = null;
+function schedulePublish() { clearTimeout(pubT); pubT = setTimeout(publishNow, 2500); }
+function publishNow() {
+  const me = state.me; if (!me || !SPECIES.length) return;
+  const cfg = D(me).pub;
+  if (!cfg || !cfg.on) return;
+  const faltan = SPECIES.filter(s => !L(me, s.key)).map(s => s.id).join(',');
+  const cambio = {}; SPECIES.forEach(s => { if (X(me, s.key)) cambio[s.id] = X(me, s.key); });
+  pubRef(me).set({ on: true, name: me, faltan, cambio, wa: cfg.wa || '', tg: cfg.tg || '', updatedAt: FV.serverTimestamp() })
+    .catch(e => { console.error(e); toast('⚠️ Enlace público: ' + (e.code === 'permission-denied' ? 'faltan permisos en Firebase' : e.message), 4000); });
+}
+function setPublic(cfg) {
+  docRef(state.me).set({ pub: cfg }, { merge: true });
+  D(state.me).pub = cfg;
+  if (cfg.on) publishNow(); else pubRef(state.me).set({ on: false, name: state.me, faltan: '', cambio: {} }).catch(() => {});
+}
+const publicLink = t => `${APP_URL}?ver=${encodeURIComponent(t)}`;
+function openWhatsApp(text, phone) { window.open(`https://wa.me/${(phone || '').replace(/[^0-9]/g, '')}?text=${encodeURIComponent(text)}`, '_blank'); }
+async function openTelegram(text, user, url) {
+  if (user) { try { await navigator.clipboard.writeText(text); toast('Mensaje copiado: pégalo en el chat', 3500); } catch {} window.open(`https://t.me/${user.replace(/^@/, '')}`, '_blank'); }
+  else window.open(`https://t.me/share/url?url=${encodeURIComponent(url || APP_URL)}&text=${encodeURIComponent(text)}`, '_blank');
 }
 /* Marcar / desmarcar con suerte. stamp = guardar la fecha (para «Novedades»). Al conseguirlo, sale de la quedada. */
 function setLucky(map, stamp = true) {
@@ -707,12 +848,14 @@ function subscribe() {
     unsubs.push(docRef(t).onSnapshot({ includeMetadataChanges: true }, snap => {
       const d = snap.data() || {}, x = emptyT();
       for (const f of FIELDS) if (d[f] && typeof d[f] === 'object') for (const [k, v] of Object.entries(d[f])) if (v) x[f][k] = v;
+      x.friend = d.friend || null; x.backups = d.backups || {}; x.backupAt = d.backupAt || 0; x.pub = d.pub || null; x.gUsed = d.gUsed || 0;
       state.data[t] = x;
       if (!snap.metadata.fromCache) state.loaded[t] = true;
       if (!checked && t === state.me && !snap.metadata.fromCache && SPECIES.length) {
         checked = true;
         applyVideoImport(d);
         setTimeout(() => checkAchievements(true), 800);
+        setTimeout(weeklyBackup, 2500);
       }
       scheduleRender();
     }, err => { console.error(err); toast('⚠️ Error de sincronización: ' + (err.code || err.message), 4000); }));
@@ -743,6 +886,7 @@ auth.getRedirectResult().catch(showLoginErr);
 function showLoginErr(e) { const el = $('#loginErr'); el.textContent = 'No se pudo iniciar sesión: ' + (e.code || e.message); el.classList.remove('hidden'); }
 
 auth.onAuthStateChanged(async user => {
+  if (PUBLIC) return;
   if (!user) { unsubs.forEach(u => u()); unsubs = []; $('#app').classList.add('hidden'); $('#login').classList.remove('hidden'); return; }
   const trainer = ACCOUNTS[(user.email || '').toLowerCase()];
   if (!trainer) { showLoginErr({ message: `la cuenta ${user.email} no tiene acceso.` }); await auth.signOut(); return; }
@@ -820,6 +964,8 @@ function filtered() {
       case 'oextra': if (!X(ot, s.key)) return false; break;
       case 'regional': if (!REGIONAL[s.id]) return false; break;
       case 'note': if (!NOTE(me, s.key) && !NOTE(ot, s.key)) return false; break;
+      case 'evo': if (!evoFrom(state.view === 'other' ? ot : me, s)) return false; break;
+      case 'old': if (!OLD(me, s.key) && !OLD(ot, s.key)) return false; break;
     }
     return true;
   });
@@ -853,6 +999,8 @@ function cardHTML(s) {
   if (NOTE(me, s.key) || NOTE(ot, s.key)) b.push('📝');
   const xn = X(me, s.key);
   if (xn) b.push(`<span class="xn">x${xn}</span>`);
+  if (OLD(me, s.key)) b.push('🕰️');
+  if (evoFrom(me, s)) b.push('🧬');
   return `<div class="card ${c ? 'c' : ''} ${state.sel.has(s.key) ? 'sel' : ''}" data-k="${s.key}" data-r="${s.region}">
     <div class="ctop"><span class="num">${pad(s.id)}</span><button class="chk" aria-label="Marcar con suerte"><span>${c ? '🍀' : ''}</span></button></div>
     ${fb}<div class="cb">${b.join('')}</div>
@@ -874,6 +1022,7 @@ function render() {
   if (state.tab === 'ach') renderAch();
   if (state.detail) renderDetail();
   if (currentDlg === 'compare') renderCompare();
+  if (currentDlg === 'live') renderLive();
 }
 
 function renderDex() {
@@ -961,7 +1110,7 @@ $('#grid').addEventListener('click', e => {
   const k = card.dataset.k;
   if (state.selecting) { toggleSel(k); return; }
   const tg = e.target.closest('[data-tg]');
-  if (tg || e.target.closest('.chk')) { toggleLucky(tg ? tg.dataset.tg : k); vib(); return; }
+  if (tg || e.target.closest('.chk')) { const kk = tg ? tg.dataset.tg : k, on = !L(state.me, kk); undoable(on ? `🍀 ${nameOf(kk)} marcado` : `${nameOf(kk)} desmarcado`, () => setLucky({ [kk]: on })); vib(); return; }
   if (e.target.closest('.pl')) return;
   openDetail(k);
 });
@@ -988,10 +1137,10 @@ $('#selbar').onclick = e => {
   if (act === 'cancel') return setSelecting(false);
   if (!keys.length) return toast('Toca los Pokémon que quieras seleccionar');
   const m = {};
-  if (act === 'lucky') { keys.forEach(k => m[k] = true); setLucky(m); toast(`🍀 ${keys.length} marcados`); }
-  if (act === 'unlucky') { if (!confirm(`¿Quitar la suerte a ${keys.length} Pokémon?`)) return; keys.forEach(k => m[k] = false); setLucky(m); toast(`Quitados ${keys.length}`); }
-  if (act === 'prio') { const all = keys.every(k => P(state.me, k)); keys.forEach(k => m[k] = !all); write({ prio: m }); toast(all ? 'Prioridad quitada' : `⭐ ${keys.length} con prioridad`); }
-  if (act === 'meet') { const ok = keys.filter(k => !L(state.me, k)); ok.forEach(k => m[k] = true); write({ meet: m }); toast(`🤝 ${ok.length} añadidos a la quedada`); }
+  if (act === 'lucky') { keys.forEach(k => m[k] = true); undoable(`🍀 ${keys.length} marcados`, () => setLucky(m)); }
+  if (act === 'unlucky') { keys.forEach(k => m[k] = false); undoable(`Quitada la suerte a ${keys.length}`, () => setLucky(m)); }
+  if (act === 'prio') { const all = keys.every(k => P(state.me, k)); keys.forEach(k => m[k] = !all); undoable(all ? 'Prioridad quitada' : `⭐ ${keys.length} con prioridad`, () => write({ prio: m })); }
+  if (act === 'meet') { const ok = keys.filter(k => !L(state.me, k)); ok.forEach(k => m[k] = true); undoable(`🤝 ${ok.length} añadidos a la quedada`, () => write({ meet: m })); }
   setSelecting(false);
 };
 
@@ -1003,7 +1152,11 @@ function openShare(items, title) {
   openDlg('share', `<div class="sheet"><div class="sh-head"><h3>Compartir</h3><button class="ibtn" data-close>${icon('x')}</button></div>
     <div class="sh-body"><p class="muted">${esc(title)} · ${items.length} Pokémon</p>
     <button class="btn pri" id="shImg">📷 Como imagen</button>
-    <button class="btn" id="shTxt">💬 Como texto</button></div></div>`);
+    <div class="share3"><button class="btn wa" id="shWa">WhatsApp</button><button class="btn tg" id="shTg">Telegram</button></div>
+    <button class="btn" id="shTxt">💬 Otra app (texto)</button></div></div>`);
+  const txt = () => `${title} (${items.length})\n\n${items.map(s => `${pad(s.sp ? s.sp.id : s.id)} ${s.sp ? s.sp.name : s.name}`).join('\n')}${D(state.me).pub?.on ? `\n\nMi Pokédex con suerte: ${publicLink(state.me)}` : ''}`;
+  $('#shWa').onclick = () => openWhatsApp(txt());
+  $('#shTg').onclick = () => openTelegram(txt(), '', D(state.me).pub?.on ? publicLink(state.me) : APP_URL);
   $('#shTxt').onclick = () => shareText(items, title);
   $('#shImg').onclick = () => shareImage(items, title);
 }
@@ -1063,6 +1216,11 @@ function closeDlg(fromPop) {
 }
 window.addEventListener('popstate', () => closeDlg(true));
 $('#dlg').addEventListener('click', e => { if (e.target.id === 'dlg' || e.target.closest('[data-close]')) closeDlg(); });
+$('#dlg').addEventListener('click', e => {
+  const g = e.target.closest('[data-lgot]'); if (g) { const k = g.dataset.lgot; undoable(`🍀 ¡${nameOf(k)} con suerte!`, () => setLucky({ [k]: true })); vib(); confetti(); return; }
+  const n = e.target.closest('[data-lno]'); if (n) { liveSkip = liveSkip.filter(x => x !== n.dataset.lno).concat(n.dataset.lno); toast('Otra vez será 💪 · pasa al final de la lista'); renderLive(); return; }
+  const sk = e.target.closest('[data-lskip]'); if (sk) { liveSkip = liveSkip.filter(x => x !== sk.dataset.lskip).concat(sk.dataset.lskip); renderLive(); }
+});
 document.addEventListener('keydown', e => {
   if (e.target.tagName === 'TEXTAREA') return;
   if (e.key === 'Escape') closeDlg();
@@ -1141,8 +1299,11 @@ function renderDetail(force) {
         ${L(me, k) ? '' : `<button class="tbtn q ${M(me, k) ? 'on' : ''}" data-meet="${k}">🤝 ${M(me, k) ? 'En la quedada' : 'A la quedada'}</button>`}
       </div>
       ${P(ot, k) ? `<p class="tip">⭐ ${ot} también lo tiene como prioridad.</p>` : ''}
-      <div class="stepper"><div class="l">🔁 Copias que tengo para cambiar<small>${ot} tiene: ${X(ot, k)}</small></div>
+      ${evoFrom(me, s) ? `<div class="evo-tip">🧬 Tienes <b>${esc(evoFrom(me, s).name)}</b> con suerte: si lo evolucionas, este sale con suerte sin intercambiar.</div>` : ''}
+      <div class="stepper"><div class="l">🔁 Copias que tengo para cambiar<small>${ot} tiene: ${X(ot, k)}${YR(ot, k) ? ` (de ${YR(ot, k)})` : ''}</small></div>
         <div class="c"><button data-ex="-1">−</button><b>${X(me, k)}</b><button data-ex="1">+</button></div></div>
+      ${X(me, k) ? `<div class="stepper"><div class="l">🕰️ Año de mi copia más antigua<small class="old-tip">${OLD(me, k) ? '🍀 De 2018 o antes: suerte garantizada si te quedan intercambios garantizados (máx. 25)' : 'Cuanto más antigua, más probabilidad de suerte'}</small></div>
+        <select class="yrsel" id="yrSel">${YEARS.map(([v, l]) => `<option value="${v}" ${YR(me, k) === v ? 'selected' : ''}>${l}</option>`).join('')}</select></div>` : ''}
       <div><p class="sec-t">📝 Mi nota</p>
         <textarea class="note" id="myNote" data-key="${k}" placeholder="Ej.: tengo uno de 2017, pedírselo a ${ot}…">${esc(NOTE(me, k))}</textarea>
         ${onote ? `<div class="note-o"><b>${ot}:</b> ${esc(onote)}</div>` : ''}</div>
@@ -1151,15 +1312,16 @@ function renderDetail(force) {
     </div>`;
   el.querySelector('.sh-body').scrollTop = prev;
   $('#myNote').addEventListener('blur', saveNoteIfAny);
+  $('#yrSel') && ($('#yrSel').onchange = e => write({ year: { [k]: e.target.value || null } }));
 }
 
 $('#dlg').addEventListener('click', e => {
-  const tg = e.target.closest('[data-tg]'); if (tg) { toggleLucky(tg.dataset.tg); vib(); return; }
+  const tg = e.target.closest('[data-tg]'); if (tg) { const kk = tg.dataset.tg, on = !L(state.me, kk); undoable(on ? `🍀 ${nameOf(kk)} marcado` : `${nameOf(kk)} desmarcado`, () => setLucky({ [kk]: on })); vib(); return; }
   const st = e.target.closest('[data-step]'); if (st) return stepDetail(+st.dataset.step);
   const go = e.target.closest('[data-go]'); if (go) { saveNoteIfAny(); state.detail = go.dataset.go; renderDetail(true); $('#sheet .sh-body').scrollTo(0, 0); return; }
-  const pr = e.target.closest('[data-prio]'); if (pr) { const k = pr.dataset.prio; write({ prio: { [k]: !P(state.me, k) } }); return; }
+  const pr = e.target.closest('[data-prio]'); if (pr) { const k = pr.dataset.prio; undoable(P(state.me, k) ? 'Prioridad quitada' : '⭐ Prioridad', () => write({ prio: { [k]: !P(state.me, k) } })); return; }
   const mt = e.target.closest('[data-meet]'); if (mt) { const k = mt.dataset.meet; write({ meet: { [k]: !M(state.me, k) } }); toast(M(state.me, k) ? '🤝 Añadido a la próxima quedada' : 'Quitado de la quedada'); return; }
-  const ex = e.target.closest('[data-ex]'); if (ex) { const k = state.detail; write({ extra: { [k]: Math.max(0, X(state.me, k) + +ex.dataset.ex) || null } }); return; }
+  const ex = e.target.closest('[data-ex]'); if (ex) { const k = state.detail, n = Math.max(0, X(state.me, k) + +ex.dataset.ex); write(n ? { extra: { [k]: n } } : { extra: { [k]: null }, year: { [k]: null } }); return; }
 });
 let tx0 = null, ty0 = null;
 $('#dlg').addEventListener('touchstart', e => { if (state.detail) { tx0 = e.touches[0].clientX; ty0 = e.touches[0].clientY; } }, { passive: true });
@@ -1189,16 +1351,46 @@ function suggestPairs() {
   const pr = s => (P(me, s.key) ? 2 : 0) + (P(ot, s.key) ? 2 : 0);
   // Espejo: os falta a los dos → cambiarlo entre vosotros da la opción de suerte a ambos
   const mirror = SPECIES.filter(s => !L(me, s.key) && !L(ot, s.key))
-    .map(s => ({ s, score: pr(s) + (X(me, s.key) ? 3 : 0) + (X(ot, s.key) ? 3 : 0) + (REGIONAL[s.id] ? 1 : 0) }))
+    .filter(s => !evoFrom(me, s) || !evoFrom(ot, s))
+    .map(s => ({ s, score: pr(s) + (X(me, s.key) ? 3 : 0) + (X(ot, s.key) ? 3 : 0) + (OLD(me, s.key) || OLD(ot, s.key) ? 6 : 0) + (REGIONAL[s.id] ? 1 : 0) - (evoFrom(me, s) || evoFrom(ot, s) ? 4 : 0) }))
     .sort((a, b) => b.score - a.score || a.s.id - b.s.id);
   // Cruzados: él tiene copias de lo que me falta y yo de lo que le falta
-  const iGet = SPECIES.filter(s => !L(me, s.key) && X(ot, s.key) > 0).sort((a, b) => pr(b) - pr(a) || a.id - b.id);
-  const heGets = SPECIES.filter(s => !L(ot, s.key) && X(me, s.key) > 0).sort((a, b) => pr(b) - pr(a) || a.id - b.id);
+  const age = (t, s) => OLD(t, s.key) ? 3 : 0;
+  const iGet = SPECIES.filter(s => !L(me, s.key) && !evoFrom(me, s) && X(ot, s.key) > 0).sort((a, b) => pr(b) + age(ot, b) - pr(a) - age(ot, a) || a.id - b.id);
+  const heGets = SPECIES.filter(s => !L(ot, s.key) && !evoFrom(ot, s) && X(me, s.key) > 0).sort((a, b) => pr(b) + age(me, b) - pr(a) - age(me, a) || a.id - b.id);
   const cross = [];
   for (let i = 0; i < Math.min(iGet.length, heGets.length); i++) cross.push({ get: iGet[i], give: heGets[i] });
   return { mirror, cross, iGet, heGets };
 }
+const costTag = ids => { const c = tradeCost(ids); return `<span class="cost ${c.special ? 'sp' : ''}" title="Polvoestelar si ya lo tenéis registrado">💰${c.n >= 1000 ? Math.round(c.n / 1000) + 'k' : c.n}${c.special ? ' ★' : ''}</span>`; };
 let meetShowAll = false;
+
+/* ---------- 🔴 Modo quedada en directo ---------- */
+let liveSkip = [];
+function openLive() { liveSkip = []; openDlg('live', '<div class="sheet" id="liveS" style="max-height:96vh"></div>'); renderLive(); }
+function renderLive() {
+  const el = $('#liveS'); if (!el) return;
+  const me = state.me, ot = state.other;
+  const pend = meetList();
+  const mine = pend.filter(x => x.t === me).sort((a, b) => (liveSkip.indexOf(a.k) - liveSkip.indexOf(b.k)) || (P(me, b.k) - P(me, a.k)));
+  const theirs = pend.filter(x => x.t !== me);
+  const cur = mine[0], curS = cur && BY_KEY.get(cur.k);
+  const since = Date.now() - 6 * 3600e3;
+  const feed = TRAINERS.flatMap(t => Object.entries(D(t).luckyAt).filter(([k, at]) => at > since && L(t, k) && BY_KEY.has(k)).map(([k, at]) => ({ t, k, at }))).sort((a, b) => b.at - a.at);
+  const ago = at => { const m = Math.round((Date.now() - at) / 60000); return m < 1 ? 'ahora' : m < 60 ? `hace ${m} min` : `hace ${Math.round(m / 60)} h`; };
+  const fi = friendInfo();
+  el.innerHTML = `<div class="sh-head"><h3>🔴 Quedada en directo</h3><button class="ibtn" data-close>${icon('x')}</button></div>
+    <div class="sh-body live">
+      ${fi.lucky ? '<div class="lf">🍀 Sois amigos de la suerte: este intercambio sale con suerte seguro.</div>' : ''}
+      ${curS ? `<div class="live-cur"><span class="sub">Te toca conseguir (${mine.length} pendientes)</span>
+          <img src="${ART(curS.id)}" alt=""><span class="nm">${esc(curS.name)}</span>
+          <span class="sub">${pad(curS.id)} · ${costTag([curS.id])}${X(ot, cur.k) ? ` · ${ot} tiene ${X(ot, cur.k)}${OLD(ot, cur.k) ? ' (antigua 🕰️🍀)' : ''}` : ''}${P(me, cur.k) ? ' · ⭐' : ''}</span>
+          <div class="live-btns"><button class="ok" data-lgot="${cur.k}">🍀 ¡Salió con suerte!</button><button data-lno="${cur.k}">😕 No salió</button><button data-lskip="${cur.k}">⏭️ Luego</button></div></div>`
+        : `<div class="box"><p class="muted">No tienes nada pendiente en la lista de la quedada. Añade Pokémon desde las parejas sugeridas o la selección múltiple.</p></div>`}
+      ${theirs.length ? `<div><p class="sec-t">Lo que busca ${ot} (${theirs.length})</p><div class="qlist">${theirs.slice(0, 15).map(({ k }) => `<div class="qi"><img src="${artOf(k)}" alt=""><div class="n">${esc(nameOf(k))}<small>${X(me, k) ? `tienes ${X(me, k)} para darle${OLD(me, k) ? ' · 🕰️🍀' : ''}` : 'no tienes copias apuntadas'}</small></div></div>`).join('')}</div></div>` : ''}
+      <div><p class="sec-t">Lo que ha salido hoy</p>${feed.length ? `<div class="feed">${feed.slice(0, 30).map(f => `<div><img src="${artOf(f.k)}" alt=""><b>${f.t === me ? 'Tú' : f.t}</b> · ${esc(nameOf(f.k))} 🍀<span style="margin-left:auto;color:var(--tx4)">${ago(f.at)}</span></div>`).join('')}</div>` : '<p class="tip">Aún nada. Cuando alguno marque un Pokémon con suerte, aparecerá aquí al momento.</p>'}</div>
+    </div>`;
+}
 function renderMeet() {
   const me = state.me, ot = state.other;
   const nw = news(), ml = meetList(), { mirror, cross, iGet, heGets } = suggestPairs();
@@ -1208,7 +1400,22 @@ function renderMeet() {
   const mineFirst = [...ml.filter(x => x.t === me), ...ml.filter(x => x.t !== me)];
   const mirrorShown = meetShowAll ? mirror.slice(0, 120) : mirror.slice(0, 12);
   const side = (s, lbl) => `<div class="side"><img loading="lazy" src="${ART(s.id)}" alt=""><span>${esc(s.name)}<small>${lbl}</small></span></div>`;
+  const fi = friendInfo(), lv = fi.level || '';
+  const nextDate = fi.nextAt ? new Date(fi.nextAt) : null, daysLeft = nextDate ? Math.max(0, Math.ceil((nextDate - Date.now()) / 864e5)) : null;
+  const best = SPECIES.filter(s => !L(me, s.key) && !L(ot, s.key) && !evoFrom(me, s) && !evoFrom(ot, s)).sort((a, b) => (P(me, b.key) + P(ot, b.key) + (REGIONAL[b.id] ? 1 : 0) + (SPECIAL.has(b.id) ? 1 : 0)) - (P(me, a.key) + P(ot, a.key) + (REGIONAL[a.id] ? 1 : 0) + (SPECIAL.has(a.id) ? 1 : 0)))[0];
   $('#pgMeet').innerHTML = `
+    <button class="btn pri" id="liveBtn" style="padding:14px;font-size:15px">🔴 Modo quedada en directo</button>
+    ${fi.lucky ? `<div class="lf">🍀 ¡Sois amigos de la suerte! El próximo intercambio entre vosotros sale con suerte seguro.${best ? ` Aprovechadlo con <b>${esc(best.name)}</b>, que os falta a los dos.` : ''}</div>` : ''}
+    <div class="qsec"><h3>🤝 Vuestra amistad <span>${lv ? FRIEND_LEVELS[lv] : 'sin indicar'}</span></h3>
+      <div class="fr">
+        <label>Nivel de amistad<select id="frLv">${['', ...Object.keys(FRIEND_LEVELS)].map(v => `<option value="${v}" ${v === lv ? 'selected' : ''}>${v ? FRIEND_LEVELS[v] : '—'}</option>`).join('')}</select></label>
+        <label>Días para el siguiente nivel<input id="frDays" type="number" min="0" inputmode="numeric" placeholder="lo pone el juego" value="${daysLeft ?? ''}" ${lv === 'best' ? 'disabled' : ''}></label>
+        <label>Garantizados usados (tú)<input id="frG" type="number" min="0" max="25" inputmode="numeric" value="${D(me).gUsed || ''}" placeholder="0 de 25"></label>
+        <label>Amigos de la suerte<select id="frLucky"><option value="0" ${fi.lucky ? '' : 'selected'}>No</option><option value="1" ${fi.lucky ? 'selected' : ''}>🍀 Sí</option></select></label>
+      </div>
+      <p class="tip">${lv && lv !== 'best' && nextDate ? `📅 Seréis ${FRIEND_LEVELS[NEXT_LEVEL[lv]]} el ${nextDate.toLocaleDateString('es-ES', { day: 'numeric', month: 'long' })} (faltan ${daysLeft} días). ` : ''}💰 Coste por intercambio${lv ? '' : ' (suponiendo Mejores amigos)'}: normal ${fmt(COST[lv || 'best'][0])} · legendario ${fmt(COST[lv || 'best'][2])} · nuevo en la Pokédex ${fmt(COST[lv || 'best'][1])}–${fmt(COST[lv || 'best'][3])} de polvoestelar. Solo 1 intercambio especial al día.
+        ${(D(me).gUsed || 0) >= 25 ? '<br>⚠️ Ya has usado tus 25 intercambios con suerte garantizada: las copias antiguas ya no la aseguran.' : `<br>🕰️ Te quedan ${25 - (D(me).gUsed || 0)} intercambios con suerte garantizada usando copias de 2018 o antes${D(ot).gUsed ? ` (a ${ot}: ${Math.max(0, 25 - D(ot).gUsed)})` : ''}.`}</p>
+    </div>
     <div class="qsec"><h3>🔔 Novedades <span>${nw.length ? `${ot} consiguió ${nw.length}` : 'nada nuevo'}</span></h3>
       ${nw.length ? `<div class="news">${nw.slice(0, 40).map(k => `<span class="nw" data-open="${k}"><img src="${artOf(k)}" alt="">${esc(nameOf(k))}</span>`).join('')}</div>
       <button class="btn" id="seenBtn">✓ Marcar como visto</button>` : `<p class="tip">Aquí verás los Pokémon con suerte que ${ot} vaya consiguiendo desde tu última visita.</p>`}
@@ -1220,21 +1427,30 @@ function renderMeet() {
     </div>
     <div class="qsec"><h3>🔄 Parejas sugeridas <span>${mirror.length} espejo · ${cross.length} cruzadas</span></h3>
       ${cross.length ? `<p class="sec-t" style="margin:0">Cruzadas (según vuestras copias para cambiar)</p>
-        ${cross.slice(0, 20).map(p => `<div class="pair">${side(p.give, `Tú das (x${X(me, p.give.key)})`)}<span class="mid">⇄</span>${side(p.get, `${ot} da (x${X(ot, p.get.key)})`)}
+        ${cross.slice(0, 20).map(p => `<div class="pair">${side(p.give, `Tú das (x${X(me, p.give.key)})${OLD(me, p.give.key) ? ' 🕰️' : ''}`)}<span class="mid">⇄<br>${costTag([p.give.id, p.get.id])}</span>${side(p.get, `${ot} da (x${X(ot, p.get.key)})${OLD(ot, p.get.key) ? ' 🕰️' : ''}`)}
           <button class="${M(me, p.get.key) ? 'done' : ''}" data-addmeet="${p.get.key}">${M(me, p.get.key) ? '✓' : '+ 🤝'}</button></div>`).join('')}` :
         `<p class="tip">💡 Si apuntáis en cada ficha cuántas copias tenéis para cambiar (🔁), aquí os emparejo "tú le das X y él te da Y". Ahora mismo: tú tienes copias de ${heGets.length} que le faltan a ${ot}, y ${ot} tiene copias de ${iGet.length} que te faltan a ti.</p>`}
       <p class="sec-t" style="margin:6px 0 0">Espejo: os falta a los dos (cambiaos el mismo)</p>
-      ${mirrorShown.map(({ s }) => `<div class="pair">${side(s, `${pad(s.id)}${X(me, s.key) ? ` · tú x${X(me, s.key)}` : ''}${X(ot, s.key) ? ` · ${ot[0]} x${X(ot, s.key)}` : ''}${REGIONAL[s.id] ? ' · 🌍' : ''}`)}
-          <span class="mid">⇄</span><div class="side" style="justify-content:flex-end;color:var(--tx3);font-weight:600">el mismo</div>
+      ${mirrorShown.map(({ s }) => `<div class="pair">${side(s, `${pad(s.id)}${X(me, s.key) ? ` · tú x${X(me, s.key)}` : ''}${X(ot, s.key) ? ` · ${ot[0]} x${X(ot, s.key)}` : ''}${OLD(me, s.key) || OLD(ot, s.key) ? ' · 🕰️🍀' : ''}${REGIONAL[s.id] ? ' · 🌍' : ''}${evoFrom(me, s) || evoFrom(ot, s) ? ' · 🧬' : ''}`)}
+          <span class="mid">⇄<br>${costTag([s.id])}</span><div class="side" style="justify-content:flex-end;color:var(--tx3);font-weight:600">el mismo</div>
           <button class="${M(me, s.key) ? 'done' : ''}" data-addmeet="${s.key}">${M(me, s.key) ? '✓' : '+ 🤝'}</button></div>`).join('')}
       ${mirror.length > 12 ? `<button class="more" id="moreMirror">${meetShowAll ? 'Ver menos' : `Ver más (${mirror.length})`}</button>` : ''}
     </div>`;
   $('#seenBtn') && ($('#seenBtn').onclick = () => { store.set('seen_' + me, Date.now()); render(); });
+  $('#liveBtn').onclick = openLive;
+  const saveFriend = () => {
+    const level = $('#frLv').value, days = $('#frDays').value;
+    const f = { ...friendInfo(), level, lucky: $('#frLucky').value === '1', updated: Date.now() };
+    f.nextAt = level && level !== 'best' && days !== '' ? Date.now() + (+days) * 864e5 : null;
+    write({}, { friend: f });
+  };
+  ['frLv', 'frDays', 'frLucky'].forEach(id => $('#' + id).onchange = saveFriend);
+  $('#frG').onchange = e => write({}, { gUsed: Math.min(25, Math.max(0, +e.target.value || 0)) });
   $('#moreMirror') && ($('#moreMirror').onclick = () => { meetShowAll = !meetShowAll; renderMeet(); });
   $('#shareMeet') && ($('#shareMeet').onclick = () => openShare(mineFirst.map(x => BY_KEY.get(x.k)), '🤝 Lista para la próxima quedada'));
 }
 $('#pgMeet').addEventListener('click', e => {
-  const g = e.target.closest('[data-got]'); if (g) { setLucky({ [g.dataset.got]: true }); toast('🍀 ¡Enhorabuena! Quitado de la lista'); vib(); return; }
+  const g = e.target.closest('[data-got]'); if (g) { const k = g.dataset.got; undoable(`🍀 ¡${nameOf(k)} conseguido!`, () => setLucky({ [k]: true })); vib(); return; }
   const u = e.target.closest('[data-unmeet]'); if (u) { write({ meet: { [u.dataset.unmeet]: null } }); return; }
   const a = e.target.closest('[data-addmeet]'); if (a) { const k = a.dataset.addmeet; write({ meet: { [k]: !M(state.me, k) } }); return; }
   const o = e.target.closest('[data-open]'); if (o) { const k = o.dataset.open; const x = BY_KEY.get(k); openDetail(x && x.sp ? x.sp.key : k); }
@@ -1336,7 +1552,18 @@ $('#btnSettings').onclick = () => {
 </div>
       <div class="box"><p class="sec-t">Instalar en el móvil</p>${installHTML}
         <p class="muted" style="margin-top:8px">Funciona sin conexión: lo que marques se sube solo al volver la conexión.</p></div>
-      <div class="box"><p class="sec-t">Copia de seguridad</p>
+      <div class="box"><p class="sec-t">🔗 Enlace para pedir intercambios</p>
+        <p class="muted">Un enlace de solo lectura para mandar por WhatsApp o Telegram: cualquiera ve los Pokémon con suerte que te faltan y los que tienes para cambiar, y te escribe directamente. No ve tus notas.</p>
+        <div style="height:8px"></div>
+        <div class="seg" style="grid-template-columns:1fr 1fr" id="pubSeg"><button data-v="0" style="${D(state.me).pub?.on ? '' : 'background:var(--accent);color:#fff'}">Desactivado</button><button data-v="1" style="${D(state.me).pub?.on ? 'background:var(--accent);color:#fff' : ''}">Activado</button></div>
+        <div class="fr" style="margin-top:8px"><label>Tu WhatsApp (con prefijo)<input id="pubWa" type="tel" placeholder="+34 600 000 000" value="${esc(D(state.me).pub?.wa || '')}"></label>
+          <label>Tu usuario de Telegram<input id="pubTg" type="text" placeholder="@usuario" value="${esc(D(state.me).pub?.tg || '')}"></label></div>
+        ${D(state.me).pub?.on ? `<div class="share3" style="margin-top:8px"><button class="btn wa" id="pubShWa">Enviar por WhatsApp</button><button class="btn tg" id="pubShTg">Enviar por Telegram</button></div>
+          <button class="btn" id="pubCopy" style="margin-top:8px">📋 Copiar enlace</button>` : ''}</div>
+      <div class="box"><p class="sec-t">💾 Copias automáticas (cada semana)</p>
+        ${Object.keys(D(state.me).backups).length ? Object.entries(D(state.me).backups).sort((a, b) => b[0].localeCompare(a[0])).map(([k, b]) => `<div class="stepper" style="margin-bottom:6px"><div class="l">${new Date(b.at).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' })}<small>${(b.lucky || '').split(',').filter(Boolean).length} con suerte</small></div><button class="sbtn" data-restore="${k}">Restaurar</button></div>`).join('') : '<p class="muted">Todavía no hay copias. Se hace una sola cada semana al abrir la app.</p>'}
+        <button class="btn" id="bkNow" style="margin-top:6px">💾 Hacer copia ahora</button></div>
+      <div class="box"><p class="sec-t">Copia de seguridad (archivo)</p>
         <div class="btn2"><button class="btn" id="btnExport">${icon('down')} Exportar</button>
         <label class="btn" style="cursor:pointer">${icon('up')} Importar<input type="file" id="fileImport" accept=".json,application/json" hidden></label></div></div>
       <div class="box"><button class="btn danger" id="btnReset">${icon('trash')} Borrar todos mis 🍀</button></div>
@@ -1350,6 +1577,15 @@ $('#btnSettings').onclick = () => {
     segEl.querySelectorAll('button').forEach(x => { const on = x === b; x.classList.toggle('on', on); x.style.background = on ? 'var(--accent)' : ''; });
   });
   $('#btnLogout').onclick = () => { if (confirm('¿Cerrar sesión?')) { closeDlg(); auth.signOut(); } };
+  const pubCfg = () => ({ on: !!D(state.me).pub?.on, wa: $('#pubWa').value.trim(), tg: $('#pubTg').value.trim() });
+  $('#pubSeg').onclick = e => { const b = e.target.closest('[data-v]'); if (!b) return; setPublic({ ...pubCfg(), on: b.dataset.v === '1' }); closeDlg(); setTimeout(() => $('#btnSettings').click(), 350); toast(b.dataset.v === '1' ? '🔗 Enlace activado' : 'Enlace desactivado'); };
+  $('#pubWa').onchange = $('#pubTg').onchange = () => setPublic(pubCfg());
+  const pubMsg = () => `🍀 Mi Pokédex con suerte de Pokémon GO: mira cuáles me faltan y cuáles tengo para cambiar. ¡Escríbeme si quieres intercambiar!\n${publicLink(state.me)}`;
+  $('#pubShWa') && ($('#pubShWa').onclick = () => openWhatsApp(pubMsg()));
+  $('#pubShTg') && ($('#pubShTg').onclick = () => openTelegram(pubMsg(), '', publicLink(state.me)));
+  $('#pubCopy') && ($('#pubCopy').onclick = async () => { try { await navigator.clipboard.writeText(publicLink(state.me)); toast('Enlace copiado'); } catch { prompt('Copia el enlace:', publicLink(state.me)); } });
+  $('#bkNow').onclick = () => makeBackup(true);
+  document.querySelectorAll('#dlg [data-restore]').forEach(b => b.onclick = () => { if (confirm('¿Volver a como estaba tu Pokédex en esa copia? Lo de después se perderá (puedes deshacerlo al momento).')) { undoable('Copia restaurada', () => restoreBackup(b.dataset.restore)); closeDlg(); } });
   $('#btnInstall') && ($('#btnInstall').onclick = async () => { deferredInstall.prompt(); await deferredInstall.userChoice; deferredInstall = null; closeDlg(); });
   $('#btnExport').onclick = () => {
     const blob = new Blob([JSON.stringify({ version: 4, trainer: state.me, exportedAt: new Date().toISOString(), ...D(state.me) })], { type: 'application/json' });
@@ -1397,10 +1633,61 @@ if ('serviceWorker' in navigator && location.protocol === 'https:') {
   navigator.serviceWorker.addEventListener('controllerchange', () => { if (!hadController || reloaded) return; reloaded = true; if (!currentDlg) location.reload(); });
 }
 
+/* ================= VISTA PÚBLICA (?ver=Entrenador) ================= */
+const pubState = { tab: 'faltan', q: '', region: 'all', sel: new Set(), data: null };
+function startPublic() {
+  $('#login').classList.add('hidden'); $('#app').classList.add('hidden'); $('#pub').classList.remove('hidden');
+  $('#pub').innerHTML = '<div class="loading"><div class="spin"></div>Cargando…</div>';
+  pubRef(PUBLIC).onSnapshot(snap => { pubState.data = snap.exists ? snap.data() : null; renderPublic(); },
+    () => { $('#pub').innerHTML = '<div class="empty">No se pudo cargar esta Pokédex.</div>'; });
+}
+function renderPublic() {
+  const d = pubState.data, root = $('#pub');
+  if (!d || !d.on) { root.innerHTML = `<div class="empty">🔒 La Pokédex de ${esc(PUBLIC)} no está compartida ahora mismo.</div>`; return; }
+  const faltan = new Set((d.faltan || '').split(',').filter(Boolean).map(Number)), cambio = d.cambio || {};
+  const q = norm(pubState.q.trim()).replace(/^#/, ''), qNum = /^\d+$/.test(q) ? String(parseInt(q, 10)) : null;
+  const list = SPECIES.filter(s => (pubState.tab === 'faltan' ? faltan.has(s.id) : cambio[s.id]) && (pubState.region === 'all' || s.region === pubState.region)
+    && (!q || (qNum ? s.key.startsWith(qNum) : s.n.includes(q))));
+  const nSel = pubState.sel.size;
+  root.innerHTML = `
+    <header><div class="hrow"><div class="me"><div class="avatar">${esc(d.name[0])}</div><div class="me-txt"><div class="me-name">Pokédex con suerte de ${esc(d.name)}</div>
+      <div class="me-sub">🍀 Le faltan ${faltan.size} · 🔁 tiene ${Object.keys(cambio).length} para cambiar</div></div></div></div></header>
+    <section class="controls">
+      <div class="seg" style="grid-template-columns:1fr 1fr" id="pubTabs">
+        <button data-t="faltan" style="${pubState.tab === 'faltan' ? 'background:#b45309;color:#fff' : ''}">🍀 Le faltan (${faltan.size})</button>
+        <button data-t="cambio" style="${pubState.tab === 'cambio' ? 'background:#6d28d9;color:#fff' : ''}">🔁 Tiene para cambiar (${Object.keys(cambio).length})</button></div>
+      <div class="row"><div class="search"><svg class="i"><use href="#i-search"/></svg><input id="pq" type="search" placeholder="Nombre o número" value="${esc(pubState.q)}"></div>
+        <select class="sel" id="pReg" style="flex:0 0 40%"><option value="all">Todas</option>${REGIONS.map(r => `<option value="${r[0]}" ${pubState.region === r[0] ? 'selected' : ''}>${r[1]}</option>`).join('')}</select></div>
+      <p class="tip">${pubState.tab === 'faltan' ? 'Toca los que tú tengas para ofrecérselos.' : 'Toca los que te interesen para pedírselos.'}</p>
+    </section>
+    <main><div class="grid">${list.map(s => `<div class="card ${pubState.sel.has(pubState.tab[0] + ':' + s.key) ? 'sel' : ''}" data-pk="${s.key}"><div class="ctop"><span class="num">${pad(s.id)}</span>${cambio[s.id] ? `<span class="xn" style="font-size:10px;font-weight:800;background:#6d28d9;color:#fff;border-radius:6px;padding:2px 4px">x${cambio[s.id]}</span>` : ''}</div>
+      <div class="art"><img loading="lazy" src="${ART(s.id)}" alt=""></div><div class="cname">${esc(s.name)}</div><div class="ctypes">${s.types.map(typeTag).join('')}</div></div>`).join('')}</div>
+      ${list.length ? '' : '<div class="empty">Nada por aquí.</div>'}</main>
+    ${nSel ? `<div class="pubbar"><b style="font-size:13px;text-align:center">${nSel} seleccionado${nSel === 1 ? '' : 's'}</b><div class="b2">
+      ${d.wa ? '<button class="btn wa" id="pWa">Escribir por WhatsApp</button>' : ''}${d.tg ? '<button class="btn tg" id="pTg">Escribir por Telegram</button>' : ''}
+      ${!d.wa && !d.tg ? '<button class="btn wa" id="pWa">Enviar por WhatsApp</button><button class="btn tg" id="pTg">Enviar por Telegram</button>' : ''}</div></div>` : ''}`;
+  document.body.style.paddingBottom = nSel ? '130px' : '20px';
+  $('#pubTabs').onclick = e => { const b = e.target.closest('[data-t]'); if (b) { pubState.tab = b.dataset.t; renderPublic(); } };
+  let qt; $('#pq').oninput = e => { clearTimeout(qt); qt = setTimeout(() => { pubState.q = e.target.value; renderPublic(); $('#pq').focus(); }, 250); };
+  $('#pReg').onchange = e => { pubState.region = e.target.value; renderPublic(); };
+  root.querySelector('.grid').onclick = e => { const c = e.target.closest('[data-pk]'); if (!c) return; const k = pubState.tab[0] + ':' + c.dataset.pk; pubState.sel.has(k) ? pubState.sel.delete(k) : pubState.sel.add(k); renderPublic(); };
+  const msg = () => {
+    const pick = pre => [...pubState.sel].filter(x => x.startsWith(pre + ':')).map(x => BY_KEY.get(x.slice(2))).filter(Boolean).sort((a, b) => a.id - b.id);
+    const offer = pick('f'), want = pick('c');
+    let m = `¡Hola ${d.name}! He visto tu Pokédex con suerte 🍀`;
+    if (offer.length) m += `\n\nTe puedo cambiar (te faltan con suerte):\n${offer.map(s => `• ${pad(s.id)} ${s.name}`).join('\n')}`;
+    if (want.length) m += `\n\nMe interesan de los tuyos:\n${want.map(s => `• ${pad(s.id)} ${s.name}`).join('\n')}`;
+    return m + '\n\n¿Hacemos intercambio?';
+  };
+  $('#pWa') && ($('#pWa').onclick = () => openWhatsApp(msg(), d.wa));
+  $('#pTg') && ($('#pTg').onclick = () => openTelegram(msg(), d.tg, publicLink(d.name)));
+}
+
 /* ================= ARRANQUE ================= */
 applyBodyClasses();
 buildControls();
 const dataReady = loadData();
+if (PUBLIC) dataReady.then(startPublic);
 dataReady.then(() => scheduleRender()).catch(err => { console.error(err); $('#loading').innerHTML = '⚠️ No se pudieron cargar los datos. Comprueba tu conexión y recarga.'; });
 </script>
 </body>

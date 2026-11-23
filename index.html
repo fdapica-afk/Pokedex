@@ -280,11 +280,13 @@ body.compact .chk span{width:16px;height:16px;font-size:10px}
 body.compact .pls{gap:2px;margin-top:2px}
 body.compact .pl{font-size:9px;padding:2px 0;border-radius:6px}
 
-/* Saltos rápidos por región */
-.jump{position:fixed;right:2px;top:50%;transform:translateY(-50%);z-index:30;display:flex;flex-direction:column;gap:2px;background:rgba(15,23,42,.7);border:1px solid var(--line);border-radius:12px;padding:4px 2px}
-body.light .jump{background:rgba(255,255,255,.85)}
-.jump button{font-size:10px;font-weight:800;color:var(--tx2);padding:5px 4px;border-radius:8px;min-width:26px}
-.jump button:active{background:var(--accent);color:#fff}
+/* Saltos rápidos por región: barra de arriba a abajo, se puede deslizar el dedo */
+.jump{position:fixed;right:3px;top:calc(var(--hh,64px) + 10px);bottom:calc(84px + var(--safe-b));z-index:30;width:30px;display:flex;flex-direction:column;justify-content:space-between;align-items:center;background:rgba(30,41,59,.55);border:1px solid var(--line);border-radius:15px;padding:8px 0;touch-action:none;user-select:none;-webkit-user-select:none}
+body.light .jump{background:rgba(255,255,255,.8)}
+.jump button{font-size:11px;font-weight:800;color:var(--tx2);padding:2px 0;width:100%;border-radius:8px;pointer-events:none}
+.jump button.on{color:var(--accent2)}
+.jump.drag{background:var(--accentbg);border-color:var(--accent)}
+.jbub{position:fixed;right:46px;z-index:31;min-width:96px;padding:10px 14px;border-radius:14px;background:var(--accent);color:#fff;font-weight:800;font-size:16px;text-align:center;box-shadow:0 8px 24px rgba(0,0,0,.35);pointer-events:none;transform:translateY(-50%)}
 body.has-jump main{padding-right:34px}
 body.has-jump .summary,body.has-jump .controls{padding-right:38px}
 
@@ -473,6 +475,7 @@ body.light .qi button.s{color:#b45309}
       <div id="empty" class="empty hidden">🎉 ¡Nada pendiente con estos filtros!</div>
     </main>
     <div class="jump hidden" id="jump"></div>
+    <div class="jbub hidden" id="jbub"></div>
   </div>
 
   <!-- ===== PESTAÑA QUEDADA ===== -->
@@ -508,7 +511,7 @@ body.light .qi button.s{color:#b45309}
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 <script>
 'use strict';
-const APP_VERSION = '4.0.0';
+const APP_VERSION = '4.0.2';
 const DATA_VERSION = '2026-11-12';
 
 /* ================= CONFIGURACIÓN ================= */
@@ -638,7 +641,7 @@ async function loadData() {
   });
   SPECIES.forEach(s => s.forms.sort((a, b) => FORM_ORDER[a.cat] - FORM_ORDER[b.cat] || a.pid - b.pid));
 }
-const showForms = () => !state.hideForms;
+const showForms = () => false;   // la Pokédex con suerte de GO no registra las formas aparte
 const formsOf = s => showForms() ? s.forms : [];
 const nameOf = key => { const x = BY_KEY.get(key); return !x ? key : x.sp ? `${x.sp.name} (${x.label})` : x.name; };
 const artOf = key => { const x = BY_KEY.get(key); return ART(x ? (x.pid || x.id) : 0); };
@@ -649,7 +652,7 @@ const emptyT = () => ({ lucky: {}, luckyAt: {}, extra: {}, prio: {}, notes: {}, 
 const state = {
   me: null, other: null,
   data: { Dapica03: emptyT(), Rulotgar: emptyT() },
-  region: store.get('region', 'all'), type: store.get('type', 'all'), sort: store.get('sort', 'num'),
+  region: (r => r === 'forms' ? 'all' : r)(store.get('region', 'all')), type: store.get('type', 'all'), sort: store.get('sort', 'num'),
   view: store.get('view', 'me'), xf: null, q: '', list: [], detail: null,
   tab: 'dex', compact: store.get('compact', false), theme: store.get('theme', 'dark'), hideForms: store.get('hideForms', false),
   selecting: false, sel: new Set(), loaded: { Dapica03: false, Rulotgar: false }
@@ -765,7 +768,7 @@ function applyBodyClasses() {
 /* ================= FILTROS Y LISTA ================= */
 function buildControls() {
   const reg = $('#fRegion');
-  reg.innerHTML = `<option value="all">🌐 Todas las regiones</option>` + REGIONS.map(r => `<option value="${r[0]}">${r[1]}</option>`).join('') + `<option value="forms">Con formas</option>`;
+  reg.innerHTML = `<option value="all">🌐 Todas las regiones</option>` + REGIONS.map(r => `<option value="${r[0]}">${r[1]}</option>`).join('');
   reg.value = state.region;
   $('#fType').innerHTML = `<option value="all">Todos los tipos</option>` + TYPES.map((t, i) => `<option value="${i}">${t[0]}</option>`).join('');
   $('#fType').value = state.type; $('#fSort').value = state.sort;
@@ -884,6 +887,7 @@ function renderDex() {
   $('#compactTxt').textContent = state.compact ? '▣' : '▦';
   $('#btnSelect').textContent = state.selecting ? '✖️' : '☑️';
   renderJump(list);
+  setHH();
 }
 
 /* ---------- Saltos rápidos por región ---------- */
@@ -894,11 +898,38 @@ function renderJump(list) {
   document.body.classList.toggle('has-jump', show);
   if (show) $('#jump').innerHTML = regs.map(r => `<button data-j="${r[0]}" title="${r[1]}">${r[4]}</button>`).join('');
 }
-$('#jump').onclick = e => {
-  const b = e.target.closest('[data-j]'); if (!b) return;
-  const el = document.querySelector(`.card[data-r="${b.dataset.j}"]`);
-  if (el) { const y = el.getBoundingClientRect().top + scrollY - document.querySelector('header').offsetHeight - 8; scrollTo({ top: y, behavior: 'smooth' }); }
-};
+function jumpTo(reg, smooth) {
+  const el = document.querySelector(`.card[data-r="${reg}"]`); if (!el) return;
+  const y = el.getBoundingClientRect().top + scrollY - document.querySelector('header').offsetHeight - 8;
+  scrollTo({ top: y, behavior: smooth ? 'smooth' : 'auto' });
+}
+let jumpCur = null;
+function jumpAt(clientY) {
+  const btns = [...document.querySelectorAll('#jump button')]; if (!btns.length) return;
+  let best = btns[0], bd = Infinity;
+  btns.forEach(b => { const r = b.getBoundingClientRect(), d = Math.abs(r.top + r.height / 2 - clientY); if (d < bd) { bd = d; best = b; } });
+  const reg = best.dataset.j;
+  const bub = $('#jbub'), r = best.getBoundingClientRect();
+  bub.textContent = REGIONS.find(x => x[0] === reg)[1]; bub.style.top = (r.top + r.height / 2) + 'px'; bub.classList.remove('hidden');
+  btns.forEach(b => b.classList.toggle('on', b === best));
+  if (reg !== jumpCur) { jumpCur = reg; jumpTo(reg, false); vib(); }
+}
+const jumpEl = $('#jump');
+jumpEl.addEventListener('pointerdown', e => { e.preventDefault(); jumpEl.setPointerCapture(e.pointerId); jumpEl.classList.add('drag'); jumpCur = null; jumpAt(e.clientY); });
+jumpEl.addEventListener('pointermove', e => { if (jumpEl.classList.contains('drag')) jumpAt(e.clientY); });
+['pointerup', 'pointercancel'].forEach(ev => jumpEl.addEventListener(ev, () => {
+  jumpEl.classList.remove('drag'); setTimeout(() => $('#jbub').classList.add('hidden'), 350);
+}));
+/* Marca en la barra la región que se está viendo */
+addEventListener('scroll', () => {
+  if (jumpEl.classList.contains('hidden') || jumpEl.classList.contains('drag')) return;
+  const hh = document.querySelector('header').offsetHeight + 20;
+  const card = [...document.querySelectorAll('#grid .card')].find(c => c.getBoundingClientRect().bottom > hh);
+  const reg = card && card.dataset.r;
+  document.querySelectorAll('#jump button').forEach(b => b.classList.toggle('on', b.dataset.j === reg));
+}, { passive: true });
+const setHH = () => document.documentElement.style.setProperty('--hh', document.querySelector('header').offsetHeight + 'px');
+addEventListener('resize', setHH);
 
 function updateHeader() {
   const pool = SPECIES.filter(s => state.region === 'all' || state.region === 'forms' || s.region === state.region);
@@ -1302,7 +1333,7 @@ $('#btnSettings').onclick = () => {
       <div class="box"><p class="sec-t">Aspecto</p>
         ${seg('theme', [['dark', '🌙 Oscuro'], ['light', '☀️ Claro'], ['auto', '⚙️ Auto']], state.theme)}
         <div style="height:8px"></div>${seg('compact', [['false', 'Tarjetas normales'], ['true', 'Vista compacta']], state.compact)}
-        <div style="height:8px"></div>${seg('hideForms', [['false', 'Mostrar formas'], ['true', 'Ocultar formas']], state.hideForms)}</div>
+</div>
       <div class="box"><p class="sec-t">Instalar en el móvil</p>${installHTML}
         <p class="muted" style="margin-top:8px">Funciona sin conexión: lo que marques se sube solo al volver la conexión.</p></div>
       <div class="box"><p class="sec-t">Copia de seguridad</p>

@@ -234,6 +234,131 @@ main{max-width:1200px;margin:0 auto;padding:4px 8px}
 .who-p.R.on{border-color:#f43f5e;background:rgba(244,63,94,.12);color:#fecdd3}
 button.who-p{cursor:pointer}
 .fbadge{top:24px}
+
+/* ===== v4 ===== */
+body{padding-bottom:calc(74px + var(--safe-b))}
+/* Modo claro */
+body.light{--bg:#f1f5f9;--bg2:#ffffff;--bg3:#e2e8f0;--line:#e2e8f0;--line2:#cbd5e1;--tx:#0f172a;--tx2:#334155;--tx3:#64748b;--tx4:#94a3b8}
+body.light header{background:rgba(255,255,255,.94)}
+body.light .progress{background:#e2e8f0}
+body.light .bnav{background:rgba(255,255,255,.96)}
+body.light .card img{filter:drop-shadow(0 3px 4px rgba(0,0,0,.18))}
+body.light .duo-p.D b{color:#1d4ed8} body.light .duo-p.R b{color:#be123c}
+body.light .who-p.D.on{color:#1d4ed8} body.light .who-p.R.on{color:#be123c}
+body.light .pl.D.on{color:#1d4ed8} body.light .pl.R.on{color:#be123c}
+body.light #toast{background:#fff;color:var(--tx)}
+body.light .overlay{background:rgba(15,23,42,.45)}
+
+/* Navegación inferior */
+.bnav{position:fixed;left:0;right:0;bottom:0;z-index:45;background:rgba(15,23,42,.96);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(3,1fr);padding:6px 6px calc(6px + var(--safe-b))}
+.bnav button{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px;font-weight:600;color:var(--tx3);padding:4px;border-radius:12px;position:relative}
+.bnav button .e{font-size:20px;line-height:1}
+.bnav button.on{color:var(--tx);background:var(--bg2)}
+.bnav .dot{position:absolute;top:2px;right:calc(50% - 18px);min-width:16px;height:16px;padding:0 4px;border-radius:8px;background:var(--bad);color:#fff;font-size:10px;line-height:16px;font-weight:800}
+.page{max-width:1200px;margin:0 auto}
+
+/* Chips de filtros extra */
+.chips .chip.on.p{background:#a16207;border-color:#ca8a04}
+.chips .chip.on.g{background:#0f766e;border-color:#14b8a6}
+.chips .chip.on.x{background:#6d28d9;border-color:#8b5cf6}
+
+/* Insignias de la tarjeta */
+.cb{position:absolute;right:6px;top:30px;display:flex;flex-direction:column;align-items:flex-end;gap:2px;font-size:12px;line-height:1}
+.cb .xn{font-size:10px;font-weight:800;background:#6d28d9;color:#fff;border-radius:6px;padding:2px 4px}
+.card.sel{outline:3px solid var(--accent);outline-offset:-1px}
+.card.sel::after{content:"✓";position:absolute;left:50%;top:42%;transform:translate(-50%,-50%);width:34px;height:34px;border-radius:50%;background:var(--accent);color:#fff;font-weight:900;display:flex;align-items:center;justify-content:center;font-size:18px}
+
+/* Vista compacta */
+body.compact .grid{grid-template-columns:repeat(5,minmax(0,1fr));gap:5px}
+@media(min-width:560px){body.compact .grid{grid-template-columns:repeat(7,minmax(0,1fr))}}
+@media(min-width:820px){body.compact .grid{grid-template-columns:repeat(10,minmax(0,1fr))}}
+body.compact .card{padding:3px 3px 5px;border-radius:10px;contain-intrinsic-size:auto 96px}
+body.compact .cname,body.compact .fbadge,body.compact .cb{display:none}
+body.compact .num{font-size:9px}
+body.compact .chk{width:22px;height:22px}
+body.compact .chk span{width:16px;height:16px;font-size:10px}
+body.compact .pls{gap:2px;margin-top:2px}
+body.compact .pl{font-size:9px;padding:2px 0;border-radius:6px}
+
+/* Saltos rápidos por región */
+.jump{position:fixed;right:2px;top:50%;transform:translateY(-50%);z-index:30;display:flex;flex-direction:column;gap:2px;background:rgba(15,23,42,.7);border:1px solid var(--line);border-radius:12px;padding:4px 2px}
+body.light .jump{background:rgba(255,255,255,.85)}
+.jump button{font-size:10px;font-weight:800;color:var(--tx2);padding:5px 4px;border-radius:8px;min-width:26px}
+.jump button:active{background:var(--accent);color:#fff}
+body.has-jump main{padding-right:34px}
+body.has-jump .summary,body.has-jump .controls{padding-right:38px}
+
+/* Barra de selección múltiple */
+.selbar{position:fixed;left:8px;right:8px;bottom:calc(70px + var(--safe-b));z-index:46;background:var(--bg2);border:1px solid var(--accent);border-radius:16px;padding:8px;box-shadow:0 10px 30px rgba(0,0,0,.45);display:flex;flex-direction:column;gap:6px}
+.selbar .t{font-size:13px;font-weight:700;text-align:center}
+.selbar .a{display:grid;grid-template-columns:repeat(5,1fr);gap:4px}
+.selbar .a button{font-size:11px;font-weight:700;padding:8px 2px;border-radius:10px;background:var(--bg);border:1px solid var(--line);color:var(--tx2)}
+.selbar .a button .e{display:block;font-size:17px}
+
+/* Ficha: bloques nuevos */
+.trow{display:flex;gap:8px}
+.tbtn{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:11px 6px;border-radius:12px;background:var(--bg);border:1.5px solid var(--line);font-weight:700;font-size:13px;color:var(--tx2)}
+.tbtn.on.p{border-color:#ca8a04;background:rgba(202,138,4,.15);color:#facc15}
+.tbtn.on.q{border-color:#0ea5e9;background:rgba(14,165,233,.14);color:#7dd3fc}
+body.light .tbtn.on.p{color:#a16207} body.light .tbtn.on.q{color:#0369a1}
+.stepper{display:flex;align-items:center;justify-content:space-between;gap:8px;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:8px 10px}
+.stepper .l{font-size:13px;font-weight:700}
+.stepper .l small{display:block;font-weight:400;color:var(--tx3);font-size:11px}
+.stepper .c{display:flex;align-items:center;gap:6px}
+.stepper button{width:34px;height:34px;border-radius:10px;background:var(--bg2);border:1px solid var(--line);font-size:18px;font-weight:800}
+.stepper b{min-width:24px;text-align:center;font-size:17px}
+.note{width:100%;min-height:62px;resize:vertical;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:9px 10px;font:inherit;font-size:14px;color:var(--tx)}
+.note-o{font-size:13px;color:var(--tx2);background:var(--bg);border:1px dashed var(--line2);border-radius:12px;padding:8px 10px;margin-top:6px}
+.regx{font-size:13px;background:rgba(20,184,166,.12);border:1px solid rgba(20,184,166,.4);color:#5eead4;border-radius:12px;padding:8px 10px}
+body.light .regx{color:#0f766e}
+
+/* Quedada */
+.qsec{background:var(--bg2);border:1px solid var(--line);border-radius:16px;padding:12px;display:flex;flex-direction:column;gap:10px}
+.qsec h3{margin:0;font-size:15px;display:flex;align-items:center;gap:6px}
+.qsec h3 span{margin-left:auto;font-size:12px;color:var(--tx3);font-weight:600}
+.qlist{display:flex;flex-direction:column;gap:6px}
+.qi{display:flex;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:6px 8px}
+.qi img{width:44px;height:44px;object-fit:contain;flex:none}
+.qi .n{flex:1;min-width:0;font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.qi .n small{display:block;font-weight:500;color:var(--tx3);font-size:11px}
+.qi button.s{font-size:12px;font-weight:700;padding:7px 9px;border-radius:10px;background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.5);color:#fcd34d;white-space:nowrap}
+body.light .qi button.s{color:#b45309}
+.qi button.x{width:30px;height:30px;border-radius:9px;color:var(--tx3);font-size:16px}
+.pair{display:flex;align-items:center;gap:6px;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:6px}
+.pair .side{flex:1;min-width:0;display:flex;align-items:center;gap:4px;font-size:12px;font-weight:700}
+.pair .side img{width:38px;height:38px;object-fit:contain;flex:none}
+.pair .side span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pair .side small{display:block;font-weight:500;color:var(--tx3);font-size:10px}
+.pair .mid{font-size:16px;color:var(--tx3)}
+.pair button{font-size:11px;font-weight:800;padding:7px 8px;border-radius:9px;background:var(--accent);color:#fff;white-space:nowrap}
+.pair button.done{background:var(--bg3);color:var(--tx3)}
+.news{display:flex;flex-wrap:wrap;gap:6px}
+.news .nw{display:flex;align-items:center;gap:4px;background:var(--bg);border:1px solid var(--line);border-radius:999px;padding:3px 9px 3px 3px;font-size:12px;font-weight:700}
+.news .nw img{width:26px;height:26px;object-fit:contain}
+.more{font-size:12px;font-weight:700;color:var(--accent2);padding:6px;align-self:center}
+.tip{font-size:12px;color:var(--tx3);line-height:1.45;margin:0}
+
+/* Logros */
+.lg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+@media(min-width:560px){.lg{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.lgi{background:var(--bg2);border:1.5px solid var(--line);border-radius:14px;padding:10px;display:flex;flex-direction:column;gap:4px;align-items:center;text-align:center}
+.lgi .e{font-size:30px;filter:grayscale(1);opacity:.35}
+.lgi.ok{border-color:#ca8a04;background:linear-gradient(180deg,rgba(250,204,21,.12),var(--bg2))}
+.lgi.ok .e{filter:none;opacity:1}
+.lgi b{font-size:13px}
+.lgi small{font-size:11px;color:var(--tx3)}
+.lgi .who2{display:flex;gap:4px;font-size:10px;font-weight:800}
+.lgi .who2 span{padding:2px 6px;border-radius:6px;background:var(--bg3);color:var(--tx4)}
+.lgi .who2 span.D.on{background:#2563eb;color:#fff}
+.lgi .who2 span.R.on{background:#e11d48;color:#fff}
+.lgi .bar{width:100%}
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:100}
+#toast{bottom:calc(84px + var(--safe-b))}
+.summary .acts .sbtn{min-width:40px;height:36px;justify-content:center;font-size:15px;padding:6px 10px}
+.summary > div:first-child{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.card{-webkit-touch-callout:none}
+.card img{pointer-events:none;-webkit-user-drag:none}
 </style>
 </head>
 <body>
@@ -272,6 +397,7 @@ button.who-p{cursor:pointer}
   </div>
 </section>
 
+
 <!-- APP -->
 <div id="app" class="hidden">
   <header>
@@ -290,60 +416,99 @@ button.who-p{cursor:pointer}
     <div class="progress"><div id="progBar"></div></div>
   </header>
 
-  <section class="controls">
-    <div class="duo" id="duo">
-      <div class="duo-p D"><b>Dapica03</b><span id="duoD">—</span><div class="bar"><div id="barD"></div></div></div>
-      <div class="duo-p R"><b>Rulotgar</b><span id="duoR">—</span><div class="bar"><div id="barR"></div></div></div>
-    </div>
-    <div class="seg" id="viewSeg">
-      <button data-view="me">🍀 Me faltan</button>
-      <button data-view="other">Le faltan a …</button>
-      <button data-view="both">A los dos</button>
-      <button data-view="all">Todos</button>
-    </div>
-    <div class="row">
-      <div class="search">
-        <svg class="i"><use href="#i-search"/></svg>
-        <input id="q" type="search" inputmode="search" autocomplete="off" placeholder="Nombre o número (ej. Pikachu, 25)">
-        <button class="clear hidden" id="qClear" aria-label="Borrar"><svg class="i"><use href="#i-x"/></svg></button>
+  <!-- ===== PESTAÑA POKÉDEX ===== -->
+  <div id="pgDex" class="page">
+    <section class="controls">
+      <div class="duo" id="duo">
+        <div class="duo-p D"><b>Dapica03</b><span id="duoD">—</span><div class="bar"><div id="barD"></div></div></div>
+        <div class="duo-p R"><b>Rulotgar</b><span id="duoR">—</span><div class="bar"><div id="barR"></div></div></div>
+      </div>
+      <div class="seg" id="viewSeg">
+        <button data-view="me">🍀 Me faltan</button>
+        <button data-view="other">Le faltan a …</button>
+        <button data-view="both">A los dos</button>
+        <button data-view="all">Todos</button>
+      </div>
+      <div class="row">
+        <div class="search">
+          <svg class="i"><use href="#i-search"/></svg>
+          <input id="q" type="search" inputmode="search" autocomplete="off" placeholder="Nombre o número (ej. Pikachu, 25)">
+          <button class="clear hidden" id="qClear" aria-label="Borrar"><svg class="i"><use href="#i-x"/></svg></button>
+        </div>
+      </div>
+      <div class="row">
+        <select class="sel" id="fRegion"></select>
+        <select class="sel" id="fType"></select>
+        <select class="sel" id="fSort">
+          <option value="num">N.º ↑</option>
+          <option value="numd">N.º ↓</option>
+          <option value="az">Nombre A-Z</option>
+          <option value="za">Nombre Z-A</option>
+          <option value="both">Faltan a los dos primero</option>
+          <option value="prio">⭐ Prioridad primero</option>
+          <option value="extra">🔁 Para cambiar primero</option>
+        </select>
+      </div>
+      <div class="chips" id="extraChips">
+        <button class="chip p" data-x="prio">⭐ Prioridad</button>
+        <button class="chip x" data-x="extra">🔁 Tengo para cambiar</button>
+        <button class="chip x" data-x="oextra">🔁 Él tiene para cambiar</button>
+        <button class="chip g" data-x="regional">🌍 Exclusivos regionales</button>
+        <button class="chip" data-x="note">📝 Con nota</button>
+      </div>
+    </section>
+
+    <div class="summary">
+      <div><b id="sumCount">0</b> <span id="sumLabel">Pokémon</span></div>
+      <div class="acts">
+        <button class="sbtn" id="btnCompact" title="Cambiar vista"><span id="compactTxt">▦</span></button>
+        <button class="sbtn" id="btnSelect" title="Seleccionar varios">☑️</button>
+        <button class="sbtn" id="btnShare" title="Compartir"><svg class="i"><use href="#i-share"/></svg></button>
       </div>
     </div>
-    <div class="row">
-      <select class="sel" id="fRegion"></select>
-      <select class="sel" id="fType"></select>
-      <select class="sel" id="fSort">
-        <option value="num">N.º ↑</option>
-        <option value="numd">N.º ↓</option>
-        <option value="az">Nombre A-Z</option>
-        <option value="za">Nombre Z-A</option>
-      </select>
-    </div>
-  </section>
 
-  <div class="summary">
-    <div><b id="sumCount">0</b> <span id="sumLabel">Pokémon</span></div>
-    <div class="acts">
-      <button class="sbtn" id="btnShare"><svg class="i"><use href="#i-share"/></svg>Compartir</button>
-      <button class="sbtn" id="btnMarkAll"><svg class="i"><use href="#i-checks"/></svg><span id="markAllTxt">Marcar visibles</span></button>
+    <main>
+      <div id="loading" class="loading"><div class="spin"></div>Cargando Pokédex…</div>
+      <div id="grid" class="grid"></div>
+      <div id="empty" class="empty hidden">🎉 ¡Nada pendiente con estos filtros!</div>
+    </main>
+    <div class="jump hidden" id="jump"></div>
+  </div>
+
+  <!-- ===== PESTAÑA QUEDADA ===== -->
+  <div id="pgMeet" class="page hidden" style="padding:10px;display:flex;flex-direction:column;gap:12px"></div>
+
+  <!-- ===== PESTAÑA LOGROS ===== -->
+  <div id="pgAch" class="page hidden" style="padding:10px;display:flex;flex-direction:column;gap:12px"></div>
+
+  <div id="selbar" class="selbar hidden">
+    <div class="t" id="selTxt">0 seleccionados</div>
+    <div class="a">
+      <button data-sa="lucky"><span class="e">🍀</span>Marcar</button>
+      <button data-sa="unlucky"><span class="e">✖️</span>Quitar 🍀</button>
+      <button data-sa="prio"><span class="e">⭐</span>Prioridad</button>
+      <button data-sa="meet"><span class="e">🤝</span>Quedada</button>
+      <button data-sa="cancel"><span class="e">↩️</span>Salir</button>
     </div>
   </div>
 
-  <main>
-    <div id="loading" class="loading"><div class="spin"></div>Cargando Pokédex…</div>
-    <div id="grid" class="grid"></div>
-    <div id="empty" class="empty hidden">🎉 ¡Nada pendiente con estos filtros!</div>
-  </main>
+  <nav class="bnav" id="bnav">
+    <button data-tab="dex" class="on"><span class="e">🍀</span>Pokédex</button>
+    <button data-tab="meet"><span class="e">🤝</span>Quedada<span class="dot hidden" id="meetDot"></span></button>
+    <button data-tab="ach"><span class="e">🏅</span>Logros</button>
+  </nav>
 </div>
 
 <div id="dlg" class="overlay hidden"></div>
 <div id="toast" class="hidden"></div>
+<canvas id="confetti" class="hidden"></canvas>
 
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 <script>
 'use strict';
-const APP_VERSION = '3.2.0';
+const APP_VERSION = '4.0.0';
 const DATA_VERSION = '2026-11-12';
 
 /* ================= CONFIGURACIÓN ================= */
@@ -359,14 +524,64 @@ const ACCOUNTS = { 'f.dapica@gmail.com': 'Dapica03', 'lotyal95@gmail.com': 'Rulo
 const TRAINERS = ['Dapica03', 'Rulotgar'];
 const OTHER = { Dapica03: 'Rulotgar', Rulotgar: 'Dapica03' };
 
-/* Pokémon que no aparecen en la Pokédex con suerte de Pokémon GO (no se pueden intercambiar).
+/* Pokémon que NO se pueden intercambiar en GO (no aparecen en la Pokédex con suerte del juego).
    Meltan y Melmetal sí pueden salir con suerte, por eso no están aquí. */
-const MYTHICAL = new Set([151, 251, 385, 386, 489, 490, 491, 492, 493, 494, 647, 648, 649, 718, 719, 720, 721, 801, 802, 807, 893, 1025]);
+const UNTRADEABLE = [151, 251, 385, 386, 489, 490, 491, 492, 493, 494, 647, 648, 649, 718, 719, 720, 721, 801, 802, 807, 893, 1025];
+
+/* Pokémon que todavía NO han salido en Pokémon GO (lista a 19-10-2026).
+   Cuando salga uno nuevo, basta con quitar su número de aquí y aparecerá solo en la app. */
+const UNRELEASED = [
+  489, 490, 493,                                            // Sinnoh: Phione, Manaphy, Arceus
+  746, 771, 772, 773, 801,                                  // Alola: Wishiwashi, Pyukumuku, Código Cero, Silvally, Magearna
+  833, 834, 868, 869, 871, 875, 878, 879, 880, 881, 882, 883, 896, 897, 898, // Galar
+  902,                                                      // Hisui: Basculegion
+  951, 952, 953, 954, 963, 964, 967, 976, 981, 984, 985, 986, 987, 988, 989, // Paldea
+  990, 991, 992, 993, 994, 995, 1001, 1002, 1003, 1004, 1005, 1006, 1007, 1008,
+  1009, 1010, 1014, 1015, 1016, 1017, 1018, 1020, 1021, 1022, 1023, 1024, 1025
+];
+const HIDDEN = new Set([...UNTRADEABLE, ...UNRELEASED]);
+
+/* Exclusivos regionales de Pokémon GO (fuente: Serebii) */
+const REGIONAL = {
+  83: 'Asia', 115: 'Oceanía', 122: 'Europa', 439: 'Europa',
+  128: 'EE. UU. y Canadá · Tauros de Paldea: Combatiente en la península ibérica, Ardiente en el hemisferio oriental, Acuático en el occidental',
+  214: 'Centroamérica y Sudamérica', 222: 'Zona tropical (cerca del ecuador)',
+  313: 'Europa, Asia y Oceanía', 314: 'América y África', 324: 'India y Sudeste Asiático',
+  335: 'Europa, Asia y Oceanía', 336: 'América y África', 337: 'Europa, Asia y Oceanía', 338: 'América y África',
+  357: 'África y alrededores', 369: 'Nueva Zelanda e islas cercanas', 417: 'Norte de Canadá, Rusia y Alaska',
+  422: 'Forma según la zona: Mar Oeste al oeste del meridiano 0, Mar Este al este', 423: 'Forma según la zona: Mar Oeste al oeste del meridiano 0, Mar Este al este',
+  441: 'Hemisferio sur', 455: 'Sudeste de EE. UU.',
+  480: 'Asia-Pacífico', 481: 'Europa y África', 482: 'América',
+  511: 'Asia-Pacífico', 512: 'Asia-Pacífico', 513: 'Europa y África', 514: 'Europa y África', 515: 'América', 516: 'América',
+  538: 'América y África', 539: 'Europa, Asia y Australia',
+  550: 'Forma según la zona: Raya Roja en el hemisferio oriental, Raya Azul en el occidental',
+  556: 'Sur de EE. UU., México, Centroamérica, Caribe y Sudamérica', 561: 'Egipto y Grecia', 626: 'Nueva York',
+  631: 'Hemisferio oriental', 632: 'Hemisferio occidental',
+  669: 'Color según la zona: rojo en Europa/África, amarillo en América, azul en Asia-Pacífico',
+  670: 'Color según la zona: rojo en Europa/África, amarillo en América, azul en Asia-Pacífico',
+  671: 'Color según la zona: rojo en Europa/África, amarillo en América, azul en Asia-Pacífico',
+  676: 'Algunos cortes según la zona (Estrella, Diamante, Caballero, Reina, Kabuki, Faraón)',
+  701: 'México', 707: 'Francia', 741: 'Estilo según la zona: Apasionado en Europa/África, Animado en América, Plácido en islas, Refinado en Asia-Pacífico',
+  764: 'Hawái', 797: 'Hemisferio sur', 798: 'Hemisferio norte', 805: 'Hemisferio oriental', 806: 'Hemisferio occidental',
+  874: 'Reino Unido', 931: 'Plumaje según la zona: verde en el hemisferio oriental, azul en el occidental',
+  978: 'Forma según la zona: Curvada en Europa/África, Lánguida en América, Estirada en Asia-Pacífico'
+};
+
+/* Lista sacada del vídeo de Rulotgar (13-11-2026): los que le FALTAN. Se aplica una vez y solo añade. */
+const VIDEO_IMPORT = {
+  trainer: 'Rulotgar', flag: 'luckyImportVideo1',
+  faltan: [173, 207, 220, 221, 314, 337, 350, 380, 439, 472, 473, 671, 685, 746, 749, 750, 771, 772, 773, 774, 776, 797, 798, 806,
+    824, 825, 826, 833, 834, 837, 838, 839, 841, 842, 846, 847, 855, 857, 858, 859, 860, 867, 868, 869, 871, 873, 875, 876, 878, 879,
+    880, 881, 882, 883, 885, 886, 887, 890, 891, 892, 896, 897, 898, 902, 903, 904, 926, 927, 936, 937, 942, 943, 944, 945, 947, 948,
+    949, 951, 952, 953, 954, 958, 959, 963, 964, 967, 968, 969, 970, 976, 977, 980, 981, 983, 984, 985, 986, 987, 988, 989, 990, 991,
+    992, 993, 994, 995, 997, 998, 1000, 1001, 1002, 1003, 1004, 1005, 1006, 1007, 1008, 1009, 1010, 1011, 1012, 1013, 1014, 1015,
+    1016, 1017, 1018, 1019, 1020, 1021, 1022, 1023, 1024]
+};
 
 const REGIONS = [
-  ['kanto','Kanto',1,151],['johto','Johto',152,251],['hoenn','Hoenn',252,386],['sinnoh','Sinnoh',387,493],
-  ['unova','Teselia',494,649],['kalos','Kalos',650,721],['alola','Alola',722,809],['galar','Galar',810,898],
-  ['hisui','Hisui',899,905],['paldea','Paldea',906,1025]
+  ['kanto','Kanto',1,151,'K'],['johto','Johto',152,251,'J'],['hoenn','Hoenn',252,386,'H'],['sinnoh','Sinnoh',387,493,'S'],
+  ['unova','Teselia',494,649,'T'],['kalos','Kalos',650,721,'Ka'],['alola','Alola',722,809,'A'],['galar','Galar',810,898,'G'],
+  ['hisui','Hisui',899,905,'Hi'],['paldea','Paldea',906,1025,'P']
 ];
 const TYPES = [
   ['Normal','#9099a1'],['Lucha','#ce4069'],['Volador','#8fa8dd'],['Veneno','#ab6ac8'],['Tierra','#d97746'],['Roca','#c5b78c'],
@@ -400,6 +615,7 @@ function toast(msg, ms = 2200) {
 }
 const typeTag = i => `<span class="tp" style="background:${TYPES[i][1]}">${TYPES[i][0]}</span>`;
 const icon = (id, cls = 'i') => `<svg class="${cls}"><use href="#i-${id}"/></svg>`;
+const vib = () => { if (navigator.vibrate) navigator.vibrate(12); };
 
 /* ================= DATOS POKÉMON ================= */
 let SPECIES = [], BY_ID = new Map(), BY_KEY = new Map(), FORMS = [];
@@ -410,60 +626,40 @@ async function loadData() {
   if (!r.ok) throw new Error('No se pudieron cargar los datos');
   const d = await r.json();
   const tps = t => [...t].map(c => parseInt(c, 36));
-  SPECIES = d.P.filter(p => !MYTHICAL.has(p[0])).map(([id, name, t, gen, chain, from]) => ({
+  SPECIES = d.P.filter(p => !HIDDEN.has(p[0])).map(([id, name, t, gen, chain, from]) => ({
     id, key: String(id), name, n: norm(name), types: tps(t), gen, chain, from, region: regionOf(id), forms: []
   }));
   SPECIES.forEach(s => { BY_ID.set(s.id, s); BY_KEY.set(s.key, s); });
   d.F.forEach(([sid, pid, cat, suf, n, t]) => {
-    const s = BY_ID.get(sid); if (!s || cat === 'm') return;   // las megas no cuentan: no son Pokémon aparte
+    const s = BY_ID.get(sid); if (!s || cat === 'm') return;
     const label = cat === 'g' ? 'Gigamax' : (FORM_LABELS[suf] || n || suf.replace(/-/g, ' '));
     const f = { key: 'f' + pid, pid, sid, cat, label, types: tps(t), sp: s };
     s.forms.push(f); FORMS.push(f); BY_KEY.set(f.key, f);
   });
   SPECIES.forEach(s => s.forms.sort((a, b) => FORM_ORDER[a.cat] - FORM_ORDER[b.cat] || a.pid - b.pid));
 }
+const showForms = () => !state.hideForms;
+const formsOf = s => showForms() ? s.forms : [];
+const nameOf = key => { const x = BY_KEY.get(key); return !x ? key : x.sp ? `${x.sp.name} (${x.label})` : x.name; };
+const artOf = key => { const x = BY_KEY.get(key); return ART(x ? (x.pid || x.id) : 0); };
 
 /* ================= ESTADO ================= */
+const FIELDS = ['lucky', 'luckyAt', 'extra', 'prio', 'notes', 'meet'];
+const emptyT = () => ({ lucky: {}, luckyAt: {}, extra: {}, prio: {}, notes: {}, meet: {} });
 const state = {
   me: null, other: null,
-  lucky: { Dapica03: {}, Rulotgar: {} },
+  data: { Dapica03: emptyT(), Rulotgar: emptyT() },
   region: store.get('region', 'all'), type: store.get('type', 'all'), sort: store.get('sort', 'num'),
-  view: store.get('view', 'me'), q: '', list: [], detail: null
+  view: store.get('view', 'me'), xf: null, q: '', list: [], detail: null,
+  tab: 'dex', compact: store.get('compact', false), theme: store.get('theme', 'dark'), hideForms: store.get('hideForms', false),
+  selecting: false, sel: new Set(), loaded: { Dapica03: false, Rulotgar: false }
 };
-const L = (t, key) => !!state.lucky[t][key];
-
-/* Pokédex con suerte de Rulotgar sacada de su vídeo del juego (13-11-2026).
-   Son los que le FALTAN; todos los demás Pokémon de la lista los tiene con suerte (870).
-   Se aplica una sola vez, solo en la cuenta de Rulotgar y solo añade (nunca borra). */
-const VIDEO_IMPORT = {
-  trainer: 'Rulotgar',
-  flag: 'luckyImportVideo1',
-  faltan: [
-    173, 207, 220, 221,                                   // Johto
-    314, 337, 350, 380,                                   // Hoenn
-    439, 472, 473,                                        // Sinnoh
-    671, 685,                                             // Kalos
-    746, 749, 750, 771, 772, 773, 774, 776, 797, 798, 806, // Alola
-    824, 825, 826, 833, 834, 837, 838, 839, 841, 842, 846, 847, 855, 857, 858, 859, 860,
-    867, 868, 869, 871, 873, 875, 876, 878, 879, 880, 881, 882, 883, 885, 886, 887,
-    890, 891, 892, 896, 897, 898,                         // Galar
-    902, 903, 904,                                        // Hisui
-    926, 927, 936, 937, 942, 943, 944, 945, 947, 948, 949, 951, 952, 953, 954, 958, 959,
-    963, 964, 967, 968, 969, 970, 976, 977, 980, 981, 983, 984, 985, 986, 987, 988, 989,
-    990, 991, 992, 993, 994, 995, 997, 998, 1000, 1001, 1002, 1003, 1004, 1005, 1006,
-    1007, 1008, 1009, 1010, 1011, 1012, 1013, 1014, 1015, 1016, 1017, 1018, 1019, 1020,
-    1021, 1022, 1023, 1024                                // Paldea
-  ]
-};
-function applyVideoImport(doc) {
-  if (state.me !== VIDEO_IMPORT.trainer || (doc && doc[VIDEO_IMPORT.flag])) return;
-  const faltan = new Set(VIDEO_IMPORT.faltan), ch = {};
-  SPECIES.forEach(s => { if (!faltan.has(s.id) && !L(state.me, s.key)) ch[s.key] = true; });
-  const n = Object.keys(ch).length;
-  if (n) writeLucky(ch);
-  docRef(state.me).set({ [VIDEO_IMPORT.flag]: true }, { merge: true }).catch(() => {});
-  toast(`✅ Cargados tus Pokémon con suerte del vídeo (${SPECIES.length - faltan.size} en total)`, 4500);
-}
+const D = t => state.data[t];
+const L = (t, key) => !!D(t).lucky[key];
+const X = (t, key) => +(D(t).extra[key] || 0);
+const P = (t, key) => !!D(t).prio[key];
+const M = (t, key) => !!D(t).meet[key];
+const NOTE = (t, key) => D(t).notes[key] || '';
 
 /* ================= FIREBASE ================= */
 firebase.initializeApp(firebaseConfig);
@@ -474,56 +670,59 @@ const FV = firebase.firestore.FieldValue;
 const docRef = t => db.collection('pokedex').doc(t);
 let unsubs = [];
 
-function writeLucky(changes) { // { key: bool }
-  const me = state.me, lucky = {};
-  for (const [k, v] of Object.entries(changes)) {
-    if (v) state.lucky[me][k] = true; else delete state.lucky[me][k];
-    lucky[k] = v ? true : FV.delete();
+/* Escritura genérica: changes = { campo: { clave: valor | null } }  (null = borrar) */
+function write(changes, extraTop = {}) {
+  const me = state.me, payload = { ...extraTop, updatedAt: FV.serverTimestamp() };
+  for (const [field, ch] of Object.entries(changes)) {
+    payload[field] = {};
+    for (const [k, v] of Object.entries(ch)) {
+      if (v === null || v === false || v === '' || v === 0) delete D(me)[field][k]; else D(me)[field][k] = v;
+      payload[field][k] = (v === null || v === false || v === '' || v === 0) ? FV.delete() : v;
+    }
   }
-  docRef(me).set({ lucky, updatedAt: FV.serverTimestamp() }, { merge: true })
-    .catch(e => { console.error(e); toast('⚠️ No se pudo guardar: ' + (e.code || e.message)); });
+  docRef(me).set(payload, { merge: true }).catch(e => { console.error(e); toast('⚠️ No se pudo guardar: ' + (e.code || e.message)); });
   scheduleRender();
 }
-const toggle = key => writeLucky({ [key]: !L(state.me, key) });
-
-const OLD_FORMS = { r1: 'f10091', r2: 'f10100', r3: 'f10161', r4: 'f10238', r5: 'f10253' };
-/* Acepta: copia de esta app ({lucky}), copia v2 ({caught}) o la copia antigua ({"1":true,"r1":true...}) */
-function keysFromBackup(data) {
-  const nonEmpty = o => o && typeof o === 'object' && Object.keys(o).length ? o : null;
-  const src = (data && (nonEmpty(data.lucky) || (data.version === 2 ? data.caught : null) || (data.version ? null : data))) || {};
-  const ch = {};
-  for (const [k, v] of Object.entries(src)) { const key = OLD_FORMS[k] || k; if (v && BY_KEY.has(key)) ch[key] = true; }
-  return ch;
+/* Marcar / desmarcar con suerte. stamp = guardar la fecha (para «Novedades»). Al conseguirlo, sale de la quedada. */
+function setLucky(map, stamp = true) {
+  const ch = { lucky: {}, luckyAt: {}, meet: {} };
+  const now = Date.now();
+  for (const [k, v] of Object.entries(map)) {
+    ch.lucky[k] = v ? true : null;
+    ch.luckyAt[k] = v && stamp ? now : null;
+    if (v && M(state.me, k)) ch.meet[k] = null;
+  }
+  write(ch);
+  if (Object.values(map).some(Boolean)) setTimeout(checkAchievements, 400);
 }
-
-/* Primera vez: carga automáticamente la lista guardada del entrenador (solo si aún no tiene ningún 🍀) */
-async function migrateIfNeeded(t) {
-  try {
-    const r = await fetch('migracion-' + t + '.json', { cache: 'no-store' });
-    if (!r.ok) return;
-    const ch = keysFromBackup(await r.json());
-    const n = Object.keys(ch).length; if (!n) return;
-    writeLucky(ch);
-    docRef(t).set({ luckyMigrated: true }, { merge: true }).catch(() => {});
-    toast(`✅ Importados ${n} Pokémon con suerte de tu copia`, 4000);
-  } catch {}
-}
+const toggleLucky = key => setLucky({ [key]: !L(state.me, key) });
 
 function subscribe() {
   unsubs.forEach(u => u()); unsubs = [];
   TRAINERS.forEach(t => {
     let checked = false;
     unsubs.push(docRef(t).onSnapshot({ includeMetadataChanges: true }, snap => {
-      const d = snap.data(), x = {};
+      const d = snap.data() || {}, x = emptyT();
+      for (const f of FIELDS) if (d[f] && typeof d[f] === 'object') for (const [k, v] of Object.entries(d[f])) if (v) x[f][k] = v;
+      state.data[t] = x;
+      if (!snap.metadata.fromCache) state.loaded[t] = true;
       if (!checked && t === state.me && !snap.metadata.fromCache && SPECIES.length) {
         checked = true;
-        applyVideoImport(d);   // solo hace algo en la cuenta de Rulotgar, una vez
+        applyVideoImport(d);
+        setTimeout(() => checkAchievements(true), 800);
       }
-      if (d && d.lucky) for (const [k, v] of Object.entries(d.lucky)) if (v) x[k] = true;
-      state.lucky[t] = x;
       scheduleRender();
     }, err => { console.error(err); toast('⚠️ Error de sincronización: ' + (err.code || err.message), 4000); }));
   });
+}
+
+function applyVideoImport(doc) {
+  if (state.me !== VIDEO_IMPORT.trainer || doc[VIDEO_IMPORT.flag]) return;
+  const faltan = new Set(VIDEO_IMPORT.faltan), ch = {};
+  SPECIES.forEach(s => { if (!faltan.has(s.id) && !L(state.me, s.key)) ch[s.key] = true; });
+  if (Object.keys(ch).length) setLucky(ch, false);
+  docRef(state.me).set({ [VIDEO_IMPORT.flag]: true }, { merge: true }).catch(() => {});
+  toast('✅ Cargados tus Pokémon con suerte del vídeo', 4500);
 }
 
 /* ---------- Inicio de sesión ---------- */
@@ -538,33 +737,35 @@ $('#btnLogin').onclick = async () => {
   }
 };
 auth.getRedirectResult().catch(showLoginErr);
-function showLoginErr(e) {
-  const el = $('#loginErr'); el.textContent = 'No se pudo iniciar sesión: ' + (e.code || e.message); el.classList.remove('hidden');
-}
+function showLoginErr(e) { const el = $('#loginErr'); el.textContent = 'No se pudo iniciar sesión: ' + (e.code || e.message); el.classList.remove('hidden'); }
 
 auth.onAuthStateChanged(async user => {
-  if (!user) {
-    unsubs.forEach(u => u()); unsubs = [];
-    $('#app').classList.add('hidden'); $('#login').classList.remove('hidden');
-    return;
-  }
+  if (!user) { unsubs.forEach(u => u()); unsubs = []; $('#app').classList.add('hidden'); $('#login').classList.remove('hidden'); return; }
   const trainer = ACCOUNTS[(user.email || '').toLowerCase()];
   if (!trainer) { showLoginErr({ message: `la cuenta ${user.email} no tiene acceso.` }); await auth.signOut(); return; }
   state.me = trainer; state.other = OTHER[trainer];
-  document.body.className = 't-' + trainer;
+  applyBodyClasses();
   $('#login').classList.add('hidden'); $('#app').classList.remove('hidden');
   $('#avatar').textContent = trainer[0];
   $('#meName').textContent = trainer;
   document.querySelector('[data-view="other"]').textContent = `Le faltan a ${state.other}`;
+  document.querySelector('[data-x="oextra"]').textContent = `🔁 ${state.other} tiene para cambiar`;
+  if (store.get('seen_' + trainer, null) === null) store.set('seen_' + trainer, Date.now());
   dataReady.then(subscribe); scheduleRender();
 });
+
+function applyBodyClasses() {
+  const light = state.theme === 'light' || (state.theme === 'auto' && matchMedia('(prefers-color-scheme: light)').matches);
+  const cl = document.body.classList;
+  TRAINERS.forEach(t => cl.toggle('t-' + t, state.me === t));
+  cl.toggle('light', light); cl.toggle('compact', !!state.compact);
+  const meta = document.querySelector('meta[name=theme-color]'); if (meta) meta.content = light ? '#f1f5f9' : '#0f172a';
+}
 
 /* ================= FILTROS Y LISTA ================= */
 function buildControls() {
   const reg = $('#fRegion');
-  reg.innerHTML = `<option value="all">🌐 Todas las regiones</option>` +
-    REGIONS.map(r => `<option value="${r[0]}">${r[1]}</option>`).join('') +
-    `<option value="forms">Con formas</option>`;
+  reg.innerHTML = `<option value="all">🌐 Todas las regiones</option>` + REGIONS.map(r => `<option value="${r[0]}">${r[1]}</option>`).join('') + `<option value="forms">Con formas</option>`;
   reg.value = state.region;
   $('#fType').innerHTML = `<option value="all">Todos los tipos</option>` + TYPES.map((t, i) => `<option value="${i}">${t[0]}</option>`).join('');
   $('#fType').value = state.type; $('#fSort').value = state.sort;
@@ -572,20 +773,28 @@ function buildControls() {
   $('#fType').onchange = e => { state.type = e.target.value; store.set('type', state.type); render(); };
   $('#fSort').onchange = e => { state.sort = e.target.value; store.set('sort', state.sort); render(); };
   let qt;
-  $('#q').oninput = e => {
-    $('#qClear').classList.toggle('hidden', !e.target.value);
-    clearTimeout(qt); qt = setTimeout(() => { state.q = e.target.value; render(); }, 140);
-  };
+  $('#q').oninput = e => { $('#qClear').classList.toggle('hidden', !e.target.value); clearTimeout(qt); qt = setTimeout(() => { state.q = e.target.value; render(); }, 140); };
   $('#qClear').onclick = () => { $('#q').value = ''; state.q = ''; $('#qClear').classList.add('hidden'); render(); };
-  $('#viewSeg').onclick = e => {
-    const b = e.target.closest('[data-view]'); if (!b) return;
-    state.view = b.dataset.view; store.set('view', state.view); render(); scrollTo({ top: 0 });
-  };
+  $('#viewSeg').onclick = e => { const b = e.target.closest('[data-view]'); if (!b) return; state.view = b.dataset.view; store.set('view', state.view); render(); scrollTo({ top: 0 }); };
+  $('#extraChips').onclick = e => { const b = e.target.closest('[data-x]'); if (!b) return; state.xf = state.xf === b.dataset.x ? null : b.dataset.x; render(); };
+  $('#btnCompact').onclick = () => { state.compact = !state.compact; store.set('compact', state.compact); applyBodyClasses(); render(); };
+  $('#btnSelect').onclick = () => setSelecting(!state.selecting);
+  $('#bnav').onclick = e => { const b = e.target.closest('[data-tab]'); if (b) setTab(b.dataset.tab); };
 }
 
-const inRegion = s => state.region === 'all' ? true : state.region === 'forms' ? s.forms.length > 0 : s.region === state.region;
-// Para una especie con formas: falta si falta la especie O alguna de sus formas
-const missing = (t, s) => !L(t, s.key) || s.forms.some(f => !L(t, f.key));
+function setTab(tab) {
+  state.tab = tab;
+  if (tab !== 'dex') setSelecting(false);
+  $('#pgDex').classList.toggle('hidden', tab !== 'dex');
+  $('#pgMeet').classList.toggle('hidden', tab !== 'meet');
+  $('#pgAch').classList.toggle('hidden', tab !== 'ach');
+  document.querySelectorAll('#bnav button').forEach(b => b.classList.toggle('on', b.dataset.tab === tab));
+  scrollTo({ top: 0 });
+  render();
+}
+
+const inRegion = s => state.region === 'all' ? true : state.region === 'forms' ? formsOf(s).length > 0 : s.region === state.region;
+const missing = (t, s) => !L(t, s.key) || formsOf(s).some(f => !L(t, f.key));
 const missingBase = (t, s) => !L(t, s.key);
 
 function filtered() {
@@ -597,20 +806,30 @@ function filtered() {
   const miss = state.region === 'forms' ? missing : missingBase;
   const out = SPECIES.filter(s => {
     if (!inRegion(s)) return false;
-    if (q) {
-      if (qNum) { if (qExact ? s.key !== qNum : !s.key.startsWith(qNum)) return false; }
-      else if (!s.n.includes(q)) return false;
-    }
+    if (q) { if (qNum) { if (qExact ? s.key !== qNum : !s.key.startsWith(qNum)) return false; } else if (!s.n.includes(q)) return false; }
     if (type !== null && !s.types.includes(type)) return false;
     if (state.view === 'me' && !miss(me, s)) return false;
     if (state.view === 'other' && !miss(ot, s)) return false;
     if (state.view === 'both' && !(miss(me, s) && miss(ot, s))) return false;
+    switch (state.xf) {
+      case 'prio': if (!P(me, s.key) && !P(ot, s.key)) return false; break;
+      case 'extra': if (!X(me, s.key)) return false; break;
+      case 'oextra': if (!X(ot, s.key)) return false; break;
+      case 'regional': if (!REGIONAL[s.id]) return false; break;
+      case 'note': if (!NOTE(me, s.key) && !NOTE(ot, s.key)) return false; break;
+    }
     return true;
   });
-  const coll = new Intl.Collator('es');
-  if (state.sort === 'numd') out.reverse();
-  else if (state.sort === 'az') out.sort((a, b) => coll.compare(a.name, b.name));
-  else if (state.sort === 'za') out.sort((a, b) => coll.compare(b.name, a.name));
+  const coll = new Intl.Collator('es'), num = (a, b) => a.id - b.id;
+  const by = f => (a, b) => f(b) - f(a) || num(a, b);
+  switch (state.sort) {
+    case 'numd': out.reverse(); break;
+    case 'az': out.sort((a, b) => coll.compare(a.name, b.name)); break;
+    case 'za': out.sort((a, b) => coll.compare(b.name, a.name)); break;
+    case 'both': out.sort(by(s => (!L(me, s.key) && !L(ot, s.key)) ? 1 : 0)); break;
+    case 'prio': out.sort(by(s => (P(me, s.key) ? 2 : 0) + (P(ot, s.key) ? 1 : 0))); break;
+    case 'extra': out.sort(by(s => X(me, s.key) + X(ot, s.key))); break;
+  }
   return out;
 }
 
@@ -620,15 +839,20 @@ function pill(t, key) {
 }
 
 function cardHTML(s) {
-  const me = state.me, c = L(me, s.key);
+  const me = state.me, ot = state.other, c = L(me, s.key);
   let fb = '';
-  if (s.forms.length) {
-    const fc = s.forms.filter(f => L(me, f.key)).length;
-    fb = `<span class="fbadge ${fc === s.forms.length ? 'full' : ''}">+${s.forms.length} formas · ${fc}🍀</span>`;
-  }
-  return `<div class="card ${c ? 'c' : ''}" data-k="${s.key}">
+  const fs = formsOf(s);
+  if (fs.length) { const fc = fs.filter(f => L(me, f.key)).length; fb = `<span class="fbadge ${fc === fs.length ? 'full' : ''}">+${fs.length} formas · ${fc}🍀</span>`; }
+  const b = [];
+  if (P(me, s.key) || P(ot, s.key)) b.push('⭐');
+  if (M(me, s.key) || M(ot, s.key)) b.push('🤝');
+  if (REGIONAL[s.id]) b.push('🌍');
+  if (NOTE(me, s.key) || NOTE(ot, s.key)) b.push('📝');
+  const xn = X(me, s.key);
+  if (xn) b.push(`<span class="xn">x${xn}</span>`);
+  return `<div class="card ${c ? 'c' : ''} ${state.sel.has(s.key) ? 'sel' : ''}" data-k="${s.key}" data-r="${s.region}">
     <div class="ctop"><span class="num">${pad(s.id)}</span><button class="chk" aria-label="Marcar con suerte"><span>${c ? '🍀' : ''}</span></button></div>
-    ${fb}
+    ${fb}<div class="cb">${b.join('')}</div>
     <div class="art"><img loading="lazy" decoding="async" alt="" src="${ART(s.id)}"></div>
     <div class="cname">${esc(s.name)}</div>
     <div class="pls">${pill('Dapica03', s.key)}${pill('Rulotgar', s.key)}</div>
@@ -636,26 +860,45 @@ function cardHTML(s) {
 }
 
 let renderQueued = false;
-function scheduleRender() {
-  if (renderQueued) return; renderQueued = true;
-  requestAnimationFrame(() => { renderQueued = false; render(); });
-}
+function scheduleRender() { if (renderQueued) return; renderQueued = true; requestAnimationFrame(() => { renderQueued = false; render(); }); }
 
 function render() {
   if (!state.me || !SPECIES.length) return;
   $('#loading').classList.add('hidden');
+  updateHeader(); updateMeetDot();
+  if (state.tab === 'dex') renderDex();
+  if (state.tab === 'meet') renderMeet();
+  if (state.tab === 'ach') renderAch();
+  if (state.detail) renderDetail();
+  if (currentDlg === 'compare') renderCompare();
+}
+
+function renderDex() {
   const list = state.list = filtered();
   $('#grid').innerHTML = list.map(cardHTML).join('');
   $('#empty').classList.toggle('hidden', list.length > 0);
   document.querySelectorAll('#viewSeg button').forEach(b => b.classList.toggle('on', b.dataset.view === state.view));
+  document.querySelectorAll('#extraChips .chip').forEach(b => b.classList.toggle('on', b.dataset.x === state.xf));
   $('#sumCount').textContent = list.length;
   $('#sumLabel').textContent = { me: 'me faltan con suerte', other: `le faltan a ${state.other}`, both: 'nos faltan a los dos', all: 'Pokémon' }[state.view];
-  const allC = list.length && list.every(s => L(state.me, s.key));
-  $('#markAllTxt').textContent = allC ? 'Desmarcar visibles' : 'Marcar visibles';
-  updateHeader();
-  if (state.detail) renderDetail();
-  if (currentDlg === 'compare') renderCompare();
+  $('#compactTxt').textContent = state.compact ? '▣' : '▦';
+  $('#btnSelect').textContent = state.selecting ? '✖️' : '☑️';
+  renderJump(list);
 }
+
+/* ---------- Saltos rápidos por región ---------- */
+function renderJump(list) {
+  const regs = REGIONS.filter(r => list.some(s => s.region === r[0]));
+  const show = state.region === 'all' && regs.length > 1 && (state.sort === 'num' || state.sort === 'numd');
+  $('#jump').classList.toggle('hidden', !show);
+  document.body.classList.toggle('has-jump', show);
+  if (show) $('#jump').innerHTML = regs.map(r => `<button data-j="${r[0]}" title="${r[1]}">${r[4]}</button>`).join('');
+}
+$('#jump').onclick = e => {
+  const b = e.target.closest('[data-j]'); if (!b) return;
+  const el = document.querySelector(`.card[data-r="${b.dataset.j}"]`);
+  if (el) { const y = el.getBoundingClientRect().top + scrollY - document.querySelector('header').offsetHeight - 8; scrollTo({ top: y, behavior: 'smooth' }); }
+};
 
 function updateHeader() {
   const pool = SPECIES.filter(s => state.region === 'all' || state.region === 'forms' || s.region === state.region);
@@ -670,36 +913,106 @@ function updateHeader() {
   $('#barD').style.width = pct(d) + '%'; $('#barR').style.width = pct(r) + '%';
 }
 
-/* ---------- Clic en la rejilla ---------- */
+/* ---------- Clic en la rejilla (y pulsación larga para seleccionar) ---------- */
+let lpT = null, lpFired = false, lpX = 0, lpY = 0;
+$('#grid').addEventListener('pointerdown', e => {
+  const card = e.target.closest('.card'); if (!card || state.selecting) return;
+  lpFired = false; lpX = e.clientX; lpY = e.clientY;
+  lpT = setTimeout(() => { lpFired = true; setSelecting(true); toggleSel(card.dataset.k); vib(); }, 520);
+});
+['pointerup', 'pointercancel', 'pointerleave', 'pointermove'].forEach(ev => $('#grid').addEventListener(ev, e => {
+  if (ev === 'pointermove' && Math.abs(e.clientX - lpX) + Math.abs(e.clientY - lpY) < 10) return;
+  clearTimeout(lpT);
+}));
 $('#grid').addEventListener('click', e => {
+  if (lpFired) { lpFired = false; return; }
   const card = e.target.closest('.card'); if (!card) return;
   const k = card.dataset.k;
+  if (state.selecting) { toggleSel(k); return; }
   const tg = e.target.closest('[data-tg]');
-  if (tg || e.target.closest('.chk')) { toggle(tg ? tg.dataset.tg : k); if (navigator.vibrate) navigator.vibrate(12); return; }
+  if (tg || e.target.closest('.chk')) { toggleLucky(tg ? tg.dataset.tg : k); vib(); return; }
   if (e.target.closest('.pl')) return;
   openDetail(k);
 });
 
-$('#btnMarkAll').onclick = () => {
-  const list = state.list; if (!list.length) return;
-  const allC = list.every(s => L(state.me, s.key));
-  if (list.length > 15 && !confirm(`¿${allC ? 'Desmarcar' : 'Marcar con suerte'} ${list.length} Pokémon?`)) return;
-  const ch = {}; list.forEach(s => ch[s.key] = !allC); writeLucky(ch);
+/* ---------- Selección múltiple ---------- */
+function setSelecting(on) {
+  state.selecting = on; if (!on) state.sel.clear();
+  $('#selbar').classList.toggle('hidden', !on);
+  updateSelTxt(); if (state.tab === 'dex') renderDex();
+}
+function toggleSel(k) {
+  state.sel.has(k) ? state.sel.delete(k) : state.sel.add(k);
+  const el = document.querySelector(`.card[data-k="${k}"]`); if (el) el.classList.toggle('sel', state.sel.has(k));
+  updateSelTxt();
+}
+function updateSelTxt() {
+  const n = state.sel.size;
+  $('#selTxt').innerHTML = `${n} seleccionado${n === 1 ? '' : 's'} · <a href="#" id="selAll" style="color:var(--accent2)">todos los visibles</a>`;
+  const a = $('#selAll'); if (a) a.onclick = ev => { ev.preventDefault(); state.list.forEach(s => state.sel.add(s.key)); renderDex(); updateSelTxt(); };
+}
+$('#selbar').onclick = e => {
+  const b = e.target.closest('[data-sa]'); if (!b) return;
+  const keys = [...state.sel], act = b.dataset.sa;
+  if (act === 'cancel') return setSelecting(false);
+  if (!keys.length) return toast('Toca los Pokémon que quieras seleccionar');
+  const m = {};
+  if (act === 'lucky') { keys.forEach(k => m[k] = true); setLucky(m); toast(`🍀 ${keys.length} marcados`); }
+  if (act === 'unlucky') { if (!confirm(`¿Quitar la suerte a ${keys.length} Pokémon?`)) return; keys.forEach(k => m[k] = false); setLucky(m); toast(`Quitados ${keys.length}`); }
+  if (act === 'prio') { const all = keys.every(k => P(state.me, k)); keys.forEach(k => m[k] = !all); write({ prio: m }); toast(all ? 'Prioridad quitada' : `⭐ ${keys.length} con prioridad`); }
+  if (act === 'meet') { const ok = keys.filter(k => !L(state.me, k)); ok.forEach(k => m[k] = true); write({ meet: m }); toast(`🤝 ${ok.length} añadidos a la quedada`); }
+  setSelecting(false);
 };
 
-/* ---------- Compartir lista ---------- */
-$('#btnShare').onclick = async () => {
-  const list = state.list; if (!list.length) return toast('No hay nada que compartir');
-  const title = { me: `🍀 Me faltan con suerte (${state.me})`, other: `🍀 Le faltan con suerte a ${state.other}`, both: '🍀 Nos faltan con suerte a los dos', all: '🍀 Pokédex con suerte' }[state.view];
-  const parts = [title];
-  if (state.region !== 'all') parts.push($('#fRegion').selectedOptions[0].textContent);
-  if (state.type !== 'all') parts.push('tipo ' + TYPES[state.type][0]);
-  const lines = list.map(s => `${pad(s.id)} ${s.name}`);
-  const text = `${parts.join(' · ')} (${list.length})\n\n${lines.join('\n')}`;
+/* ---------- Compartir (texto o imagen) ---------- */
+$('#btnShare').onclick = () => openShare(state.list, ({ me: `🍀 Me faltan con suerte (${state.me})`, other: `🍀 Le faltan con suerte a ${state.other}`, both: '🍀 Nos faltan con suerte a los dos', all: '🍀 Pokédex con suerte' })[state.view]);
+
+function openShare(items, title) {
+  if (!items.length) return toast('No hay nada que compartir');
+  openDlg('share', `<div class="sheet"><div class="sh-head"><h3>Compartir</h3><button class="ibtn" data-close>${icon('x')}</button></div>
+    <div class="sh-body"><p class="muted">${esc(title)} · ${items.length} Pokémon</p>
+    <button class="btn pri" id="shImg">📷 Como imagen</button>
+    <button class="btn" id="shTxt">💬 Como texto</button></div></div>`);
+  $('#shTxt').onclick = () => shareText(items, title);
+  $('#shImg').onclick = () => shareImage(items, title);
+}
+async function shareText(items, title) {
+  const text = `${title} (${items.length})\n\n${items.map(s => `${pad(s.sp ? s.sp.id : s.id)} ${s.sp ? s.sp.name + ' (' + s.label + ')' : s.name}`).join('\n')}`;
   if (navigator.share) { try { await navigator.share({ text }); return; } catch (e) { if (e.name === 'AbortError') return; } }
   try { await navigator.clipboard.writeText(text); toast('Lista copiada'); } catch {}
   window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank');
-};
+}
+function loadImg(src) { return new Promise(res => { const i = new Image(); i.crossOrigin = 'anonymous'; i.onload = () => res(i); i.onerror = () => res(null); i.src = src; }); }
+async function shareImage(items, title) {
+  toast('Preparando imagen…', 4000);
+  const MAX = 80, list = items.slice(0, MAX), cols = 5, cw = 216, ch = 236, W = cols * cw + 40;
+  const rows = Math.ceil(list.length / cols), H = 170 + rows * ch + (items.length > MAX ? 60 : 30);
+  const c = document.createElement('canvas'); c.width = W; c.height = H; const g = c.getContext('2d');
+  const grd = g.createLinearGradient(0, 0, 0, H); grd.addColorStop(0, '#0f172a'); grd.addColorStop(1, '#1e1b4b');
+  g.fillStyle = grd; g.fillRect(0, 0, W, H);
+  g.fillStyle = '#facc15'; g.font = 'bold 44px system-ui, sans-serif'; g.fillText(title, 30, 72);
+  g.fillStyle = '#cbd5e1'; g.font = '28px system-ui, sans-serif';
+  g.fillText(`${items.length} Pokémon · ${state.me} · ${new Date().toLocaleDateString('es-ES')}`, 30, 118);
+  const imgs = await Promise.all(list.map(s => loadImg(ART(s.pid || s.id))));
+  list.forEach((s, i) => {
+    const x = 20 + (i % cols) * cw, y = 150 + Math.floor(i / cols) * ch;
+    g.fillStyle = 'rgba(255,255,255,.06)'; g.beginPath(); g.roundRect ? g.roundRect(x + 6, y + 6, cw - 12, ch - 12, 22) : g.rect(x + 6, y + 6, cw - 12, ch - 12); g.fill();
+    if (imgs[i]) g.drawImage(imgs[i], x + 30, y + 16, cw - 60, cw - 60);
+    g.fillStyle = '#94a3b8'; g.font = 'bold 20px ui-monospace, monospace'; g.textAlign = 'center';
+    g.fillText(pad(s.sp ? s.sp.id : s.id), x + cw / 2, y + ch - 52);
+    g.fillStyle = '#f1f5f9'; g.font = 'bold 22px system-ui, sans-serif';
+    let nm = s.sp ? s.sp.name : s.name; while (g.measureText(nm).width > cw - 24 && nm.length > 3) nm = nm.slice(0, -2) + '…';
+    g.fillText(nm, x + cw / 2, y + ch - 24); g.textAlign = 'left';
+  });
+  if (items.length > MAX) { g.fillStyle = '#94a3b8'; g.font = '26px system-ui'; g.fillText(`… y ${items.length - MAX} más`, 30, H - 24); }
+  let blob;
+  try { blob = await new Promise(r => c.toBlob(r, 'image/png')); } catch { blob = null; }
+  if (!blob) return toast('⚠️ No se pudo crear la imagen');
+  const file = new File([blob], 'pokedex-suerte.png', { type: 'image/png' });
+  if (navigator.canShare && navigator.canShare({ files: [file] })) { try { await navigator.share({ files: [file], title }); return; } catch (e) { if (e.name === 'AbortError') return; } }
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'pokedex-suerte.png'; a.click();
+  toast('Imagen descargada');
+}
 
 /* ================= DIÁLOGOS ================= */
 let currentDlg = null;
@@ -711,6 +1024,7 @@ function openDlg(name, html) {
 }
 function closeDlg(fromPop) {
   if (!currentDlg) return;
+  saveNoteIfAny();
   currentDlg = null; state.detail = null;
   $('#dlg').classList.add('hidden'); $('#dlg').innerHTML = '';
   document.body.style.overflow = '';
@@ -719,6 +1033,7 @@ function closeDlg(fromPop) {
 window.addEventListener('popstate', () => closeDlg(true));
 $('#dlg').addEventListener('click', e => { if (e.target.id === 'dlg' || e.target.closest('[data-close]')) closeDlg(); });
 document.addEventListener('keydown', e => {
+  if (e.target.tagName === 'TEXTAREA') return;
   if (e.key === 'Escape') closeDlg();
   if (state.detail && (e.key === 'ArrowRight' || e.key === 'ArrowLeft')) stepDetail(e.key === 'ArrowRight' ? 1 : -1);
 });
@@ -726,17 +1041,23 @@ document.addEventListener('keydown', e => {
 /* ---------- Ficha ---------- */
 function openDetail(key) { state.detail = key; openDlg('detail', '<div class="sheet" id="sheet"></div>'); renderDetail(); }
 function stepDetail(dir) {
+  saveNoteIfAny();
   const Ls = state.list.length ? state.list : SPECIES;
   let i = Ls.findIndex(s => s.key === state.detail);
   i = i < 0 ? 0 : (i + dir + Ls.length) % Ls.length;
-  state.detail = Ls[i].key; renderDetail(); $('#sheet .sh-body')?.scrollTo(0, 0);
+  state.detail = Ls[i].key; renderDetail(true); $('#sheet .sh-body')?.scrollTo(0, 0);
+}
+function saveNoteIfAny() {
+  const ta = document.querySelector('#myNote'); if (!ta) return;
+  const k = ta.dataset.key, v = ta.value.trim();
+  if (v !== NOTE(state.me, k)) write({ notes: { [k]: v || null } });
 }
 
 function whoRow(key) {
   return `<div class="who">${TRAINERS.map(t => {
     const on = L(t, key), mine = t === state.me;
     return `<${mine ? 'button' : 'div'} class="who-p ${t[0]} ${on ? 'on' : ''}" ${mine ? 'data-tg="' + key + '"' : ''}>
-      <span class="e">🍀</span><b>${t}</b><span>${on ? 'Lo tiene con suerte' : 'Le falta'}${mine ? '' : ''}</span>${mine ? `<small>${on ? 'Toca para quitar' : 'Toca para marcar'}</small>` : ''}</${mine ? 'button' : 'div'}>`;
+      <span class="e">🍀</span><b>${t}</b><span>${on ? 'Lo tiene con suerte' : 'Le falta'}</span>${mine ? `<small>${on ? 'Toca para quitar' : 'Toca para marcar'}</small>` : ''}</${mine ? 'button' : 'div'}>`;
   }).join('')}</div>`;
 }
 
@@ -745,8 +1066,7 @@ function familyHTML(s) {
   if (fam.length < 2) return '';
   const ids = new Set(fam.map(x => x.id));
   const depth = x => (x.from && ids.has(x.from)) ? depth(BY_ID.get(x.from)) + 1 : 0;
-  const cols = [];
-  fam.forEach(x => { const d = depth(x); (cols[d] = cols[d] || []).push(x); });
+  const cols = []; fam.forEach(x => { const d = depth(x); (cols[d] = cols[d] || []).push(x); });
   return `<div><p class="sec-t">Familia evolutiva</p><div class="evo">` + cols.map((col, i) =>
     (i ? `<span class="evo-arrow">${icon('right')}</span>` : '') +
     `<div class="evo-col">${col.map(x => `<button class="evo-it ${x.id === s.id ? 'cur' : ''} ${L(state.me, x.key) ? 'c' : ''}" data-go="${x.key}">
@@ -755,8 +1075,8 @@ function familyHTML(s) {
 }
 
 function formsHTML(s) {
-  if (!s.forms.length) return '';
-  return `<div><p class="sec-t">Formas con suerte</p><div class="forms">` + s.forms.map(f => `
+  const fs = formsOf(s); if (!fs.length) return '';
+  return `<div><p class="sec-t">Formas con suerte</p><div class="forms">` + fs.map(f => `
     <div class="form ${L(state.me, f.key) ? 'c' : ''}">
       <img loading="lazy" src="${ART(f.pid)}" alt="" onerror="this.src='${ART(s.id)}'">
       <div class="fi"><div class="fc">${FORM_CAT[f.cat]}</div><div class="fl">${esc(f.label)}</div></div>
@@ -764,10 +1084,14 @@ function formsHTML(s) {
     </div>`).join('') + `</div></div>`;
 }
 
-function renderDetail() {
+function renderDetail(force) {
   const s = BY_KEY.get(state.detail); const el = $('#sheet'); if (!s || !el) return;
+  const ta = document.querySelector('#myNote');
+  if (!force && ta && document.activeElement === ta) return;   // no repintar mientras escribe la nota
   const prev = el.querySelector('.sh-body')?.scrollTop || 0;
+  const me = state.me, ot = state.other, k = s.key;
   const reg = REGIONS.find(r => r[0] === s.region)[1];
+  const onote = NOTE(ot, k);
   el.innerHTML = `
     <div class="sh-head">
       <button class="ibtn" data-step="-1" aria-label="Anterior">${icon('left')}</button>
@@ -779,36 +1103,172 @@ function renderDetail() {
       <div class="dt-hero"><img src="${ART(s.id)}" alt="${esc(s.name)}"></div>
       <div class="dt-name"><div class="n">${esc(s.name)}</div><div class="m">${reg} · Generación ${s.gen}</div>
         <div class="dt-types">${s.types.map(typeTag).join('')}</div></div>
-      ${whoRow(s.key)}
+      ${REGIONAL[s.id] ? `<div class="regx">🌍 <b>Exclusivo regional:</b> ${esc(REGIONAL[s.id])}</div>` : ''}
+      ${whoRow(k)}
+      <div class="trow">
+        <button class="tbtn p ${P(me, k) ? 'on' : ''}" data-prio="${k}">⭐ ${P(me, k) ? 'Prioridad' : 'Dar prioridad'}</button>
+        ${L(me, k) ? '' : `<button class="tbtn q ${M(me, k) ? 'on' : ''}" data-meet="${k}">🤝 ${M(me, k) ? 'En la quedada' : 'A la quedada'}</button>`}
+      </div>
+      ${P(ot, k) ? `<p class="tip">⭐ ${ot} también lo tiene como prioridad.</p>` : ''}
+      <div class="stepper"><div class="l">🔁 Copias que tengo para cambiar<small>${ot} tiene: ${X(ot, k)}</small></div>
+        <div class="c"><button data-ex="-1">−</button><b>${X(me, k)}</b><button data-ex="1">+</button></div></div>
+      <div><p class="sec-t">📝 Mi nota</p>
+        <textarea class="note" id="myNote" data-key="${k}" placeholder="Ej.: tengo uno de 2017, pedírselo a ${ot}…">${esc(NOTE(me, k))}</textarea>
+        ${onote ? `<div class="note-o"><b>${ot}:</b> ${esc(onote)}</div>` : ''}</div>
       ${formsHTML(s)}
       ${familyHTML(s)}
     </div>`;
   el.querySelector('.sh-body').scrollTop = prev;
+  $('#myNote').addEventListener('blur', saveNoteIfAny);
 }
 
 $('#dlg').addEventListener('click', e => {
-  const tg = e.target.closest('[data-tg]'); if (tg) { toggle(tg.dataset.tg); if (navigator.vibrate) navigator.vibrate(12); return; }
+  const tg = e.target.closest('[data-tg]'); if (tg) { toggleLucky(tg.dataset.tg); vib(); return; }
   const st = e.target.closest('[data-step]'); if (st) return stepDetail(+st.dataset.step);
-  const go = e.target.closest('[data-go]'); if (go) { state.detail = go.dataset.go; renderDetail(); $('#sheet .sh-body').scrollTo(0, 0); }
+  const go = e.target.closest('[data-go]'); if (go) { saveNoteIfAny(); state.detail = go.dataset.go; renderDetail(true); $('#sheet .sh-body').scrollTo(0, 0); return; }
+  const pr = e.target.closest('[data-prio]'); if (pr) { const k = pr.dataset.prio; write({ prio: { [k]: !P(state.me, k) } }); return; }
+  const mt = e.target.closest('[data-meet]'); if (mt) { const k = mt.dataset.meet; write({ meet: { [k]: !M(state.me, k) } }); toast(M(state.me, k) ? '🤝 Añadido a la próxima quedada' : 'Quitado de la quedada'); return; }
+  const ex = e.target.closest('[data-ex]'); if (ex) { const k = state.detail; write({ extra: { [k]: Math.max(0, X(state.me, k) + +ex.dataset.ex) || null } }); return; }
 });
 let tx0 = null, ty0 = null;
 $('#dlg').addEventListener('touchstart', e => { if (state.detail) { tx0 = e.touches[0].clientX; ty0 = e.touches[0].clientY; } }, { passive: true });
 $('#dlg').addEventListener('touchend', e => {
   if (tx0 === null || !state.detail) return;
   const dx = e.changedTouches[0].clientX - tx0, dy = e.changedTouches[0].clientY - ty0; tx0 = null;
-  if (Math.abs(dx) > 70 && Math.abs(dx) > Math.abs(dy) * 1.8 && !e.target.closest('.evo')) stepDetail(dx < 0 ? 1 : -1);
+  if (Math.abs(dx) > 70 && Math.abs(dx) > Math.abs(dy) * 1.8 && !e.target.closest('.evo,textarea')) stepDetail(dx < 0 ? 1 : -1);
 }, { passive: true });
+
+/* ================= QUEDADA ================= */
+function news() {
+  const seen = store.get('seen_' + state.me, Date.now());
+  return Object.entries(D(state.other).luckyAt).filter(([k, t]) => t > seen && L(state.other, k) && BY_KEY.has(k)).sort((a, b) => b[1] - a[1]).map(([k]) => k);
+}
+function updateMeetDot() {
+  const n = news().length + meetList().length;
+  const dot = $('#meetDot'); dot.textContent = n > 99 ? '99+' : n; dot.classList.toggle('hidden', !n);
+}
+/* Lista para la próxima quedada: lo que cada uno quiere conseguir; desaparece solo cuando se consigue con suerte */
+function meetList() {
+  const out = [];
+  TRAINERS.forEach(t => Object.keys(D(t).meet).forEach(k => { if (BY_KEY.has(k) && !L(t, k)) out.push({ t, k }); }));
+  return out;
+}
+function suggestPairs() {
+  const me = state.me, ot = state.other;
+  const pr = s => (P(me, s.key) ? 2 : 0) + (P(ot, s.key) ? 2 : 0);
+  // Espejo: os falta a los dos → cambiarlo entre vosotros da la opción de suerte a ambos
+  const mirror = SPECIES.filter(s => !L(me, s.key) && !L(ot, s.key))
+    .map(s => ({ s, score: pr(s) + (X(me, s.key) ? 3 : 0) + (X(ot, s.key) ? 3 : 0) + (REGIONAL[s.id] ? 1 : 0) }))
+    .sort((a, b) => b.score - a.score || a.s.id - b.s.id);
+  // Cruzados: él tiene copias de lo que me falta y yo de lo que le falta
+  const iGet = SPECIES.filter(s => !L(me, s.key) && X(ot, s.key) > 0).sort((a, b) => pr(b) - pr(a) || a.id - b.id);
+  const heGets = SPECIES.filter(s => !L(ot, s.key) && X(me, s.key) > 0).sort((a, b) => pr(b) - pr(a) || a.id - b.id);
+  const cross = [];
+  for (let i = 0; i < Math.min(iGet.length, heGets.length); i++) cross.push({ get: iGet[i], give: heGets[i] });
+  return { mirror, cross, iGet, heGets };
+}
+let meetShowAll = false;
+function renderMeet() {
+  const me = state.me, ot = state.other;
+  const nw = news(), ml = meetList(), { mirror, cross, iGet, heGets } = suggestPairs();
+  const qi = ({ t, k }) => `<div class="qi"><img loading="lazy" src="${artOf(k)}" alt="">
+      <div class="n">${esc(nameOf(k))}<small>Para ${t === me ? 'ti' : t}${P(t, k) ? ' · ⭐' : ''}${X(OTHER[t], k) ? ` · ${OTHER[t] === me ? 'tú tienes' : OTHER[t] + ' tiene'} ${X(OTHER[t], k)} para cambiar` : ''}</small></div>
+      ${t === me ? `<button class="s" data-got="${k}">🍀 ¡Conseguido!</button><button class="x" data-unmeet="${k}" title="Quitar">✕</button>` : `<button class="s" data-open="${k}" style="background:transparent;border-color:var(--line);color:var(--tx3)">Ver</button>`}</div>`;
+  const mineFirst = [...ml.filter(x => x.t === me), ...ml.filter(x => x.t !== me)];
+  const mirrorShown = meetShowAll ? mirror.slice(0, 120) : mirror.slice(0, 12);
+  const side = (s, lbl) => `<div class="side"><img loading="lazy" src="${ART(s.id)}" alt=""><span>${esc(s.name)}<small>${lbl}</small></span></div>`;
+  $('#pgMeet').innerHTML = `
+    <div class="qsec"><h3>🔔 Novedades <span>${nw.length ? `${ot} consiguió ${nw.length}` : 'nada nuevo'}</span></h3>
+      ${nw.length ? `<div class="news">${nw.slice(0, 40).map(k => `<span class="nw" data-open="${k}"><img src="${artOf(k)}" alt="">${esc(nameOf(k))}</span>`).join('')}</div>
+      <button class="btn" id="seenBtn">✓ Marcar como visto</button>` : `<p class="tip">Aquí verás los Pokémon con suerte que ${ot} vaya consiguiendo desde tu última visita.</p>`}
+    </div>
+    <div class="qsec"><h3>🤝 Próxima quedada <span>${ml.length} pendientes</span></h3>
+      ${ml.length ? `<div class="qlist">${mineFirst.map(qi).join('')}</div>
+        <div class="row"><button class="btn" id="shareMeet">📤 Compartir lista</button></div>`
+      : `<p class="tip">Añade Pokémon desde su ficha (🤝 A la quedada), con la selección múltiple o desde las parejas de abajo. Cuando lo consigas con suerte, sale solo de la lista.</p>`}
+    </div>
+    <div class="qsec"><h3>🔄 Parejas sugeridas <span>${mirror.length} espejo · ${cross.length} cruzadas</span></h3>
+      ${cross.length ? `<p class="sec-t" style="margin:0">Cruzadas (según vuestras copias para cambiar)</p>
+        ${cross.slice(0, 20).map(p => `<div class="pair">${side(p.give, `Tú das (x${X(me, p.give.key)})`)}<span class="mid">⇄</span>${side(p.get, `${ot} da (x${X(ot, p.get.key)})`)}
+          <button class="${M(me, p.get.key) ? 'done' : ''}" data-addmeet="${p.get.key}">${M(me, p.get.key) ? '✓' : '+ 🤝'}</button></div>`).join('')}` :
+        `<p class="tip">💡 Si apuntáis en cada ficha cuántas copias tenéis para cambiar (🔁), aquí os emparejo "tú le das X y él te da Y". Ahora mismo: tú tienes copias de ${heGets.length} que le faltan a ${ot}, y ${ot} tiene copias de ${iGet.length} que te faltan a ti.</p>`}
+      <p class="sec-t" style="margin:6px 0 0">Espejo: os falta a los dos (cambiaos el mismo)</p>
+      ${mirrorShown.map(({ s }) => `<div class="pair">${side(s, `${pad(s.id)}${X(me, s.key) ? ` · tú x${X(me, s.key)}` : ''}${X(ot, s.key) ? ` · ${ot[0]} x${X(ot, s.key)}` : ''}${REGIONAL[s.id] ? ' · 🌍' : ''}`)}
+          <span class="mid">⇄</span><div class="side" style="justify-content:flex-end;color:var(--tx3);font-weight:600">el mismo</div>
+          <button class="${M(me, s.key) ? 'done' : ''}" data-addmeet="${s.key}">${M(me, s.key) ? '✓' : '+ 🤝'}</button></div>`).join('')}
+      ${mirror.length > 12 ? `<button class="more" id="moreMirror">${meetShowAll ? 'Ver menos' : `Ver más (${mirror.length})`}</button>` : ''}
+    </div>`;
+  $('#seenBtn') && ($('#seenBtn').onclick = () => { store.set('seen_' + me, Date.now()); render(); });
+  $('#moreMirror') && ($('#moreMirror').onclick = () => { meetShowAll = !meetShowAll; renderMeet(); });
+  $('#shareMeet') && ($('#shareMeet').onclick = () => openShare(mineFirst.map(x => BY_KEY.get(x.k)), '🤝 Lista para la próxima quedada'));
+}
+$('#pgMeet').addEventListener('click', e => {
+  const g = e.target.closest('[data-got]'); if (g) { setLucky({ [g.dataset.got]: true }); toast('🍀 ¡Enhorabuena! Quitado de la lista'); vib(); return; }
+  const u = e.target.closest('[data-unmeet]'); if (u) { write({ meet: { [u.dataset.unmeet]: null } }); return; }
+  const a = e.target.closest('[data-addmeet]'); if (a) { const k = a.dataset.addmeet; write({ meet: { [k]: !M(state.me, k) } }); return; }
+  const o = e.target.closest('[data-open]'); if (o) { const k = o.dataset.open; const x = BY_KEY.get(k); openDetail(x && x.sp ? x.sp.key : k); }
+});
+
+/* ================= LOGROS ================= */
+function achievements(t) {
+  const n = SPECIES.filter(s => L(t, s.key)).length;
+  const list = [];
+  [[50, '🥉'], [100, '🥈'], [250, '🥇'], [500, '🏆'], [750, '💎'], [900, '👑'], [SPECIES.length, '🌈']].forEach(([m, e]) => {
+    if (m > SPECIES.length) return;
+    list.push({ id: 'n' + m, e, name: m === SPECIES.length ? 'Pokédex completa' : `${m} con suerte`, desc: m === SPECIES.length ? 'Todos los posibles' : `Consigue ${m} Pokémon con suerte`, cur: Math.min(n, m), max: m });
+  });
+  REGIONS.forEach(([k, name]) => {
+    const pool = SPECIES.filter(s => s.region === k); if (!pool.length) return;
+    list.push({ id: 'r' + k, e: '🗺️', name: `${name} completa`, desc: `${pool.length} Pokémon`, cur: pool.filter(s => L(t, s.key)).length, max: pool.length });
+  });
+  const reg = SPECIES.filter(s => REGIONAL[s.id]);
+  list.push({ id: 'regional', e: '🌍', name: 'Trotamundos', desc: 'Todos los exclusivos regionales', cur: reg.filter(s => L(t, s.key)).length, max: reg.length });
+  if (showForms()) list.push({ id: 'forms', e: '🎭', name: 'Coleccionista de formas', desc: `${FORMS.length} formas`, cur: FORMS.filter(f => L(t, f.key)).length, max: FORMS.length });
+  return list;
+}
+function checkAchievements(silent) {
+  if (!state.me || !SPECIES.length || !state.loaded[state.me]) return;
+  const key = 'ach_' + state.me, seen = store.get(key, null);
+  const done = achievements(state.me).filter(a => a.cur >= a.max).map(a => a.id);
+  if (seen === null || silent && !seen.length) { store.set(key, done); return; }
+  const fresh = done.filter(id => !seen.includes(id));
+  if (fresh.length) {
+    store.set(key, [...new Set([...seen, ...done])]);
+    const a = achievements(state.me).find(x => x.id === fresh[0]);
+    if (!silent) { confetti(); toast(`🏅 ¡Nuevo logro: ${a.e} ${a.name}!`, 4000); }
+  }
+}
+function renderAch() {
+  const mine = achievements(state.me), other = achievements(state.other);
+  const ok = mine.filter(a => a.cur >= a.max).length;
+  $('#pgAch').innerHTML = `<div class="qsec"><h3>🏅 Logros <span>${ok}/${mine.length} conseguidos</span></h3>
+    <div class="lg">${mine.map((a, i) => { const o = other[i]; const pct = Math.round(a.cur / a.max * 100);
+      return `<div class="lgi ${a.cur >= a.max ? 'ok' : ''}"><span class="e">${a.e}</span><b>${esc(a.name)}</b><small>${esc(a.desc)}</small>
+        <div class="bar"><div style="width:${pct}%;background:var(--accent)"></div></div><small>${a.cur}/${a.max}</small>
+        <div class="who2"><span class="D ${(state.me === 'Dapica03' ? a : o).cur >= a.max ? 'on' : ''}">D</span><span class="R ${(state.me === 'Rulotgar' ? a : o).cur >= a.max ? 'on' : ''}">R</span></div></div>`; }).join('')}</div></div>`;
+}
+function confetti() {
+  const c = $('#confetti'); c.classList.remove('hidden'); c.width = innerWidth; c.height = innerHeight;
+  const g = c.getContext('2d'), cols = ['#facc15', '#f59e0b', '#3b82f6', '#f43f5e', '#10b981', '#a855f7'];
+  const ps = Array.from({ length: 160 }, () => ({ x: Math.random() * c.width, y: -20 - Math.random() * c.height * .5, vx: (Math.random() - .5) * 3, vy: 2 + Math.random() * 4, s: 5 + Math.random() * 6, r: Math.random() * 6, c: cols[Math.floor(Math.random() * cols.length)] }));
+  let f = 0;
+  (function tick() {
+    g.clearRect(0, 0, c.width, c.height);
+    ps.forEach(p => { p.x += p.vx; p.y += p.vy; p.r += .1; g.save(); g.translate(p.x, p.y); g.rotate(p.r); g.fillStyle = p.c; g.fillRect(-p.s / 2, -p.s / 4, p.s, p.s / 2); g.restore(); });
+    if (++f < 180) requestAnimationFrame(tick); else c.classList.add('hidden');
+  })();
+}
 
 /* ---------- Por regiones ---------- */
 $('#btnCompare').onclick = () => { openDlg('compare', '<div class="sheet" id="cmp"></div>'); renderCompare(); };
 function renderCompare() {
   const el = $('#cmp'); if (!el) return;
   const cnt = (t, pool) => pool.filter(x => L(t, x.key)).length;
-  const D = 'Dapica03', R = 'Rulotgar';
-  const both = SPECIES.filter(s => !L(D, s.key) && !L(R, s.key)).length;
+  const Dn = 'Dapica03', Rn = 'Rulotgar';
+  const both = SPECIES.filter(s => !L(Dn, s.key) && !L(Rn, s.key)).length;
   const rows = REGIONS.map(([k, name]) => {
-    const pool = SPECIES.filter(s => s.region === k), n = pool.length;
-    const cd = cnt(D, pool), cr = cnt(R, pool);
+    const pool = SPECIES.filter(s => s.region === k), n = pool.length; if (!n) return '';
+    const cd = cnt(Dn, pool), cr = cnt(Rn, pool);
     return `<div class="reg-row"><div class="reg-top">${name}<span>${n} posibles</span></div>
       <div class="bar"><div style="width:${cd / n * 100}%;background:#3b82f6"></div></div>
       <div class="bar"><div style="width:${cr / n * 100}%;background:#f43f5e"></div></div>
@@ -818,7 +1278,7 @@ function renderCompare() {
     <div class="sh-body">
       <div class="box"><p class="muted">Faltan a los dos: <b style="color:var(--tx)">${both}</b>. Intercambiarlos entre vosotros os da a ambos la oportunidad de que salgan con suerte.</p></div>
       <div class="reg">${rows}</div>
-      <p class="muted" style="font-size:11px">Igual que en el juego, no se incluyen los Pokémon que no se pueden intercambiar (Mew, Celebi, Zygarde…). Meltan y Melmetal sí cuentan.</p>
+      <p class="muted" style="font-size:11px">Igual que en el juego, no se incluyen los que no se pueden intercambiar (Mew, Celebi, Zygarde…), ni los ${UNRELEASED.filter(id => !UNTRADEABLE.includes(id)).length} que aún no han salido en Pokémon GO.</p>
     </div>`;
 }
 
@@ -832,24 +1292,36 @@ $('#btnSettings').onclick = () => {
     : deferredInstall ? `<button class="btn pri" id="btnInstall">${icon('phone')} Instalar como app</button>`
     : ios ? `<p class="muted">En iPhone: abre esta página en <b>Safari</b>, pulsa <b>Compartir</b> y luego <b>Añadir a pantalla de inicio</b>.</p>`
     : `<p class="muted">En Android: menú ⋮ de Chrome → <b>Instalar aplicación</b>.</p>`;
+  const seg = (name, opts, cur) => `<div class="seg" style="grid-template-columns:repeat(${opts.length},1fr)" data-set="${name}">${opts.map(([v, l]) => `<button data-v="${v}" class="${String(cur) === String(v) ? 'on' : ''}" style="${String(cur) === String(v) ? 'background:var(--accent)' : ''}">${l}</button>`).join('')}</div>`;
   openDlg('settings', `<div class="sheet">
     <div class="sh-head"><h3>Ajustes</h3><button class="ibtn" data-close>${icon('x')}</button></div>
     <div class="sh-body">
       <div class="box"><p class="sec-t">Cuenta</p>
         <p class="muted">Has entrado como <b style="color:var(--accent2)">${state.me}</b><br>${esc(auth.currentUser?.email || '')}</p>
         <div style="height:10px"></div><button class="btn" id="btnLogout">${icon('out')} Cerrar sesión</button></div>
+      <div class="box"><p class="sec-t">Aspecto</p>
+        ${seg('theme', [['dark', '🌙 Oscuro'], ['light', '☀️ Claro'], ['auto', '⚙️ Auto']], state.theme)}
+        <div style="height:8px"></div>${seg('compact', [['false', 'Tarjetas normales'], ['true', 'Vista compacta']], state.compact)}
+        <div style="height:8px"></div>${seg('hideForms', [['false', 'Mostrar formas'], ['true', 'Ocultar formas']], state.hideForms)}</div>
       <div class="box"><p class="sec-t">Instalar en el móvil</p>${installHTML}
         <p class="muted" style="margin-top:8px">Funciona sin conexión: lo que marques se sube solo al volver la conexión.</p></div>
       <div class="box"><p class="sec-t">Copia de seguridad</p>
         <div class="btn2"><button class="btn" id="btnExport">${icon('down')} Exportar</button>
         <label class="btn" style="cursor:pointer">${icon('up')} Importar<input type="file" id="fileImport" accept=".json,application/json" hidden></label></div></div>
       <div class="box"><button class="btn danger" id="btnReset">${icon('trash')} Borrar todos mis 🍀</button></div>
-      <p class="muted" style="text-align:center;font-size:11px">Versión ${APP_VERSION} · Datos de PokeAPI</p>
+      <p class="muted" style="text-align:center;font-size:11px">Versión ${APP_VERSION} · Datos de PokeAPI y Serebii</p>
     </div></div>`);
+  document.querySelectorAll('#dlg [data-set]').forEach(segEl => segEl.onclick = e => {
+    const b = e.target.closest('[data-v]'); if (!b) return;
+    const name = segEl.dataset.set, v = b.dataset.v;
+    state[name] = v === 'true' ? true : v === 'false' ? false : v; store.set(name, state[name]);
+    applyBodyClasses(); render();
+    segEl.querySelectorAll('button').forEach(x => { const on = x === b; x.classList.toggle('on', on); x.style.background = on ? 'var(--accent)' : ''; });
+  });
   $('#btnLogout').onclick = () => { if (confirm('¿Cerrar sesión?')) { closeDlg(); auth.signOut(); } };
   $('#btnInstall') && ($('#btnInstall').onclick = async () => { deferredInstall.prompt(); await deferredInstall.userChoice; deferredInstall = null; closeDlg(); });
   $('#btnExport').onclick = () => {
-    const blob = new Blob([JSON.stringify({ version: 3, trainer: state.me, exportedAt: new Date().toISOString(), lucky: state.lucky[state.me] })], { type: 'application/json' });
+    const blob = new Blob([JSON.stringify({ version: 4, trainer: state.me, exportedAt: new Date().toISOString(), ...D(state.me) })], { type: 'application/json' });
     const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
     a.download = `pokedex_suerte_${state.me}_${new Date().toISOString().slice(0, 10)}.json`; a.click();
   };
@@ -858,18 +1330,25 @@ $('#btnSettings').onclick = () => {
     const r = new FileReader();
     r.onload = () => {
       try {
-        const ch = keysFromBackup(JSON.parse(r.result));
-        if (!Object.keys(ch).length) return toast('El archivo no tiene Pokémon con suerte');
-        if (!confirm(`Se añadirán ${Object.keys(ch).length} Pokémon con suerte. ¿Continuar?`)) return;
-        writeLucky(ch); closeDlg(); toast('✅ Importado');
+        const data = JSON.parse(r.result);
+        const OLD = { r1: 'f10091', r2: 'f10100', r3: 'f10161', r4: 'f10238', r5: 'f10253' };
+        const nonEmpty = o => o && typeof o === 'object' && Object.keys(o).length ? o : null;
+        const src = nonEmpty(data.lucky) || (data.version === 2 ? data.caught : null) || (data.version ? {} : data);
+        const ch = {}; Object.entries(src || {}).forEach(([k, v]) => { const kk = OLD[k] || k; if (v && BY_KEY.has(kk)) ch[kk] = true; });
+        const n = Object.keys(ch).length;
+        if (!n) return toast('El archivo no tiene Pokémon con suerte');
+        if (!confirm(`Se añadirán ${n} Pokémon con suerte. ¿Continuar?`)) return;
+        setLucky(ch, false);
+        if (data.version === 4) { const extra = {}; for (const f of ['extra', 'prio', 'notes', 'meet']) if (nonEmpty(data[f])) extra[f] = data[f]; if (Object.keys(extra).length) write(extra); }
+        closeDlg(); toast('✅ Importado');
       } catch { toast('⚠️ El archivo no es válido'); }
     };
     r.readAsText(file);
   };
   $('#btnReset').onclick = () => {
     if (!confirm(`¿Borrar TODOS los Pokémon con suerte de ${state.me}? No se puede deshacer.`)) return;
-    state.lucky[state.me] = {};
-    docRef(state.me).set({ lucky: FV.delete(), updatedAt: FV.serverTimestamp() }, { merge: true }).catch(e => toast('⚠️ ' + (e.code || e.message)));
+    D(state.me).lucky = {}; D(state.me).luckyAt = {};
+    docRef(state.me).set({ lucky: FV.delete(), luckyAt: FV.delete(), updatedAt: FV.serverTimestamp() }, { merge: true }).catch(e => toast('⚠️ ' + (e.code || e.message)));
     closeDlg(); render(); toast('Borrado');
   };
 };
@@ -877,25 +1356,21 @@ $('#btnSettings').onclick = () => {
 /* ================= CONEXIÓN Y SERVICE WORKER ================= */
 const setOnline = () => $('#offline').classList.toggle('hidden', navigator.onLine);
 addEventListener('online', setOnline); addEventListener('offline', setOnline); setOnline();
+matchMedia('(prefers-color-scheme: light)').addEventListener?.('change', () => state.theme === 'auto' && applyBodyClasses());
 if ('serviceWorker' in navigator && location.protocol === 'https:') {
   const hadController = !!navigator.serviceWorker.controller;
   navigator.serviceWorker.register('sw.js').then(reg => {
     document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') reg.update().catch(() => {}); });
   });
   let reloaded = false;
-  navigator.serviceWorker.addEventListener('controllerchange', () => {
-    if (!hadController || reloaded) return; reloaded = true;
-    if (!currentDlg) location.reload();
-  });
+  navigator.serviceWorker.addEventListener('controllerchange', () => { if (!hadController || reloaded) return; reloaded = true; if (!currentDlg) location.reload(); });
 }
 
 /* ================= ARRANQUE ================= */
+applyBodyClasses();
 buildControls();
 const dataReady = loadData();
-dataReady.then(() => scheduleRender()).catch(err => {
-  console.error(err);
-  $('#loading').innerHTML = '⚠️ No se pudieron cargar los datos. Comprueba tu conexión y recarga.';
-});
+dataReady.then(() => scheduleRender()).catch(err => { console.error(err); $('#loading').innerHTML = '⚠️ No se pudieron cargar los datos. Comprueba tu conexión y recarga.'; });
 </script>
 </body>
 </html>

@@ -382,6 +382,26 @@ body.light .old-tip{color:#b45309}
 .pubbar .b2{display:grid;grid-template-columns:1fr 1fr;gap:6px}
 .btn.wa{background:#16a34a;color:#fff}.btn.tg{background:#0284c7;color:#fff}
 .share3{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.upd{position:fixed;left:8px;right:8px;top:calc(8px + var(--safe-t));z-index:95;display:flex;align-items:center;gap:8px;background:var(--bg2);border:1.5px solid var(--accent);border-radius:16px;padding:10px 10px 10px 14px;box-shadow:0 10px 30px rgba(0,0,0,.45);animation:up .25s ease-out}
+.upd .t{flex:1;min-width:0;font-size:14px;line-height:1.3}
+.upd .t small{display:block;color:var(--tx3);font-size:12px}
+.upd .b{padding:9px 14px;border-radius:11px;background:var(--accent);color:#fff;font-weight:800;font-size:14px;white-space:nowrap}
+.upd .l{width:32px;height:32px;border-radius:10px;color:var(--tx3);font-size:16px}
+.evh{font-size:12px;color:var(--tx3);margin:0}
+.evg{display:flex;flex-direction:column;gap:6px}
+.evg h4{margin:4px 0 0;font-size:13px;display:flex;align-items:center;gap:6px}
+.evg h4 span{margin-left:auto;font-size:11px;color:var(--tx3);font-weight:600}
+.qi .how{display:block;font-weight:500;color:#fdba74;font-size:11px}
+body.light .qi .how{color:#c2410c}
+.qi button.c1{font-size:12px;font-weight:700;padding:7px 9px;border-radius:10px;background:rgba(109,40,217,.18);border:1px solid #8b5cf6;color:#ddd6fe;white-space:nowrap}
+body.light .qi button.c1{color:#5b21b6}
+.why{display:flex;flex-wrap:wrap;gap:3px;margin-top:2px}
+.why i{font-style:normal;font-size:10px;font-weight:700;padding:1px 6px;border-radius:6px;background:var(--bg3);color:var(--tx2)}
+.rank{width:22px;text-align:center;font-weight:900;color:var(--tx3);flex:none}
+.plan-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.plan-row label{font-size:12px;color:var(--tx3);display:flex;flex-direction:column;gap:4px}
+.plan-row input,.plan-row select{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:8px;font-size:14px;color:var(--tx);width:100%}
+
 .stepper .l{min-width:0;flex:1}
 .stepper .sbtn{flex:none;white-space:nowrap}
 
@@ -489,6 +509,7 @@ body.light .old-tip{color:#b45309}
         <button class="chip" data-x="note">📝 Con nota</button>
         <button class="chip x" data-x="evo">🧬 Por evolución</button>
         <button class="chip p" data-x="old">🕰️ Copias antiguas</button>
+        <button class="chip g" data-x="ev">🔥 Salen esta semana</button>
       </div>
     </section>
 
@@ -534,6 +555,10 @@ body.light .old-tip{color:#b45309}
   </nav>
 </div>
 
+<div id="upd" class="upd hidden">
+  <div class="t">🆕 <b>Hay una actualización nueva</b><small>Actualiza para tener las últimas mejoras</small></div>
+  <button class="b" id="updNow">Actualizar</button><button class="l" id="updLater" aria-label="Luego">✕</button>
+</div>
 <div id="pub" class="hidden"></div>
 <div id="dlg" class="overlay hidden"></div>
 <div id="toast" class="hidden"></div>
@@ -544,7 +569,7 @@ body.light .old-tip{color:#b45309}
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 <script>
 'use strict';
-const APP_VERSION = '4.1.0';
+const APP_VERSION = '4.3.0';
 const DATA_VERSION = '2026-11-12';
 
 /* ================= CONFIGURACIÓN ================= */
@@ -672,6 +697,7 @@ const vib = () => { if (navigator.vibrate) navigator.vibrate(12); };
 
 /* ================= DATOS POKÉMON ================= */
 let SPECIES = [], BY_ID = new Map(), BY_KEY = new Map(), FORMS = [], FROM = new Map();
+let EVENT = null, EV = new Map();   // 🔥 lo que sale esta semana (eventos.json)
 const regionOf = id => (REGIONS.find(r => id >= r[2] && id <= r[3]) || REGIONS[9])[0];
 
 async function loadData() {
@@ -691,7 +717,16 @@ async function loadData() {
     s.forms.push(f); FORMS.push(f); BY_KEY.set(f.key, f);
   });
   SPECIES.forEach(s => s.forms.sort((a, b) => FORM_ORDER[a.cat] - FORM_ORDER[b.cat] || a.pid - b.pid));
+  try {
+    const e = await (await fetch('eventos.json?t=' + Date.now(), { cache: 'no-store' })).json();
+    const end = new Date(e.hasta + 'T23:59:59');
+    if (Date.now() <= end.getTime()) {
+      EVENT = e;
+      e.items.forEach(it => { if (BY_ID.has(it.id)) EV.set(it.id, [...(EV.get(it.id) || []), it.como]); });
+    }
+  } catch {}
 }
+const evHow = s => (EV.get(s.id) || []).join(' · ');
 const showForms = () => false;   // la Pokédex con suerte de GO no registra las formas aparte
 const formsOf = s => showForms() ? s.forms : [];
 const nameOf = key => { const x = BY_KEY.get(key); return !x ? key : x.sp ? `${x.sp.name} (${x.label})` : x.name; };
@@ -699,7 +734,7 @@ const artOf = key => { const x = BY_KEY.get(key); return ART(x ? (x.pid || x.id)
 
 /* ================= ESTADO ================= */
 const FIELDS = ['lucky', 'luckyAt', 'extra', 'prio', 'notes', 'meet', 'year'];
-const emptyT = () => ({ lucky: {}, luckyAt: {}, extra: {}, prio: {}, notes: {}, meet: {}, year: {}, friend: null, backups: {}, backupAt: 0, pub: null, gUsed: 0 });
+const emptyT = () => ({ lucky: {}, luckyAt: {}, extra: {}, prio: {}, notes: {}, meet: {}, year: {}, friend: null, backups: {}, backupAt: 0, pub: null, gUsed: 0, dust: 0 });
 const state = {
   me: null, other: null,
   data: { Dapica03: emptyT(), Rulotgar: emptyT() },
@@ -848,7 +883,7 @@ function subscribe() {
     unsubs.push(docRef(t).onSnapshot({ includeMetadataChanges: true }, snap => {
       const d = snap.data() || {}, x = emptyT();
       for (const f of FIELDS) if (d[f] && typeof d[f] === 'object') for (const [k, v] of Object.entries(d[f])) if (v) x[f][k] = v;
-      x.friend = d.friend || null; x.backups = d.backups || {}; x.backupAt = d.backupAt || 0; x.pub = d.pub || null; x.gUsed = d.gUsed || 0;
+      x.friend = d.friend || null; x.backups = d.backups || {}; x.backupAt = d.backupAt || 0; x.pub = d.pub || null; x.gUsed = d.gUsed || 0; x.dust = d.dust || 0;
       state.data[t] = x;
       if (!snap.metadata.fromCache) state.loaded[t] = true;
       if (!checked && t === state.me && !snap.metadata.fromCache && SPECIES.length) {
@@ -966,6 +1001,7 @@ function filtered() {
       case 'note': if (!NOTE(me, s.key) && !NOTE(ot, s.key)) return false; break;
       case 'evo': if (!evoFrom(state.view === 'other' ? ot : me, s)) return false; break;
       case 'old': if (!OLD(me, s.key) && !OLD(ot, s.key)) return false; break;
+      case 'ev': if (!EV.has(s.id)) return false; break;
     }
     return true;
   });
@@ -1000,6 +1036,7 @@ function cardHTML(s) {
   const xn = X(me, s.key);
   if (xn) b.push(`<span class="xn">x${xn}</span>`);
   if (OLD(me, s.key)) b.push('🕰️');
+  if (EV.has(s.id)) b.push('🔥');
   if (evoFrom(me, s)) b.push('🧬');
   return `<div class="card ${c ? 'c' : ''} ${state.sel.has(s.key) ? 'sel' : ''}" data-k="${s.key}" data-r="${s.region}">
     <div class="ctop"><span class="num">${pad(s.id)}</span><button class="chk" aria-label="Marcar con suerte"><span>${c ? '🍀' : ''}</span></button></div>
@@ -1293,6 +1330,7 @@ function renderDetail(force) {
       <div class="dt-name"><div class="n">${esc(s.name)}</div><div class="m">${reg} · Generación ${s.gen}</div>
         <div class="dt-types">${s.types.map(typeTag).join('')}</div></div>
       ${REGIONAL[s.id] ? `<div class="regx">🌍 <b>Exclusivo regional:</b> ${esc(REGIONAL[s.id])}</div>` : ''}
+      ${EV.has(s.id) ? `<div class="regx" style="background:rgba(249,115,22,.12);border-color:rgba(249,115,22,.45);color:#fdba74">🔥 <b>Sale esta semana (${esc(EVENT.titulo)}):</b> ${esc(evHow(s))}</div>` : ''}
       ${whoRow(k)}
       <div class="trow">
         <button class="tbtn p ${P(me, k) ? 'on' : ''}" data-prio="${k}">⭐ ${P(me, k) ? 'Prioridad' : 'Dar prioridad'}</button>
@@ -1362,8 +1400,99 @@ function suggestPairs() {
   for (let i = 0; i < Math.min(iGet.length, heGets.length); i++) cross.push({ get: iGet[i], give: heGets[i] });
   return { mirror, cross, iGet, heGets };
 }
+/* 🏆 Puntuación de «qué me conviene conseguir primero» */
+function recoScore(t, s) {
+  const o = OTHER[t], why = [];
+  if (L(t, s.key) || evoFrom(t, s)) return null;
+  let sc = 0;
+  if (EV.has(s.id)) { sc += 5; why.push('🔥 sale ahora'); }
+  if (X(o, s.key)) { sc += 4; why.push(`🔁 ${o} tiene ${X(o, s.key)}`); }
+  if (OLD(o, s.key)) { sc += 6; why.push('🕰️ copia antigua'); }
+  if (P(t, s.key)) { sc += 3; why.push('⭐ prioridad'); }
+  if (!L(o, s.key)) { sc += 2; why.push('os falta a los dos'); }
+  if (REGIONAL[s.id]) { sc += 1; why.push('🌍 regional'); }
+  if (SPECIAL.has(s.id)) { sc -= 1; why.push('★ especial'); }
+  return sc > 0 ? { s, sc, why } : null;
+}
+function topFor(t, n = 10) { return SPECIES.map(s => recoScore(t, s)).filter(Boolean).sort((a, b) => b.sc - a.sc || a.s.id - b.s.id).slice(0, n); }
+
+/* 🪄 Plan automático de la quedada: intercambios que más os aportan, dentro del polvoestelar */
+function buildPlan(n, budgetMe, budgetOt) {
+  const me = state.me, ot = state.other, cands = [];
+  SPECIES.forEach(s => {
+    const iNeed = !L(me, s.key) && !evoFrom(me, s), heNeeds = !L(ot, s.key) && !evoFrom(ot, s);
+    if (!iNeed && !heNeeds) return;
+    const iCan = X(me, s.key) > 0 || EV.has(s.id), heCan = X(ot, s.key) > 0 || EV.has(s.id);
+    // Espejo: os falta a los dos y ambos podéis tener una copia
+    if (iNeed && heNeeds && iCan && heCan) cands.push({ type: 'mirror', a: s, b: s, v: 4 + (OLD(me, s.key) || OLD(ot, s.key) ? 3 : 0) + (P(me, s.key) || P(ot, s.key) ? 2 : 0) + (EV.has(s.id) ? 1 : 0) });
+  });
+  const gets = SPECIES.filter(s => !L(me, s.key) && !evoFrom(me, s) && (X(ot, s.key) || EV.has(s.id)) && L(ot, s.key));
+  const gives = SPECIES.filter(s => !L(ot, s.key) && !evoFrom(ot, s) && (X(me, s.key) || EV.has(s.id)) && L(me, s.key));
+  const sc = (t, s) => (P(t, s.key) ? 2 : 0) + (OLD(OTHER[t], s.key) ? 3 : 0) + (EV.has(s.id) ? 1 : 0) + (X(OTHER[t], s.key) ? 1 : 0);
+  gets.sort((a, b) => sc(me, b) - sc(me, a)); gives.sort((a, b) => sc(ot, b) - sc(ot, a));
+  for (let i = 0; i < Math.max(gets.length, gives.length); i++) {
+    const g = gets[i], v = gives[i];
+    if (g && v) cands.push({ type: 'cross', a: v, b: g, v: 3 + sc(me, g) + sc(ot, v) });   // a = lo que das, b = lo que recibes
+  }
+  cands.sort((x, y) => y.v - x.v);
+  const plan = []; let spent = 0, special = 0;
+  const budget = Math.min(budgetMe || Infinity, budgetOt || Infinity);
+  const used = new Set();
+  for (const c of cands) {
+    if (plan.length >= n) break;
+    if (used.has(c.a.key) || used.has(c.b.key)) continue;
+    const cost = tradeCost([c.a.id, c.b.id]);
+    if (cost.special && special >= 1) continue;          // solo 1 intercambio especial al día
+    if (spent + cost.n > budget) continue;
+    plan.push({ ...c, cost }); spent += cost.n; if (cost.special) special++;
+    used.add(c.a.key); used.add(c.b.key);
+  }
+  return { plan, spent, budget };
+}
+function openPlan() {
+  const n = +($('#plN')?.value || 10), dMe = +($('#plDustMe')?.value || 0), dOt = D(state.other).dust || 0;
+  if ($('#plDustMe')) write({}, { dust: dMe });
+  const { plan, spent } = buildPlan(n, dMe, dOt);
+  const me = state.me, ot = state.other;
+  const line = (c, i) => c.type === 'mirror'
+    ? `<div class="pair"><span class="rank">${i + 1}</span><div class="side"><img src="${ART(c.a.id)}" alt=""><span>${esc(c.a.name)}<small>os falta a los dos · cambiad el mismo${OLD(me, c.a.key) || OLD(ot, c.a.key) ? ' · 🕰️🍀' : ''}${EV.has(c.a.id) ? ' · 🔥' : ''}</small></span></div>${costTag([c.a.id])}</div>`
+    : `<div class="pair"><span class="rank">${i + 1}</span><div class="side"><img src="${ART(c.a.id)}" alt=""><span>${esc(c.a.name)}<small>das tú${OLD(me, c.a.key) ? ' · 🕰️' : ''}</small></span></div><span class="mid">⇄</span><div class="side"><img src="${ART(c.b.id)}" alt=""><span>${esc(c.b.name)}<small>te da ${ot}${OLD(ot, c.b.key) ? ' · 🕰️' : ''}</small></span></div>${costTag([c.a.id, c.b.id])}</div>`;
+  const text = `🪄 Plan para la quedada (${plan.length} intercambios · ${fmt(spent)} de polvo cada uno)\n\n` + plan.map((c, i) => c.type === 'mirror' ? `${i + 1}. ${c.a.name} ⇄ ${c.a.name} (os falta a los dos)` : `${i + 1}. ${me} da ${c.a.name} ⇄ ${ot} da ${c.b.name}`).join('\n');
+  openDlg('plan', `<div class="sheet"><div class="sh-head"><h3>🪄 Plan de la quedada</h3><button class="ibtn" data-close>${icon('x')}</button></div>
+    <div class="sh-body">
+      ${plan.length ? `<p class="muted">${plan.length} intercambios · 💰 ${fmt(spent)} de polvoestelar cada uno${dMe || dOt ? ` (tenéis ${dMe ? fmt(dMe) : '?'} y ${dOt ? fmt(dOt) : '?'})` : ''} · máx. 1 especial.</p>
+        <div class="qlist">${plan.map(line).join('')}</div>
+        <button class="btn pri" id="plAdd">🤝 Añadir mis Pokémon a la quedada</button>
+        <div class="share3"><button class="btn wa" id="plWa">WhatsApp</button><button class="btn tg" id="plTg">Telegram</button></div>`
+      : `<p class="muted">No encuentro intercambios todavía. Apuntad en las fichas las copias que tenéis para cambiar (🔁), o capturad lo que sale esta semana (🔥).</p>`}
+    </div></div>`);
+  $('#plAdd') && ($('#plAdd').onclick = () => { const m = {}; plan.forEach(c => { const k = c.type === 'mirror' ? c.a.key : c.b.key; if (!L(me, k)) m[k] = true; }); undoable(`🤝 ${Object.keys(m).length} añadidos a la quedada`, () => write({ meet: m })); closeDlg(); });
+  $('#plWa') && ($('#plWa').onclick = () => openWhatsApp(text));
+  $('#plTg') && ($('#plTg').onclick = () => openTelegram(text, '', APP_URL));
+}
 const costTag = ids => { const c = tradeCost(ids); return `<span class="cost ${c.special ? 'sp' : ''}" title="Polvoestelar si ya lo tenéis registrado">💰${c.n >= 1000 ? Math.round(c.n / 1000) + 'k' : c.n}${c.special ? ' ★' : ''}</span>`; };
 let meetShowAll = false;
+/* 🔥 Esta semana: quién debe capturar qué para el otro */
+const evShowAll = {};
+function eventSection() {
+  if (!EVENT) return '';
+  const me = state.me, ot = state.other;
+  const ev = SPECIES.filter(s => EV.has(s.id));
+  const forOther = ev.filter(s => L(me, s.key) && !L(ot, s.key) && !evoFrom(ot, s));     // tú lo tienes con suerte, a él le falta → captúralo tú
+  const forMe = ev.filter(s => !L(me, s.key) && !evoFrom(me, s) && L(ot, s.key));         // él lo tiene, a ti te falta → que lo capture él
+  const both = ev.filter(s => !L(me, s.key) && !L(ot, s.key));                            // os falta a los dos → capturad y cambiad
+  const item = (s, mode) => `<div class="qi"><img loading="lazy" src="${ART(s.id)}" alt="" data-open="${s.key}">
+      <div class="n" data-open="${s.key}">${esc(s.name)}<span class="how">${esc(evHow(s))}</span></div>
+      ${mode === 'give' || mode === 'both' ? `<button class="c1" data-copy="${s.key}" title="Ya lo he capturado">+1 copia${X(me, s.key) ? ` (${X(me, s.key)})` : ''}</button>` : ''}
+      ${mode !== 'give' ? `<button class="x" data-addmeet="${s.key}" title="A la quedada">${M(me, s.key) ? '✓' : '🤝'}</button>` : ''}</div>`;
+  const grp = (title, list, mode, empty) => { const cut = list.length > 8 && !evShowAll[mode]; return `<div class="evg"><h4>${title}<span>${list.length}</span></h4>${list.length ? (cut ? list.slice(0, 8) : list).map(s => item(s, mode)).join('') : `<p class="tip">${empty}</p>`}${list.length > 8 ? `<button class="more" data-evmore="${mode}">${cut ? `Ver todos (${list.length})` : 'Ver menos'}</button>` : ''}</div>`; };
+  const d1 = new Date(EVENT.desde + 'T12:00'), d2 = new Date(EVENT.hasta + 'T12:00'), f = d => d.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
+  return `<div class="qsec"><h3>🔥 Esta semana: ${esc(EVENT.titulo)} <span>${f(d1)} – ${f(d2)}</span></h3>
+    ${grp(`🎯 Captura para ${ot}`, forOther, 'give', `Nada que capturar para ${ot}.`)}
+    ${grp(`🎁 ${ot} captura para ti`, forMe, 'get', `Nada que ${ot} tenga que capturarte.`)}
+    ${grp('🤝 Os faltan a los dos: capturad y cambiad', both, 'both', 'Nada.')}
+    <p class="evh">Fuente: ${esc(EVENT.fuente)} · actualizado ${esc(EVENT.actualizado)}. «+1 copia» apunta que ya lo has capturado para cambiar.</p></div>`;
+}
 
 /* ---------- 🔴 Modo quedada en directo ---------- */
 let liveSkip = [];
@@ -1404,6 +1533,18 @@ function renderMeet() {
   const nextDate = fi.nextAt ? new Date(fi.nextAt) : null, daysLeft = nextDate ? Math.max(0, Math.ceil((nextDate - Date.now()) / 864e5)) : null;
   const best = SPECIES.filter(s => !L(me, s.key) && !L(ot, s.key) && !evoFrom(me, s) && !evoFrom(ot, s)).sort((a, b) => (P(me, b.key) + P(ot, b.key) + (REGIONAL[b.id] ? 1 : 0) + (SPECIAL.has(b.id) ? 1 : 0)) - (P(me, a.key) + P(ot, a.key) + (REGIONAL[a.id] ? 1 : 0) + (SPECIAL.has(a.id) ? 1 : 0)))[0];
   $('#pgMeet').innerHTML = `
+    ${eventSection()}
+    <div class="qsec"><h3>🪄 Prepárame la quedada</h3>
+      <div class="plan-row">
+        <label>Intercambios<select id="plN">${[5, 10, 15, 20, 30].map(v => `<option ${v === 10 ? 'selected' : ''}>${v}</option>`).join('')}</select></label>
+        <label>Tu polvoestelar<input id="plDustMe" type="number" inputmode="numeric" min="0" placeholder="opcional" value="${D(me).dust || ''}"></label>
+      </div>
+      <p class="tip">${D(ot).dust ? `${ot} tiene ${fmt(D(ot).dust)} de polvo apuntado. ` : ''}Elige los intercambios que más os aportan (os faltan a los dos, copias antiguas 🕰️, prioridades ⭐ y lo que sale esta semana 🔥), sin pasarse del polvo y con 1 especial como máximo.</p>
+      <button class="btn pri" id="planBtn">🪄 Prepárame la quedada</button>
+    </div>
+    <div class="qsec"><h3>🏆 Lo que más te conviene conseguir <span>top 10</span></h3>
+      <div class="qlist">${topFor(me).map((r, i) => `<div class="qi" data-open="${r.s.key}"><span class="rank">${i + 1}</span><img loading="lazy" src="${ART(r.s.id)}" alt=""><div class="n">${esc(r.s.name)}<div class="why">${r.why.map(w => `<i>${esc(w)}</i>`).join('')}</div></div></div>`).join('') || '<p class="tip">¡No hay nada pendiente!</p>'}</div>
+    </div>
     <button class="btn pri" id="liveBtn" style="padding:14px;font-size:15px">🔴 Modo quedada en directo</button>
     ${fi.lucky ? `<div class="lf">🍀 ¡Sois amigos de la suerte! El próximo intercambio entre vosotros sale con suerte seguro.${best ? ` Aprovechadlo con <b>${esc(best.name)}</b>, que os falta a los dos.` : ''}</div>` : ''}
     <div class="qsec"><h3>🤝 Vuestra amistad <span>${lv ? FRIEND_LEVELS[lv] : 'sin indicar'}</span></h3>
@@ -1438,6 +1579,8 @@ function renderMeet() {
     </div>`;
   $('#seenBtn') && ($('#seenBtn').onclick = () => { store.set('seen_' + me, Date.now()); render(); });
   $('#liveBtn').onclick = openLive;
+  $('#planBtn').onclick = openPlan;
+  $('#plDustMe').onchange = e => write({}, { dust: Math.max(0, +e.target.value || 0) });
   const saveFriend = () => {
     const level = $('#frLv').value, days = $('#frDays').value;
     const f = { ...friendInfo(), level, lucky: $('#frLucky').value === '1', updated: Date.now() };
@@ -1452,6 +1595,8 @@ function renderMeet() {
 $('#pgMeet').addEventListener('click', e => {
   const g = e.target.closest('[data-got]'); if (g) { const k = g.dataset.got; undoable(`🍀 ¡${nameOf(k)} conseguido!`, () => setLucky({ [k]: true })); vib(); return; }
   const u = e.target.closest('[data-unmeet]'); if (u) { write({ meet: { [u.dataset.unmeet]: null } }); return; }
+  const em = e.target.closest('[data-evmore]'); if (em) { evShowAll[em.dataset.evmore] = !evShowAll[em.dataset.evmore]; renderMeet(); return; }
+  const c1 = e.target.closest('[data-copy]'); if (c1) { const k = c1.dataset.copy; undoable(`🔁 +1 copia de ${nameOf(k)}`, () => write({ extra: { [k]: X(state.me, k) + 1 } })); return; }
   const a = e.target.closest('[data-addmeet]'); if (a) { const k = a.dataset.addmeet; write({ meet: { [k]: !M(state.me, k) } }); return; }
   const o = e.target.closest('[data-open]'); if (o) { const k = o.dataset.open; const x = BY_KEY.get(k); openDetail(x && x.sp ? x.sp.key : k); }
 });
@@ -1567,6 +1712,7 @@ $('#btnSettings').onclick = () => {
         <div class="btn2"><button class="btn" id="btnExport">${icon('down')} Exportar</button>
         <label class="btn" style="cursor:pointer">${icon('up')} Importar<input type="file" id="fileImport" accept=".json,application/json" hidden></label></div></div>
       <div class="box"><button class="btn danger" id="btnReset">${icon('trash')} Borrar todos mis 🍀</button></div>
+      <button class="btn" id="btnUpd">🔄 Buscar actualizaciones</button>
       <p class="muted" style="text-align:center;font-size:11px">Versión ${APP_VERSION} · Datos de PokeAPI y Serebii</p>
     </div></div>`);
   document.querySelectorAll('#dlg [data-set]').forEach(segEl => segEl.onclick = e => {
@@ -1577,6 +1723,7 @@ $('#btnSettings').onclick = () => {
     segEl.querySelectorAll('button').forEach(x => { const on = x === b; x.classList.toggle('on', on); x.style.background = on ? 'var(--accent)' : ''; });
   });
   $('#btnLogout').onclick = () => { if (confirm('¿Cerrar sesión?')) { closeDlg(); auth.signOut(); } };
+  $('#btnUpd').onclick = () => { closeDlg(); checkUpdate(true); };
   const pubCfg = () => ({ on: !!D(state.me).pub?.on, wa: $('#pubWa').value.trim(), tg: $('#pubTg').value.trim() });
   $('#pubSeg').onclick = e => { const b = e.target.closest('[data-v]'); if (!b) return; setPublic({ ...pubCfg(), on: b.dataset.v === '1' }); closeDlg(); setTimeout(() => $('#btnSettings').click(), 350); toast(b.dataset.v === '1' ? '🔗 Enlace activado' : 'Enlace desactivado'); };
   $('#pubWa').onchange = $('#pubTg').onchange = () => setPublic(pubCfg());
@@ -1624,14 +1771,40 @@ $('#btnSettings').onclick = () => {
 const setOnline = () => $('#offline').classList.toggle('hidden', navigator.onLine);
 addEventListener('online', setOnline); addEventListener('offline', setOnline); setOnline();
 matchMedia('(prefers-color-scheme: light)').addEventListener?.('change', () => state.theme === 'auto' && applyBodyClasses());
+/* 🆕 Aviso de actualización: la versión nueva espera hasta que pulses «Actualizar» */
+let swReg = null, updShown = false;
+function showUpdate() {
+  if (updShown || !swReg || !swReg.waiting) return;
+  updShown = true;
+  $('#upd').classList.remove('hidden');
+}
+async function checkUpdate(manual) {
+  if (!swReg) { if (manual) toast('Las actualizaciones solo funcionan en la web publicada'); return; }
+  try { await swReg.update(); } catch {}
+  if (swReg.waiting) showUpdate();
+  else if (manual) setTimeout(() => toast(swReg.installing ? 'Descargando la actualización…' : `✅ Ya tienes la última versión (${APP_VERSION})`), 600);
+}
+$('#updNow').onclick = () => {
+  $('#updNow').textContent = 'Actualizando…';
+  store.set('updatedFrom', APP_VERSION);
+  if (swReg && swReg.waiting) swReg.waiting.postMessage('skipWaiting'); else location.reload();
+};
+$('#updLater').onclick = () => $('#upd').classList.add('hidden');
 if ('serviceWorker' in navigator && location.protocol === 'https:') {
-  const hadController = !!navigator.serviceWorker.controller;
   navigator.serviceWorker.register('sw.js').then(reg => {
-    document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') reg.update().catch(() => {}); });
+    swReg = reg;
+    if (reg.waiting && navigator.serviceWorker.controller) showUpdate();
+    reg.addEventListener('updatefound', () => {
+      const nw = reg.installing; if (!nw) return;
+      nw.addEventListener('statechange', () => { if (nw.state === 'installed' && navigator.serviceWorker.controller) showUpdate(); });
+    });
+    setInterval(() => checkUpdate(false), 30 * 60 * 1000);
+    document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') checkUpdate(false); });
   });
   let reloaded = false;
-  navigator.serviceWorker.addEventListener('controllerchange', () => { if (!hadController || reloaded) return; reloaded = true; if (!currentDlg) location.reload(); });
+  navigator.serviceWorker.addEventListener('controllerchange', () => { if (reloaded || !store.get('updatedFrom', null)) return; reloaded = true; location.reload(); });
 }
+{ const from = store.get('updatedFrom', null); if (from && from !== APP_VERSION) { store.set('updatedFrom', null); setTimeout(() => toast(`✅ Actualizada a la versión ${APP_VERSION}`, 3500), 1200); } else if (from) store.set('updatedFrom', null); }
 
 /* ================= VISTA PÚBLICA (?ver=Entrenador) ================= */
 const pubState = { tab: 'faltan', q: '', region: 'all', sel: new Set(), data: null };

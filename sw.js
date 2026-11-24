@@ -1,5 +1,5 @@
-/* Service worker: permite usar la Pokédex sin conexión y la actualiza sola */
-const VERSION = 'v4.1.0';
+/* Service worker: permite usar la Pokédex sin conexión. Las versiones nuevas esperan a que el usuario pulse «Actualizar». */
+const VERSION = 'v4.3.0';
 const SHELL = 'pdx-shell-' + VERSION;
 const LIBS = 'pdx-libs-v1';
 const IMGS = 'pdx-img-v1';
@@ -7,8 +7,11 @@ const MAX_IMGS = 900;
 const SHELL_FILES = ['./', 'index.html', 'pokedex-data.json?v=2026-11-12', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png'];
 
 self.addEventListener('install', e => {
-  e.waitUntil(caches.open(SHELL).then(c => c.addAll(SHELL_FILES)).then(() => self.skipWaiting()));
+  e.waitUntil(caches.open(SHELL).then(c => c.addAll(SHELL_FILES)));
 });
+
+/* La app pide activar la versión nueva cuando el usuario pulsa «Actualizar» */
+self.addEventListener('message', e => { if (e.data === 'skipWaiting') self.skipWaiting(); });
 
 self.addEventListener('activate', e => {
   e.waitUntil((async () => {
@@ -38,7 +41,7 @@ self.addEventListener('fetch', e => {
 
   // Archivos propios (datos, iconos...): copia guardada y se refresca en segundo plano
   if (url.origin === location.origin) {
-    if (url.pathname.includes('migracion-')) return;
+    if (url.pathname.includes('migracion-') || url.pathname.includes('eventos')) return;
     e.respondWith(caches.open(SHELL).then(async c => {
       const hit = await c.match(req);
       const net = fetch(req).then(r => { if (r.ok) c.put(req, r.clone()); return r; }).catch(() => hit);

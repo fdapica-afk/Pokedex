@@ -382,8 +382,9 @@ body.light .old-tip{color:#b45309}
 .pubbar .b2{display:grid;grid-template-columns:1fr 1fr;gap:6px}
 .btn.wa{background:#16a34a;color:#fff}.btn.tg{background:#0284c7;color:#fff}
 .share3{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-#extraChips{flex-wrap:wrap;overflow:visible;row-gap:6px}
-#extraChips .chip{padding:6px 10px;font-size:12.5px}
+#extraChips{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;overflow:visible}
+#extraChips .chip{flex-direction:column;justify-content:center;gap:2px;padding:6px 2px;border-radius:12px;font-size:11.5px;line-height:1.15;text-align:center;white-space:normal;min-width:0}
+#extraChips .chip .e{font-size:17px;line-height:1}
 .upd{position:fixed;left:8px;right:8px;top:calc(8px + var(--safe-t));z-index:95;display:flex;align-items:center;gap:8px;background:var(--bg2);border:1.5px solid var(--accent);border-radius:16px;padding:10px 10px 10px 14px;box-shadow:0 10px 30px rgba(0,0,0,.45);animation:up .25s ease-out}
 .upd .t{flex:1;min-width:0;font-size:14px;line-height:1.3}
 .upd .t small{display:block;color:var(--tx3);font-size:12px}
@@ -504,14 +505,14 @@ body.light .qi button.c1{color:#5b21b6}
         </select>
       </div>
       <div class="chips" id="extraChips">
-        <button class="chip p" data-x="prio">⭐ Prioridad</button>
-        <button class="chip x" data-x="extra">🔁 Tengo para cambiar</button>
-        <button class="chip x" data-x="oextra">🔁 Él tiene para cambiar</button>
-        <button class="chip g" data-x="regional">🌍 Exclusivos regionales</button>
-        <button class="chip" data-x="note">📝 Con nota</button>
-        <button class="chip x" data-x="evo">🧬 Por evolución</button>
-        <button class="chip p" data-x="old">🕰️ Copias antiguas</button>
-        <button class="chip g" data-x="ev">🔥 Salen esta semana</button>
+        <button class="chip p" data-x="prio" title="Prioridad"><span class="e">⭐</span>Prioridad</button>
+        <button class="chip x" data-x="extra" title="Tengo para cambiar"><span class="e">🔁</span>Tengo</button>
+        <button class="chip x" data-x="oextra" title="Él tiene para cambiar"><span class="e">🔁</span><span id="oextraTxt">Él tiene</span></button>
+        <button class="chip g" data-x="regional" title="Exclusivos regionales"><span class="e">🌍</span>Regional</button>
+        <button class="chip" data-x="note" title="Con nota"><span class="e">📝</span>Nota</button>
+        <button class="chip x" data-x="evo" title="Por evolución"><span class="e">🧬</span>Evolución</button>
+        <button class="chip p" data-x="old" title="Copias antiguas"><span class="e">🕰️</span>Antiguas</button>
+        <button class="chip g" data-x="ev" title="Salen esta semana"><span class="e">🔥</span>Evento</button>
       </div>
     </section>
 
@@ -571,7 +572,7 @@ body.light .qi button.c1{color:#5b21b6}
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 <script>
 'use strict';
-const APP_VERSION = '4.3.1';
+const APP_VERSION = '4.3.2';
 const DATA_VERSION = '2026-11-12';
 
 /* ================= CONFIGURACIÓN ================= */
@@ -933,7 +934,7 @@ auth.onAuthStateChanged(async user => {
   $('#avatar').textContent = trainer[0];
   $('#meName').textContent = trainer;
   document.querySelector('[data-view="other"]').textContent = `Le faltan a ${state.other}`;
-  document.querySelector('[data-x="oextra"]').textContent = `🔁 ${state.other} tiene para cambiar`;
+  $('#oextraTxt').textContent = state.other;
   if (store.get('seen_' + trainer, null) === null) store.set('seen_' + trainer, Date.now());
   dataReady.then(subscribe); scheduleRender();
 });
@@ -1081,7 +1082,7 @@ function renderDex() {
 /* ---------- Saltos rápidos por región ---------- */
 function renderJump(list) {
   const regs = REGIONS.filter(r => list.some(s => s.region === r[0]));
-  const show = state.region === 'all' && regs.length > 1 && (state.sort === 'num' || state.sort === 'numd');
+  const show = false;   // barra lateral desactivada
   $('#jump').classList.toggle('hidden', !show);
   document.body.classList.toggle('has-jump', show);
   if (show) $('#jump').innerHTML = regs.map(r => `<button data-j="${r[0]}" title="${r[1]}">${r[4]}</button>`).join('');
